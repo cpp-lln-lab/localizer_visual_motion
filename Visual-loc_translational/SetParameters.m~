@@ -1,0 +1,51 @@
+function [ExpParameters, Cfg] = SetParameters()
+
+ExpParameters = struct; % Initialize the parameters variables
+Cfg           = struct; % Initialize the general configuration variables
+
+%% Debug mode settings
+Cfg.TestingSmallScreen = false; % To test on a part of the screen, change to 1
+
+%% MRI settings
+Cfg.Device             = 'PC';  % 'PC': does not care about trigger - 'Scanner'
+Cfg.triggerKey         = 's';   %set the letter sent by the trigger to sync stimulation and volume acquisition
+Cfg.numTriggers        = 4;   % CHECK ON THE MAIN SCRIPT, MADE AN ERROR TO PUT IT HERE BUT IT WILL BE USEFUL ANYWAY
+
+%% Engine parameters
+% Monitor parameters
+Cfg.monitor_width  	  = 42;  % Monitor Width in cm
+Cfg.screen_distance   = 134; % Distance from the screen in cm
+Cfg.diameter_aperture = 8;   % Diameter/length of side of aperture in Visual angles
+
+
+%% Experiment Design
+ExpParameters.names = {'static','motion'};
+ExpParameters.possibleDirections = [-1 1];            % 1 motion , -1 static
+ExpParameters.numRepetitions  = 1 ; %AT THE MOMENT IT IS NOT SET IN THE MAIN SCRIPT
+ExpParameters.interBlock_interval    = 8 ;
+ExpParameters.interstimulus_interval = 0.1 ;                   % time between events in secs
+ExpParameters.onsetDelay = 5;                                      % number of seconds before the motion stimuli are presented
+ExpParameters.endDelay = 5;                                        % number of seconds after the end all the stimuli before ending the run
+
+
+%% Visual Stimulation
+ExpParameters.experimentType = 'Dots';   % Visual modality is in RDKs %NOT USED IN THE MAIN SCIPT
+ExpParameters.speedEvent             = 4  ;           % speed in visual angles
+ExpParameters.numEventsPerBlock      = 12 ;           % Number of events per block (should not be changed)
+ExpParameters.eventDuration          = 1.2 ;
+ExpParameters.coh = 1;                                      % Coherence Level (0-1)
+ExpParameters.maxDotsPerFrame = 300;                        % Maximum number dots per frame (Number must be divisible by 3)
+ExpParameters.dotLifeTime = 0.2;                            % Dot life time in seconds
+ExpParameters.dontclear = 0;
+ExpParameters.dotSize = 0.1; % dot Size (dot width) in visual angles.
+
+
+%% Task 1 - Fixation cross
+ExpParameters.Task1 = true; % true / false
+
+if ExpParameters.Task1
+    ExpParameters.maxNumFixationTargetPerBlock = 2 ;
+    ExpParameters.fixationChangeDuration = 0.15;                    % in secs
+    `xpParameters.xDisplacementFixCross        = 0 ;   % manual displacement of the fixation cross
+	ExpParameters.yDisplacementFixCross        = 0 ;   % manual displacement of the fixation cross
+end

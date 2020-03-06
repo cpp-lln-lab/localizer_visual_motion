@@ -4,23 +4,8 @@
 % by Mohamed Rezk 2018
 % adapted by MarcoB 2020
 
-%%
+clc;
 
-% Clear all the previous stuff
-% clc;
-if ~ismac
-clear;
-close all;
-clear Screen;
-PsychPortAudio('Close');
-end
-
-% make sure we got access to all the required functions and inputs
-addpath(fullfile(pwd, 'subfun'))
-
-% set and load all the parameters to run the experiment
-[subjectName, runNumber, sessionNumber] = UserInputs;
-[ExpParameters, Cfg] = SetParameters;
 
 
 
@@ -36,8 +21,42 @@ addpath(fullfile(pwd, 'subfun'))
 
 
 
-%% Color Parameters
 
+
+%% Parameters for monitor setting
+Cfg.monitor_width  	 = 42;                            % Monitor Width in cm
+Cfg.screen_distance  = 134;                           % Distance from the screen in cm
+diameter_aperture= 8;                             % diameter/length of side of aperture in Visual angles
+
+Cfg.coh = 1;                                      % Coherence Level (0-1)
+dotSize = 0.12;                                   % dot Size (dot width) in visual angles.
+Cfg.maxDotsPerFrame = 300;                        % Maximum number dots per frame (Number must be divisible by 3)
+Cfg.dotLifeTime = 0.2;                            % Dot life time in seconds
+Cfg.dontclear = 0;
+Cfg.dotSize = 0.1;
+
+% manual displacement of the fixation cross
+xDisplacementFixCross = 0 ;
+yDisplacementFixCross = 0 ;
+
+if mod(Cfg.maxDotsPerFrame,3) ~= 0
+    error('Number of dots should be divisible by 3.')
+end
+
+%% Fixation Cross parameters
+% Used Pixels here since it really small and can be adjusted during the experiment
+Cfg.fixCrossDimPix = 10;                            % Set the length of the lines (in Pixels) of the fixation cross
+Cfg.lineWidthPix = 4;                               % Set the line width (in Pixels) for our fixation cross
+
+%% Color Parameters
+White = [255 255 255];
+Black = [ 0   0   0 ];
+Grey  = mean([Black;White]);
+
+Cfg.textColor           = White ;
+Cfg.Background_color    = Black  ;
+Cfg.fixationCross_color = White ;
+Cfg.dotColor            = White ;
 
 % Get Subject Name and run number
 subjectName = input('Enter Subject Name: ','s');
@@ -78,8 +97,8 @@ try % safety loop: close the screen if code crashes
     Cfg.center = [Cfg.winRect(3), Cfg.winRect(4)]/2;
     
     %% Fixation Cross
-    xCoords = [-ExpParameters.fixCrossDimPix ExpParameters.fixCrossDimPix 0 0] + ExpParameters.xDisplacementFixCross;
-    yCoords = [0 0 -ExpParameters.fixCrossDimPix ExpParameters.fixCrossDimPix] + ExpParameters.yDisplacementFixCross;
+    xCoords = [-Cfg.fixCrossDimPix Cfg.fixCrossDimPix 0 0] + xDisplacementFixCross;
+    yCoords = [0 0 -Cfg.fixCrossDimPix Cfg.fixCrossDimPix] + yDisplacementFixCross;
     Cfg.allCoords = [xCoords; yCoords];
     
     % Query frame duration
@@ -89,7 +108,7 @@ try % safety loop: close the screen if code crashes
     % monitor distance
     Cfg.mon_horizontal_cm  	= Cfg.monitor_width;                         % Width of the monitor in cm
     Cfg.view_dist_cm 		= Cfg.screen_distance;                       % Distance from viewing screen in cm
-    Cfg.apD = Cfg.diameter_aperture;                                     % diameter/length of side of aperture in Visual angles
+    Cfg.apD = diameter_aperture;                                     % diameter/length of side of aperture in Visual angles
     
     
     % Everything is initially in coordinates of visual degrees, convert to pixels
@@ -98,7 +117,7 @@ try % safety loop: close the screen if code crashes
     Cfg.ppd = Cfg.winRect(3) / V ;
     
     Cfg.d_ppd = floor(Cfg.apD * Cfg.ppd);                            % Covert the aperture diameter to pixels
-    ExpParameters.dotSize = floor (Cfg.ppd * ExpParameters.dotSize);                          % Covert the dot Size to pixels
+    Cfg.dotSize = floor (Cfg.ppd * Cfg.dotSize);                          % Covert the dot Size to pixels
     
     %%
     % Enable alpha-blending, set it to a blend equation useable for linear
@@ -174,7 +193,7 @@ try % safety loop: close the screen if code crashes
 
     end
     
-    Screen('DrawLines', Cfg.win, Cfg.allCoords,ExpParameters.lineWidthPix, [255 255 255] , [Cfg.center(1) Cfg.center(2)], 1);
+    Screen('DrawLines', Cfg.win, Cfg.allCoords,Cfg.lineWidthPix, [255 255 255] , [Cfg.center(1) Cfg.center(2)], 1);
     Screen('Flip',Cfg.win);
     
     %% txt logfiles
@@ -231,7 +250,7 @@ try % safety loop: close the screen if code crashes
             % concatenate the new event responses with the old responses vector
             allResponses = [allResponses responseTimeWithinEvent] ;
             
-            Screen('DrawLines', Cfg.win, Cfg.allCoords,ExpParameters.lineWidthPix, [255 255 255] , [Cfg.center(1) Cfg.center(2)], 1);
+            Screen('DrawLines', Cfg.win, Cfg.allCoords,Cfg.lineWidthPix, [255 255 255] , [Cfg.center(1) Cfg.center(2)], 1);
             Screen('Flip',Cfg.win);
             
             
@@ -240,17 +259,17 @@ try % safety loop: close the screen if code crashes
                 iBlock,iEventsPerBlock,iEventDirection,iEventIsFixationTarget,iEventSpeed,eventOnsets(iBlock,iEventsPerBlock),eventEnds(iBlock,iEventsPerBlock),eventDurations(iBlock,iEventsPerBlock));
             
             % wait for the inter-stimulus interval
-            WaitSecs(ExpParameters.ISI);
+            WaitSecs(ExpParameters.interstimulus_interval);
         end
         
         blockEnds(iBlock,1)= GetSecs-Cfg.Experiment_start;          % End of the block Time
         blockDurations(iBlock,1)= blockEnds(iBlock,1) - blockOnsets(iBlock,1); % Block Duration
         
         %Screen('DrawTexture',Cfg.win,imagesTex.Event(1));
-        Screen('DrawLines', Cfg.win, Cfg.allCoords,ExpParameters.lineWidthPix, [255 255 255] , [Cfg.center(1) Cfg.center(2)], 1);
+        Screen('DrawLines', Cfg.win, Cfg.allCoords,Cfg.lineWidthPix, [255 255 255] , [Cfg.center(1) Cfg.center(2)], 1);
         Screen('Flip',Cfg.win);
         
-        WaitSecs(ExpParameters.IBI)
+        WaitSecs(ExpParameters.interBlock_interval)
         
         %% Block txt_Logfile
         fprintf(BlockTxtLogFile,'%12.0f %12s %12f %12f %12f  \n',...

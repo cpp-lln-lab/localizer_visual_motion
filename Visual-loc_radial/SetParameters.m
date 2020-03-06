@@ -8,7 +8,7 @@ Cfg.TestingSmallScreen = false; % To test on a part of the screen, change to 1
 Cfg.Debug              = true;  % To test the script out of the scanner
 Cfg.stim_position      = 'PC';  % 'Scanner': means that it removes the lower 1/3 of the screen (the coil hides the lower part of the screen)
 
-%%MRI settings
+%% MRI settings
 Cfg.Device             = 'PC';  % 'PC': does not care about trigger - 'Scanner'
 Cfg.triggerKey         = 's';   %set the letter sent by the trigger to sync stimulation and volume acquisition
 Cfg.numTriggers        = 4;   % CHECK ON THE MAIN SCRIPT, MADE AN ERROR TO PUT IT HERE BUT IT WILL BE USEFUL ANYWAY
