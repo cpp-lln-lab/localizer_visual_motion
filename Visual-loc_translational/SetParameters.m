@@ -4,10 +4,11 @@ ExpParameters = struct; % Initialize the parameters variables
 Cfg           = struct; % Initialize the general configuration variables
 
 %% Debug mode settings
-Cfg.TestingSmallScreen = false; % To test on a part of the screen, change to 1
-Cfg.Debug              = true;  % To test the script out of the scanner
-Cfg.Device             = 'PC';  % 'PC': does not care about trigger - 'Scanner'
-Cfg.stim_position      = 'Scanner';  % 'Scanner': means that it removes the lower 1/3 of the screen (the coil hides the lower part of the screen)
+Cfg.Debug               = true;  % To test the script out of the scanner, skyp PTB sync
+Cfg.TestingSmallScreen  = false; % To test on a part of the screen, change to 1
+Cfg.TestingTranspScreen = true;  % To test with trasparent full size screen 
+Cfg.Device              = 'PC';  % 'PC': does not care about trigger - 'Scanner'
+Cfg.stim_position       = 'PC';  % 'Scanner': means that it removes the lower 1/3 of the screen (the coil hides the lower part of the screen)
 
 %% MRI settings
 Cfg.Device             = 'PC';  % 'PC': does not care about trigger - 'Scanner'

@@ -1,4 +1,4 @@
-%% Visual hMT localizer using translational motion in four directions 
+%% Visual hMT localizer using translational motion in four directions
 %  (up- down- left and right-ward)
 
 % by Mohamed Rezk 2018
@@ -9,10 +9,10 @@
 % Clear all the previous stuff
 % clc;
 if ~ismac
-clear;
-close all;
-clear Screen;
-PsychPortAudio('Close');
+    clear;
+    close all;
+    clear Screen;
+    PsychPortAudio('Close');
 end
 
 % make sure we got access to all the required functions and inputs
@@ -22,69 +22,48 @@ addpath(fullfile(pwd, 'subfun'))
 [subjectName, runNumber, sessionNumber] = UserInputs;
 [ExpParameters, Cfg] = SetParameters;
 
-
-
-% Different duratons for different number of repetitions (may add a few TRs to this number just for safety)
-% Cfg.numRepetitions=7, Duration: 345.77 secs (5.76 mins), collect 139 + 4 Triggers = 143 TRs at least per run 
-% Cfg.numRepetitions=6, Duration: 297.86 secs (4.96 mins), collect 120 + 4 Triggers = 124 TRs at least per run 
-% Cfg.numRepetitions=5, Duration: 249.91 secs (4.17 mins), collect 100 + 4 Triggers = 104 TRs at least per run 
-% Cfg.numRepetitions=4, Duration: 201.91 secs (3.37 mins), collect 81 + 4 Triggers  = 85  TRs at least per run 
-
-
-
-
-
-
-
-%% Color Parameters
-
-
-% Get Subject Name and run number
-subjectName = input('Enter Subject Name: ','s');
-if isempty(subjectName)
-    subjectName = 'trial';
-end
-
-HideCursor;
-
-if exist(fullfile('logfiles',[subjectName,'.mat']),'file')>0
-    error('This file is already present in your logfiles. Delete the old file or rename your run!!')
-end
-
 %%  Experiment
 
-try % safety loop: close the screen if code crashes
+% Safety loop: close the screen if code crashes
+try
+    %% Init the experiment
+    [Cfg] = InitPTB(Cfg);
     
-    AssertOpenGL;
     
-    % any preliminary stuff
-    %%%%%%%%%%%%%%%%%%%%%%%%%
-    % Select screen with maximum id for output window:
-    screenid = max(Screen('Screens'));
-    % Open a fullscreen, onscreen window with gray background. Enable 32bpc
-    % floating point framebuffer via imaging pipeline on it.
-    PsychImaging('PrepareConfiguration');
-    %PsychImaging('AddTask', 'General', 'FloatingPoint32BitIfPossible');
     
-    Screen('Preference','SkipSyncTests', 1);
     
-    if Cfg.TestingSmallScreen
-        [Cfg.win, Cfg.winRect] = PsychImaging('OpenWindow', screenid, Cfg.Background_color,  [0,0, 480, 270]);
-    else
-        [Cfg.win, Cfg.winRect] = PsychImaging('OpenWindow', screenid, Cfg.Background_color);
-    end
     
-    % Get the Center of the Screen
-    Cfg.center = [Cfg.winRect(3), Cfg.winRect(4)]/2;
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    % Different duratons for different number of repetitions (may add a few TRs to this number just for safety)
+    % Cfg.numRepetitions=7, Duration: 345.77 secs (5.76 mins), collect 139 + 4 Triggers = 143 TRs at least per run
+    % Cfg.numRepetitions=6, Duration: 297.86 secs (4.96 mins), collect 120 + 4 Triggers = 124 TRs at least per run
+    % Cfg.numRepetitions=5, Duration: 249.91 secs (4.17 mins), collect 100 + 4 Triggers = 104 TRs at least per run
+    % Cfg.numRepetitions=4, Duration: 201.91 secs (3.37 mins), collect 81 + 4 Triggers  = 85  TRs at least per run
+    
+    
+    
+    
+    
+    
+    
+    
+
     
     %% Fixation Cross
-    xCoords = [-ExpParameters.fixCrossDimPix ExpParameters.fixCrossDimPix 0 0] + ExpParameters.xDisplacementFixCross;
-    yCoords = [0 0 -ExpParameters.fixCrossDimPix ExpParameters.fixCrossDimPix] + ExpParameters.yDisplacementFixCross;
-    Cfg.allCoords = [xCoords; yCoords];
-    
-    % Query frame duration
-    Cfg.ifi = Screen('GetFlipInterval', Cfg.win);
-    Cfg.monRefresh = 1/Cfg.ifi;
+    if ExpParameters.Task1
+        xCoords = [-ExpParameters.fixCrossDimPix ExpParameters.fixCrossDimPix 0 0] + ExpParameters.xDisplacementFixCross;
+        yCoords = [0 0 -ExpParameters.fixCrossDimPix ExpParameters.fixCrossDimPix] + ExpParameters.yDisplacementFixCross;
+        Cfg.allCoords = [xCoords; yCoords];
+    end
     
     % monitor distance
     Cfg.mon_horizontal_cm  	= Cfg.monitor_width;                         % Width of the monitor in cm
@@ -100,20 +79,8 @@ try % safety loop: close the screen if code crashes
     Cfg.d_ppd = floor(Cfg.apD * Cfg.ppd);                            % Covert the aperture diameter to pixels
     ExpParameters.dotSize = floor (Cfg.ppd * ExpParameters.dotSize);                          % Covert the dot Size to pixels
     
-    %%
-    % Enable alpha-blending, set it to a blend equation useable for linear
-    % superposition with alpha-weighted source.
-    Screen('BlendFunction', Cfg.win, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    % Initially sync us to VBL at start of animation loop.
-    
-    vbl = Screen('Flip', Cfg.win);
-    
-    % Text options/
-    % Select specific text font, style and size:
-    Screen('TextFont',Cfg.win, 'Courier New');
-    Screen('TextSize',Cfg.win, 18);
-    Screen('TextStyle', Cfg.win, 1);
-    
+   
+    % % % TO ME NOT NECESSARY
     directions=[];
     speeds=[];
     fixationTargets=[];
@@ -171,7 +138,7 @@ try % safety loop: close the screen if code crashes
                 end
             end
         end
-
+        
     end
     
     Screen('DrawLines', Cfg.win, Cfg.allCoords,ExpParameters.lineWidthPix, [255 255 255] , [Cfg.center(1) Cfg.center(2)], 1);
@@ -277,13 +244,13 @@ try % safety loop: close the screen if code crashes
     save(fullfile('logfiles',[subjectName,'.mat']),...
         'Cfg','allResponses','blockDurations','blockNames','blockOnsets')
     
-
+    
     % Close the screen
     clear Screen;
     
 catch              % if code crashes, closes serial port and screen
     clear Screen;
-
+    
     error(lasterror) % show default error
 end
 
