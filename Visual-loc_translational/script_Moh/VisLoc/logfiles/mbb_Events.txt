@@ -1,0 +1,3 @@
+ BlockNumber  EventNumber    Direction   IsFixationTarget        Speed        Onset          End     Duration 
+           1            1           -1                  0         4.00      5.00154      6.19857      1.19703 
+           1            2           -1                  0         4.00      6.31610      7.51474      1.19864 
