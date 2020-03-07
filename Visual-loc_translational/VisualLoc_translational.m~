@@ -4,6 +4,13 @@
 % by Mohamed Rezk 2018
 % adapted by MarcoB 2020
 
+
+% % % Different duratons for different number of repetitions (may add a few TRs to this number just for safety)
+% % % Cfg.numRepetitions=7, Duration: 345.77 secs (5.76 mins), collect 139 + 4 Triggers = 143 TRs at least per run
+% % % Cfg.numRepetitions=6, Duration: 297.86 secs (4.96 mins), collect 120 + 4 Triggers = 124 TRs at least per run
+% % % Cfg.numRepetitions=5, Duration: 249.91 secs (4.17 mins), collect 100 + 4 Triggers = 104 TRs at least per run
+% % % Cfg.numRepetitions=4, Duration: 201.91 secs (3.37 mins), collect 81 + 4 Triggers  = 85  TRs at least per run
+
 %%
 
 % Clear all the previous stuff
@@ -27,52 +34,23 @@ try
     %% Init the experiment
     [Cfg] = InitPTB(Cfg);
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    % Different duratons for different number of repetitions (may add a few TRs to this number just for safety)
-    % Cfg.numRepetitions=7, Duration: 345.77 secs (5.76 mins), collect 139 + 4 Triggers = 143 TRs at least per run
-    % Cfg.numRepetitions=6, Duration: 297.86 secs (4.96 mins), collect 120 + 4 Triggers = 124 TRs at least per run
-    % Cfg.numRepetitions=5, Duration: 249.91 secs (4.17 mins), collect 100 + 4 Triggers = 104 TRs at least per run
-    % Cfg.numRepetitions=4, Duration: 201.91 secs (3.37 mins), collect 81 + 4 Triggers  = 85  TRs at least per run
-    
-    
-    
-    
-    
-    
-    
-    
-
-    
-    %% Fixation Cross
-    if ExpParameters.Task1
-        xCoords = [-ExpParameters.fixCrossDimPix ExpParameters.fixCrossDimPix 0 0] + ExpParameters.xDisplacementFixCross;
-        yCoords = [0 0 -ExpParameters.fixCrossDimPix ExpParameters.fixCrossDimPix] + ExpParameters.yDisplacementFixCross;
-        Cfg.allCoords = [xCoords; yCoords];
-    end
-    
     [ExpParameters, Cfg]  = VisualDegree2Pixels(ExpParameters, Cfg);
-   
+    
     % % % TO ME NOT NECESSARY see later
     directions=[];
     speeds=[];
     fixationTargets=[];
     % % %
     
+    % % % REFACTOR THIS FUNCTION
+    [directions, speeds, fixationTargets, names] = experimentalDesign(Cfg);
+    % % %
+    
     % Visual degree to pixels converter
     [ExpParameters, Cfg] = VisualDegree2Pixels(ExpParameters, Cfg);
+    
+    % Prepare for the output logfiles
+    saveOutput(subjectName, Cfg, ExpParameters, 'open')
     
     % Empty vectors and matrices for speed
     blockNames     = cell(ExpParameters.numBlocks,1);
@@ -86,12 +64,21 @@ try
     
     allResponses = [] ;
     
-    
     % % % PUT IT RIGHT BEFORE STARTING THE EXPERIMENT
     % Show instructions
-    DrawFormattedText(Cfg.win,ExpParameters.TaskInstruction,...
-        'center', 'center', Cfg.textColor);
-    Screen('Flip', Cfg.win);
+    if ExpParameters.Task1
+        DrawFormattedText(Cfg.win,ExpParameters.TaskInstruction,...
+            'center', 'center', Cfg.textColor);
+        Screen('Flip', Cfg.win);
+    end
+    % % %
+    
+    % Prepare for fixation Cross
+    if ExpParameters.Task1
+        xCoords = [-ExpParameters.fixCrossDimPix ExpParameters.fixCrossDimPix 0 0] + ExpParameters.xDisplacementFixCross;
+        yCoords = [0 0 -ExpParameters.fixCrossDimPix ExpParameters.fixCrossDimPix] + ExpParameters.yDisplacementFixCross;
+        Cfg.allCoords = [xCoords; yCoords];
+    end
     
     % Wait for space key to be pressed
     pressSpace4me
@@ -99,29 +86,12 @@ try
     % Wait for Trigger from Scanner
     Wait4Trigger(Cfg)
     
-
-    
-    
-    
-    
-    Screen('DrawLines', Cfg.win, Cfg.allCoords,ExpParameters.lineWidthPix, [255 255 255] , [Cfg.center(1) Cfg.center(2)], 1);
-    Screen('Flip',Cfg.win);
-    
-    %% txt logfiles
-    if ~exist('logfiles','dir')
-        mkdir('logfiles')
+    % Show the fixation cross
+    if ExpParameters.Task1
+        Screen('DrawLines', Cfg.win, Cfg.allCoords,ExpParameters.lineWidthPix, ...
+            [255 255 255] , [Cfg.center(1) Cfg.center(2)], 1);
+        Screen('Flip',Cfg.win);
     end
-    
-    BlockTxtLogFile = fopen(fullfile('logfiles',[subjectName,'_Blocks.txt']),'w');
-    fprintf(BlockTxtLogFile,'%12s  %12s %12s %12s %12s \n',...
-        'BlockNumber','Condition','Onset','End','Duration');
-    
-    EventTxtLogFile = fopen(fullfile('logfiles',[subjectName,'_Events.txt']),'w');
-    fprintf(EventTxtLogFile,'%12s %12s %12s %18s %12s %12s %12s %12s \n',...
-        'BlockNumber','EventNumber','Direction', 'IsFixationTarget','Speed','Onset','End','Duration');
-    
-    ResponsesTxtLogFile = fopen(fullfile('logfiles',[subjectName,'_Responses.txt']),'w');
-    fprintf(ResponsesTxtLogFile,'%12s \n','Responses');
     
     %% Experiment Start
     Cfg.Experiment_start = GetSecs;
@@ -167,7 +137,14 @@ try
             
             %% Event txt_Logfile
             fprintf(EventTxtLogFile,'%12.0f %12.0f %12.0f %18.0f %12.2f %12.5f %12.5f %12.5f \n',...
-                iBlock,iEventsPerBlock,iEventDirection,iEventIsFixationTarget,iEventSpeed,eventOnsets(iBlock,iEventsPerBlock),eventEnds(iBlock,iEventsPerBlock),eventDurations(iBlock,iEventsPerBlock));
+                iBlock, ...
+                iEventsPerBlock, ...
+                iEventDirection, ...
+                iEventIsFixationTarget, ...
+                iEventSpeed, ...
+                eventOnsets(iBlock,iEventsPerBlock), ...
+                eventEnds(iBlock,iEventsPerBlock), ...
+                eventDurations(iBlock,iEventsPerBlock));
             
             % wait for the inter-stimulus interval
             WaitSecs(ExpParameters.ISI);
@@ -205,15 +182,21 @@ try
     save(fullfile('logfiles',[subjectName,'_all.mat']))
     
     save(fullfile('logfiles',[subjectName,'.mat']),...
-        'Cfg','allResponses','blockDurations','blockNames','blockOnsets')
+        'Cfg', ...
+        'allResponses', ...
+        'blockDurations', ...
+        'blockNames', ...
+        'blockOnsets')
     
     
     % Close the screen
+    sca
     clear Screen;
     
-catch              % if code crashes, closes serial port and screen
+catch
+    % if code crashes, closes serial port and screen
+    sca
     clear Screen;
-    
     error(lasterror) % show default error
 end
 

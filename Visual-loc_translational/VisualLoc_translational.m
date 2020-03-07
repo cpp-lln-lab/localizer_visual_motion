@@ -34,13 +34,6 @@ try
     %% Init the experiment
     [Cfg] = InitPTB(Cfg);
     
-    % Fixation Cross
-    if ExpParameters.Task1
-        xCoords = [-ExpParameters.fixCrossDimPix ExpParameters.fixCrossDimPix 0 0] + ExpParameters.xDisplacementFixCross;
-        yCoords = [0 0 -ExpParameters.fixCrossDimPix ExpParameters.fixCrossDimPix] + ExpParameters.yDisplacementFixCross;
-        Cfg.allCoords = [xCoords; yCoords];
-    end
-    
     [ExpParameters, Cfg]  = VisualDegree2Pixels(ExpParameters, Cfg);
     
     % % % TO ME NOT NECESSARY see later
@@ -55,6 +48,9 @@ try
     
     % Visual degree to pixels converter
     [ExpParameters, Cfg] = VisualDegree2Pixels(ExpParameters, Cfg);
+    
+    % Prepare for the output logfiles
+    saveOutput(subjectName, Cfg, ExpParameters, 'open')
     
     % Empty vectors and matrices for speed
     blockNames     = cell(ExpParameters.numBlocks,1);
@@ -77,6 +73,13 @@ try
     end
     % % %
     
+    % Prepare for fixation Cross
+    if ExpParameters.Task1
+        xCoords = [-ExpParameters.fixCrossDimPix ExpParameters.fixCrossDimPix 0 0] + ExpParameters.xDisplacementFixCross;
+        yCoords = [0 0 -ExpParameters.fixCrossDimPix ExpParameters.fixCrossDimPix] + ExpParameters.yDisplacementFixCross;
+        Cfg.allCoords = [xCoords; yCoords];
+    end
+    
     % Wait for space key to be pressed
     pressSpace4me
     
@@ -89,31 +92,6 @@ try
             [255 255 255] , [Cfg.center(1) Cfg.center(2)], 1);
         Screen('Flip',Cfg.win);
     end
-    
-
-    
-    BlockTxtLogFile = fopen(fullfile('logfiles',[subjectName,'_Blocks.txt']),'w');
-    fprintf(BlockTxtLogFile,'%12s  %12s %12s %12s %12s \n', ...
-        'BlockNumber', ...
-        'Condition', ...
-        'Onset', ...
-        'End', ...
-        'Duration');
-    
-    EventTxtLogFile = fopen(fullfile('logfiles',[subjectName,'_Events.txt']),'w');
-    fprintf(EventTxtLogFile,'%12s %12s %12s %18s %12s %12s %12s %12s \n', ...
-        'BlockNumber', ...
-        'EventNumber', ...
-        'Direction', ...
-        'IsFixationTarget', ...
-        'Speed', ...
-        'Onset', ...
-        'End', ...
-        'Duration');
-    
-    ResponsesTxtLogFile = fopen(fullfile('logfiles',[subjectName,'_Responses.txt']),'w');
-    fprintf(ResponsesTxtLogFile,'%12s \n', ...
-        'Responses');
     
     %% Experiment Start
     Cfg.Experiment_start = GetSecs;
@@ -159,7 +137,14 @@ try
             
             %% Event txt_Logfile
             fprintf(EventTxtLogFile,'%12.0f %12.0f %12.0f %18.0f %12.2f %12.5f %12.5f %12.5f \n',...
-                iBlock,iEventsPerBlock,iEventDirection,iEventIsFixationTarget,iEventSpeed,eventOnsets(iBlock,iEventsPerBlock),eventEnds(iBlock,iEventsPerBlock),eventDurations(iBlock,iEventsPerBlock));
+                iBlock, ...
+                iEventsPerBlock, ...
+                iEventDirection, ...
+                iEventIsFixationTarget, ...
+                iEventSpeed, ...
+                eventOnsets(iBlock,iEventsPerBlock), ...
+                eventEnds(iBlock,iEventsPerBlock), ...
+                eventDurations(iBlock,iEventsPerBlock));
             
             % wait for the inter-stimulus interval
             WaitSecs(ExpParameters.ISI);
@@ -176,7 +161,11 @@ try
         
         %% Block txt_Logfile
         fprintf(BlockTxtLogFile,'%12.0f %12s %12f %12f %12f  \n',...
-            iBlock,names{iBlock,1},blockOnsets(iBlock,1),blockEnds(iBlock,1),blockDurations(iBlock,1));
+            iBlock, ...
+            names{iBlock,1}, ...
+            blockOnsets(iBlock,1), ...
+            blockEnds(iBlock,1), ...
+            blockDurations(iBlock,1));
         
     end
     
