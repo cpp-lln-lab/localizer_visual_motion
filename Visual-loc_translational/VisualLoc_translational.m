@@ -34,16 +34,10 @@ try
     %% Init the experiment
     [Cfg] = InitPTB(Cfg);
     
-    [ExpParameters, Cfg]  = VisualDegree2Pixels(ExpParameters, Cfg);
-    
-    % % % TO ME NOT NECESSARY see later
-    directions=[];
-    speeds=[];
-    fixationTargets=[];
-    % % %
+    [ExpParameters, Cfg]  = VisualDegree2Pixels(ExpParameters);
     
     % % % REFACTOR THIS FUNCTION
-    [directions, speeds, fixationTargets, names] = experimentalDesign(Cfg);
+    [ExpDesignParameters] = ExpDesign(Cfg);
     % % %
     
     % Visual degree to pixels converter
@@ -108,10 +102,10 @@ try
         % For each event in the block
         for iEventsPerBlock = 1:ExpParameters.numEventsPerBlock
             
-            logFile.iEventDirection = directions(iBlock,iEventsPerBlock);       % Direction of that event
-            logFile.iEventSpeed = speeds(iBlock,iEventsPerBlock);               % Speed of that event
+            logFile.iEventDirection = ExpDesignParameters.directions(iBlock,iEventsPerBlock);       % Direction of that event
+            logFile.iEventSpeed = ExpDesignParameters.speeds(iBlock,iEventsPerBlock);               % Speed of that event
             iEventDuration = ExpParameters.eventDuration ;                        % Duration of normal events
-            logFile.iEventIsFixationTarget = fixationTargets(iBlock,iEventsPerBlock);
+            logFile.iEventIsFixationTarget = ExpDesignParameters.fixationTargets(iBlock,iEventsPerBlock);
             
             % Event Onset
             logFile.eventOnsets(iBlock,iEventsPerBlock) = GetSecs-Cfg.Experiment_start;
@@ -138,8 +132,8 @@ try
             
             
             
-            % Save the events logfile
-            SaveOutput(logFile, ExpParameters, 'save Events')
+            % Save the events txt logfile
+            SaveOutput(logFile, ExpDesignParameters, 'save Events')
        
             
             
@@ -156,17 +150,12 @@ try
         
         WaitSecs(ExpParameters.IBI)
         
-        %% Block txt_Logfile
-        fprintf(BlockTxtLogFile,'%12.0f %12s %12f %12f %12f  \n',...
-            iBlock, ...
-            names{iBlock,1}, ...
-            logFile.blockOnsets(iBlock,1), ...
-            logFile.blockEnds(iBlock,1), ...
-            logFile.blockDurations(iBlock,1));
-        
+        % Save the block txt Logfile
+        SaveOutput(logFile, ExpDesignParameters, 'save Blocks')
+
     end
     
-    blockNames = names ;
+    blockNames = ExpDesignParameters.blockNames ;
     
     % End of the run for the BOLD to go down
     WaitSecs(ExpParameters.endDelay);
