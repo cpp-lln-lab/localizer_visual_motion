@@ -54,13 +54,13 @@ try
     
     % Empty vectors and matrices for speed
     blockNames     = cell(ExpParameters.numBlocks,1);
-    blockOnsets    = zeros(ExpParameters.numBlocks,1);
-    blockEnds      = zeros(ExpParameters.numBlocks,1);
-    blockDurations = zeros(ExpParameters.numBlocks,1);
+    logFile.blockOnsets    = zeros(ExpParameters.numBlocks,1);
+    logFile.blockEnds      = zeros(ExpParameters.numBlocks,1);
+    logFile.blockDurations = zeros(ExpParameters.numBlocks,1);
     
-    eventOnsets    = zeros(ExpParameters.numBlocks,ExpParameters.numEventsPerBlock);
-    eventEnds      = zeros(ExpParameters.numBlocks,ExpParameters.numEventsPerBlock);
-    eventDurations = zeros(ExpParameters.numBlocks,ExpParameters.numEventsPerBlock);
+    logFile.eventOnsets    = zeros(ExpParameters.numBlocks,ExpParameters.numEventsPerBlock);
+    logFile.eventEnds      = zeros(ExpParameters.numBlocks,ExpParameters.numEventsPerBlock);
+    logFile.eventDurations = zeros(ExpParameters.numBlocks,ExpParameters.numEventsPerBlock);
     
     allResponses = [] ;
     
@@ -103,21 +103,21 @@ try
         
         fprintf('Running Block %.0f \n',iBlock)
         
-        blockOnsets(iBlock,1)= GetSecs-Cfg.Experiment_start;
+        logFile.blockOnsets(iBlock,1)= GetSecs-Cfg.Experiment_start;
         
         % For each event in the block
         for iEventsPerBlock = 1:ExpParameters.numEventsPerBlock
             
-            iEventDirection = directions(iBlock,iEventsPerBlock);       % Direction of that event
-            iEventSpeed = speeds(iBlock,iEventsPerBlock);               % Speed of that event
+            logFile.iEventDirection = directions(iBlock,iEventsPerBlock);       % Direction of that event
+            logFile.iEventSpeed = speeds(iBlock,iEventsPerBlock);               % Speed of that event
             iEventDuration = ExpParameters.eventDuration ;                        % Duration of normal events
-            iEventIsFixationTarget = fixationTargets(iBlock,iEventsPerBlock);
+            logFile.iEventIsFixationTarget = fixationTargets(iBlock,iEventsPerBlock);
             
             % Event Onset
-            eventOnsets(iBlock,iEventsPerBlock) = GetSecs-Cfg.Experiment_start;
+            logFile.eventOnsets(iBlock,iEventsPerBlock) = GetSecs-Cfg.Experiment_start;
             
             % play the dots
-            responseTimeWithinEvent = DoDotMo( Cfg, iEventDirection, iEventSpeed, iEventDuration, iEventIsFixationTarget);
+            responseTimeWithinEvent = DoDotMo( Cfg, logFile.iEventDirection, logFile.iEventSpeed, iEventDuration, logFile.iEventIsFixationTarget);
             
             %% logfile for responses
             if ~isempty(responseTimeWithinEvent)
@@ -125,33 +125,30 @@ try
             end
             
             %% Event End and Duration
-            eventEnds(iBlock,iEventsPerBlock) = GetSecs-Cfg.Experiment_start;
-            eventDurations(iBlock,iEventsPerBlock) = eventEnds(iBlock,iEventsPerBlock) - eventOnsets(iBlock,iEventsPerBlock);
+            logFile.eventEnds(iBlock,iEventsPerBlock) = GetSecs-Cfg.Experiment_start;
+            logFile.eventDurations(iBlock,iEventsPerBlock) = logFile.eventEnds(iBlock,iEventsPerBlock) - logFile.eventOnsets(iBlock,iEventsPerBlock);
             
             % concatenate the new event responses with the old responses vector
-            allResponses = [allResponses responseTimeWithinEvent] ;
+            allResponses = [allResponses responseTimeWithinEvent] ; %#ok<AGROW>
             
             Screen('DrawLines', Cfg.win, Cfg.allCoords,ExpParameters.lineWidthPix, [255 255 255] , [Cfg.center(1) Cfg.center(2)], 1);
             Screen('Flip',Cfg.win);
             
             
-            %% Event txt_Logfile
-            fprintf(EventTxtLogFile,'%12.0f %12.0f %12.0f %18.0f %12.2f %12.5f %12.5f %12.5f \n',...
-                iBlock, ...
-                iEventsPerBlock, ...
-                iEventDirection, ...
-                iEventIsFixationTarget, ...
-                iEventSpeed, ...
-                eventOnsets(iBlock,iEventsPerBlock), ...
-                eventEnds(iBlock,iEventsPerBlock), ...
-                eventDurations(iBlock,iEventsPerBlock));
+            
+            
+            
+            % Save the events logfile
+            SaveOutput(logFile, ExpParameters, 'save Events')
+       
+            
             
             % wait for the inter-stimulus interval
             WaitSecs(ExpParameters.ISI);
         end
         
-        blockEnds(iBlock,1)= GetSecs-Cfg.Experiment_start;          % End of the block Time
-        blockDurations(iBlock,1)= blockEnds(iBlock,1) - blockOnsets(iBlock,1); % Block Duration
+        logFile.blockEnds(iBlock,1)= GetSecs-Cfg.Experiment_start;          % End of the block Time
+        logFile.blockDurations(iBlock,1)= logFile.blockEnds(iBlock,1) - logFile.blockOnsets(iBlock,1); % Block Duration
         
         %Screen('DrawTexture',Cfg.win,imagesTex.Event(1));
         Screen('DrawLines', Cfg.win, Cfg.allCoords,ExpParameters.lineWidthPix, [255 255 255] , [Cfg.center(1) Cfg.center(2)], 1);
@@ -163,9 +160,9 @@ try
         fprintf(BlockTxtLogFile,'%12.0f %12s %12f %12f %12f  \n',...
             iBlock, ...
             names{iBlock,1}, ...
-            blockOnsets(iBlock,1), ...
-            blockEnds(iBlock,1), ...
-            blockDurations(iBlock,1));
+            logFile.blockOnsets(iBlock,1), ...
+            logFile.blockEnds(iBlock,1), ...
+            logFile.blockDurations(iBlock,1));
         
     end
     
@@ -180,7 +177,7 @@ try
     fclose(ResponsesTxtLogFile);
     
     
-    TotalExperimentTime = GetSecs-Cfg.Experiment_start
+    TotalExperimentTime = GetSecs-Cfg.Experiment_start;
     
     %% Save mat log files
     save(fullfile('logfiles',[subjectName,'_all.mat']))
