@@ -34,29 +34,29 @@ try
     %% Init the experiment
     [Cfg] = InitPTB(Cfg);
     
-    [ExpParameters, Cfg]  = VisualDegree2Pixels(ExpParameters);
+    [ExpParameters, Cfg]  = VisualDegree2Pixels(ExpParameters, Cfg);
     
     % % % REFACTOR THIS FUNCTION
-    [ExpDesignParameters] = ExpDesign(Cfg);
+    [ExpDesignParameters] = ExpDesign(ExpParameters);
     % % %
     
     % Visual degree to pixels converter
     [ExpParameters, Cfg] = VisualDegree2Pixels(ExpParameters, Cfg);
     
-    % Prepare for the output logfiles
-    saveOutput(subjectName, Cfg, ExpParameters, 'open')
-    
     % Empty vectors and matrices for speed
-    blockNames     = cell(ExpParameters.numBlocks,1);
-    logFile.blockOnsets    = zeros(ExpParameters.numBlocks,1);
-    logFile.blockEnds      = zeros(ExpParameters.numBlocks,1);
-    logFile.blockDurations = zeros(ExpParameters.numBlocks,1);
+    % % %     blockNames     = cell(ExpParameters.numBlocks,1);
+    logFile.blockOnsets    = zeros(ExpParameters.numBlocks, 1);
+    logFile.blockEnds      = zeros(ExpParameters.numBlocks, 1);
+    logFile.blockDurations = zeros(ExpParameters.numBlocks, 1);
     
-    logFile.eventOnsets    = zeros(ExpParameters.numBlocks,ExpParameters.numEventsPerBlock);
-    logFile.eventEnds      = zeros(ExpParameters.numBlocks,ExpParameters.numEventsPerBlock);
-    logFile.eventDurations = zeros(ExpParameters.numBlocks,ExpParameters.numEventsPerBlock);
+    logFile.eventOnsets    = zeros(ExpParameters.numBlocks, ExpParameters.numEventsPerBlock);
+    logFile.eventEnds      = zeros(ExpParameters.numBlocks, ExpParameters.numEventsPerBlock);
+    logFile.eventDurations = zeros(ExpParameters.numBlocks, ExpParameters.numEventsPerBlock);
     
-    allResponses = [] ;
+    logFile.allResponses = [] ;
+    
+    % Prepare for the output logfiles
+    SaveOutput(subjectName, logFile, ExpParameters, ExpDesignParameters, 'open')
     
     % % % PUT IT RIGHT BEFORE STARTING THE EXPERIMENT
     % Show instructions
@@ -69,9 +69,9 @@ try
     
     % Prepare for fixation Cross
     if ExpParameters.Task1
-        xCoords = [-ExpParameters.fixCrossDimPix ExpParameters.fixCrossDimPix 0 0] + ExpParameters.xDisplacementFixCross;
-        yCoords = [0 0 -ExpParameters.fixCrossDimPix ExpParameters.fixCrossDimPix] + ExpParameters.yDisplacementFixCross;
-        Cfg.allCoords = [xCoords; yCoords];
+        Cfg.xCoords = [-ExpParameters.fixCrossDimPix ExpParameters.fixCrossDimPix 0 0] + ExpParameters.xDisplacementFixCross;
+        Cfg.yCoords = [0 0 -ExpParameters.fixCrossDimPix ExpParameters.fixCrossDimPix] + ExpParameters.yDisplacementFixCross;
+        Cfg.allCoords = [Cfg.xCoords; Cfg.yCoords];
     end
     
     % Wait for space key to be pressed
@@ -83,7 +83,7 @@ try
     % Show the fixation cross
     if ExpParameters.Task1
         Screen('DrawLines', Cfg.win, Cfg.allCoords,ExpParameters.lineWidthPix, ...
-            [255 255 255] , [Cfg.center(1) Cfg.center(2)], 1);
+            Cfg.White , [Cfg.center(1) Cfg.center(2)], 1);
         Screen('Flip',Cfg.win);
     end
     
@@ -104,14 +104,19 @@ try
             
             logFile.iEventDirection = ExpDesignParameters.directions(iBlock,iEventsPerBlock);       % Direction of that event
             logFile.iEventSpeed = ExpDesignParameters.speeds(iBlock,iEventsPerBlock);               % Speed of that event
+            % % % CAN IT BE PUT ON A STRUCT? IT IS ONLY A NUMBER NEEDED IN
+            % DODOTMO
             iEventDuration = ExpParameters.eventDuration ;                        % Duration of normal events
+            % % %
             logFile.iEventIsFixationTarget = ExpDesignParameters.fixationTargets(iBlock,iEventsPerBlock);
             
             % Event Onset
             logFile.eventOnsets(iBlock,iEventsPerBlock) = GetSecs-Cfg.Experiment_start;
             
+            % % % REFACTORE
             % play the dots
             responseTimeWithinEvent = DoDotMo( Cfg, logFile.iEventDirection, logFile.iEventSpeed, iEventDuration, logFile.iEventIsFixationTarget);
+            % % %
             
             %% logfile for responses
             if ~isempty(responseTimeWithinEvent)
@@ -123,18 +128,20 @@ try
             logFile.eventDurations(iBlock,iEventsPerBlock) = logFile.eventEnds(iBlock,iEventsPerBlock) - logFile.eventOnsets(iBlock,iEventsPerBlock);
             
             % concatenate the new event responses with the old responses vector
-            allResponses = [allResponses responseTimeWithinEvent] ; %#ok<AGROW>
+            logFile.allResponses = [logFile.allResponses responseTimeWithinEvent];
             
-            Screen('DrawLines', Cfg.win, Cfg.allCoords,ExpParameters.lineWidthPix, [255 255 255] , [Cfg.center(1) Cfg.center(2)], 1);
+            Screen('DrawLines', Cfg.win, Cfg.allCoords,ExpParameters.lineWidthPix, ...
+                Cfg.White , [Cfg.center(1) Cfg.center(2)], 1);
             Screen('Flip',Cfg.win);
             
             
             
             
-            
+            % % % NEED TO ASSIGN THE TXT VARIABLE IN A STRUCTURE
             % Save the events txt logfile
-            SaveOutput(logFile, ExpDesignParameters, 'save Events')
-       
+            SaveOutput(subjectName, logFile, ExpParameters, ExpDesignParameters, ...
+                'save Events', iBlock, iEventsPerBlock)
+            % % %
             
             
             % wait for the inter-stimulus interval
@@ -145,17 +152,26 @@ try
         logFile.blockDurations(iBlock,1)= logFile.blockEnds(iBlock,1) - logFile.blockOnsets(iBlock,1); % Block Duration
         
         %Screen('DrawTexture',Cfg.win,imagesTex.Event(1));
-        Screen('DrawLines', Cfg.win, Cfg.allCoords,ExpParameters.lineWidthPix, [255 255 255] , [Cfg.center(1) Cfg.center(2)], 1);
+        Screen('DrawLines', Cfg.win, Cfg.allCoords,ExpParameters.lineWidthPix, ...
+            Cfg.White , [Cfg.center(1) Cfg.center(2)], 1);
         Screen('Flip',Cfg.win);
         
-        WaitSecs(ExpParameters.IBI)
+        WaitSecs(ExpParameters.IBI);
         
+        % % % NEED TO ASSIGN THE TXT VARIABLE IN A STRUCTURE
         % Save the block txt Logfile
-        SaveOutput(logFile, ExpDesignParameters, 'save Blocks')
-
+        SaveOutput(subjectName, logFile, ExpParameters, ExpDesignParameters, ...
+            'save Blocks', iBlock, iEventsPerBlock)        
+        % % %
+        
     end
     
+    % % % HERE needed for saving single vars, is it needed?
     blockNames = ExpDesignParameters.blockNames ;
+    blockDurations = logFile.blockDurations;
+    blockOnsets = logFile.blockOnsets;
+    
+    % % %
     
     % End of the run for the BOLD to go down
     WaitSecs(ExpParameters.endDelay);
@@ -171,22 +187,23 @@ try
     %% Save mat log files
     save(fullfile('logfiles',[subjectName,'_all.mat']))
     
+    % % % CANNOT FIND THE VAR BLOCKDURATION
     save(fullfile('logfiles',[subjectName,'.mat']),...
         'Cfg', ...
         'allResponses', ...
         'blockDurations', ...
         'blockNames', ...
         'blockOnsets')
-    
+    % % %
     
     % Close the screen
     sca
-    clear Screen;
+%     clear Screen;
     
 catch
     % if code crashes, closes serial port and screen
     sca
-    clear Screen;
-    error(lasterror) % show default error
+    %     clear Screen;
+    error(lasterror) %#ok<LERR> % show default error
 end
 

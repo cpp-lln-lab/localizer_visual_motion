@@ -1,13 +1,12 @@
-function responseTimeWithinEvent = DoDotMo(Cfg, direction, dotSpeed, duration, eventIsFixationTarget)
-%DODOTMO This function draws a specific type of dots
-%   Detailed explanation goes here
-%duration = Cfg.eventDuration;
-dontclear = Cfg.dontclear;
-% Dot stuff    
-coh = Cfg.coh;
-%speed = Cfg.speed;
-%direction = Cfg.direction;    
-dotSize = Cfg.dotSize;
+function responseTimeWithinEvent = DoDotMo(Cfg, ExpParameters, direction, dotSpeed, duration, eventIsFixationTarget)
+
+% % %DODOTMO This function draws a specific type of dots
+% % %   Detailed explanation goes here
+% % %duration = Cfg.eventDuration;
+
+% % % Dot stuff    
+% % %speed = Cfg.speed;
+% % %direction = Cfg.direction;    
 dotLifeTime = Cfg.dotLifeTime; 
 maxDotsPerFrame = Cfg.maxDotsPerFrame; 
 Experiment_start = Cfg.Experiment_start ;
@@ -69,7 +68,7 @@ while continue_show
     end
     % Compute new locations
     % L are the dots that will be moved
-    L = rand(ndots,1) < coh;                
+    L = rand(ndots,1) < ExpParameters.coh;                
     this_s(L,:) = this_s(L,:) + dxdy(L,:);	% Offset the selected dots
 
     if sum(~L) > 0  % if not 100% coherence
@@ -110,7 +109,7 @@ while continue_show
         dot_show = (this_x(:,1:2) - Cfg.d_ppd/2)';
 
         % Now do next drawing commands
-        %Screen('DrawDots', Cfg.win, dot_show, dotSize, dotColor, Cfg.center,2);   %if you want to change location change Cfg.center        
+        %Screen('DrawDots', Cfg.win, dot_show, ExpParameters.dotSize_ppd, dotColor, Cfg.center,2);   %if you want to change location change Cfg.center        
         %Screen('DrawLines', Cfg.win, Cfg.allCoords,Cfg.lineWidthPix, Cfg.fixationCross_color , [Cfg.center(1) Cfg.center(2)], 1);   
         if GetSecs < (movieStartTime+fixationChangeDuration) && eventIsFixationTarget==1
             Screen('DrawLines', w, Cfg.allCoords,Cfg.lineWidthPix, [255 0 0] , [Cfg.center(1) Cfg.center(2)], 1);  % Draw the fixation cross
@@ -120,14 +119,14 @@ while continue_show
         
         % NaN out-of-circle dots  
         xyDis = dot_show;
-        outCircle = sqrt(xyDis(1,:).^2 + xyDis(2,:).^2) + dotSize/2 > (Cfg.d_ppd/2);        
+        outCircle = sqrt(xyDis(1,:).^2 + xyDis(2,:).^2) + ExpParameters.dotSize_ppd/2 > (Cfg.d_ppd/2);        
         dots2Display = dot_show;
         dots2Display(:,outCircle) = NaN;
         
-        Screen('DrawDots',w,dots2Display,dotSize,dotColor,Cfg.center,2);
+        Screen('DrawDots',w,dots2Display,ExpParameters.dotSize_ppd,dotColor,Cfg.center,2);
         
-        Screen('DrawingFinished',w,dontclear);       
-        Screen('Flip', w,0,dontclear);
+        Screen('DrawingFinished',w,ExpParameters.dontclear);       
+        Screen('Flip', w,0,ExpParameters.dontclear);
 
         % Update the arrays so xor works next time
         xs(Lthis, :) = this_x;
@@ -163,11 +162,11 @@ responseTimeWithinEvent = responseTimeWithinEvent(responseTimeWithinEvent~=0);
 
 %% Present last dots
 %Screen('DrawLines', w, Cfg.allCoords,Cfg.lineWidthPix, [255 255 255] , [Cfg.center(1) Cfg.center(2)], 1);  % Draw the fixation cross
-%Screen('Flip', w,0,dontclear);
+%Screen('Flip', w,0,ExpParameters.dontclear);
 
 %Erase last dots
 Screen('DrawLines', w, Cfg.allCoords,Cfg.lineWidthPix, Cfg.fixationCross_color , [Cfg.center(1) Cfg.center(2)], 1);   
-Screen('DrawingFinished',w,dontclear);
-Screen('Flip', w,0,dontclear);
+Screen('DrawingFinished',w,ExpParameters.dontclear);
+Screen('Flip', w,0,ExpParameters.dontclear);
 
 
