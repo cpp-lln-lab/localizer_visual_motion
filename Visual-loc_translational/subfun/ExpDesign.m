@@ -1,4 +1,4 @@
-function [speeds,fixationTargets,ExpDesignParameters] = ExpDesign(ExpParameters)
+function [ExpDesignParameters] = ExpDesign(ExpParameters)
 
 % Initialize the structure
 ExpDesignParameters = struct;
@@ -8,12 +8,11 @@ displayFigs = 0;
 
 % Set variables here for a dummy test of this function
 if nargin<1
-    ExpParameters.names              = {'static','motion'};
-    ExpParameters.numRepetitions         = 1;
-    ExpParameters.speedEvent             = 4;
-    ExpParameters.numEventsPerBlock      = 12;
+    ExpParameters.names             = {'static','motion'};
+    ExpParameters.numRepetitions    = 1;
+    ExpParameters.speedEvent        = 4;
+    ExpParameters.numEventsPerBlock = 12;
 end
-
 
 range_targets = [1 ExpParameters.maxNumFixationTargetPerBlock];
 
@@ -105,7 +104,7 @@ end
 
 
 
-
+if displayFigs
 %% Visualize the design matrix
 % uniqueNames = unique(ExpDesignParameters.blockNames) ;
 %
@@ -117,3 +116,4 @@ end
 %
 % imagesc(Ind)
 % set(gca,'XTick',1:length(unique(ExpDesignParameters.blockNames')),'XTickLabel',unique(ExpDesignParameters.blockNames'))
+end

@@ -35,7 +35,7 @@ Cfg.TextStyle        = 1;
 %% Experiment Design
 ExpParameters.names              = {'static','motion'};
 ExpParameters.possibleDirections = [-1 1]; % 1 motion , -1 static
-ExpParameters.numBlocks          = size(ExpParameters.possibleDirections,1);
+ExpParameters.numBlocks          = size(ExpParameters.possibleDirections,2);
 ExpParameters.numRepetitions     = 1;      %AT THE MOMENT IT IS NOT SET IN THE MAIN SCRIPT
 ExpParameters.IBI                = 8;      
 ExpParameters.ISI                = 0.1;    % Time between events in secs

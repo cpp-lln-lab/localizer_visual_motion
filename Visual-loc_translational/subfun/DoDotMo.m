@@ -1,37 +1,41 @@
-function responseTimeWithinEvent = DoDotMo(Cfg, direction, dotSpeed, duration, eventIsFixationTarget)
+function responseTimeWithinEvent = DoDotMo(Cfg, ExpParameters, logFile, duration)
 %DODOTMO This function draws a specific type of dots
 %   Detailed explanation goes here
 %duration = Cfg.eventDuration;
-dontclear = Cfg.dontclear;
+dontclear = ExpParameters.dontclear;
 % Dot stuff    
-coh = Cfg.coh;
+coh = ExpParameters.coh;
 %speed = Cfg.speed;
 %direction = Cfg.direction;    
-dotSize = Cfg.dotSize;
-dotLifeTime = Cfg.dotLifeTime; 
-maxDotsPerFrame = Cfg.maxDotsPerFrame; 
+dotSize = ExpParameters.dotSize_ppd;
+dotLifeTime = ExpParameters.dotLifeTime; 
+maxDotsPerFrame = ExpParameters.maxDotsPerFrame; 
 Experiment_start = Cfg.Experiment_start ;
 %maxDotsPerFrame = maxDotsPerFrame*3 ;
+
+direction = logFile.iEventDirection;
+dotSpeed = logFile.iEventSpeed;
+eventIsFixationTarget = logFile.iEventIsFixationTarget;
 
 if direction == -1
     dotSpeed = 0;
     dotLifeTime = duration;
 end
 
-dotColor = Cfg.dotColor ;
+dotColor = ExpParameters.dotColor ;
 %t_duration = Cfg.t_duration ;
-fixationChangeDuration = Cfg.fixationChangeDuration;
+fixationChangeDuration = ExpParameters.fixationChangeDuration;
 
 responseTimeWithinEvent = [];
 
 w = Cfg.win;
 
 
-ndots = min(maxDotsPerFrame, ceil( Cfg.d_ppd .* Cfg.d_ppd  / Cfg.monRefresh));
+ndots = min(maxDotsPerFrame, ceil( Cfg.diameter_aperture_ppd .* Cfg.diameter_aperture_ppd  / Cfg.monRefresh));
 
 % dxdy is an N x 2 matrix that gives jumpsize in units on 0..1
 %   deg/sec * Ap-unit/deg * sec/jump = unit/jump
-dxdy = repmat(dotSpeed * 10/(Cfg.apD*10) * (3/Cfg.monRefresh) ...
+dxdy = repmat(dotSpeed * 10/(Cfg.diameter_aperture*10) * (3/Cfg.monRefresh) ...
     * [cos(pi*direction/180.0) -sin(pi*direction/180.0)], ndots,1);
 
 % ARRAYS, INDICES for loop
@@ -102,25 +106,25 @@ while continue_show
         dotTime = dotTime + 1; 
 
         % Convert to stuff we can actually plot
-        this_x(:,1:2) = floor(Cfg.d_ppd(1) * this_s); % pix/ApUnit
+        this_x(:,1:2) = floor(Cfg.diameter_aperture_ppd(1) * this_s); % pix/ApUnit
 
         % This assumes that zero is at the top left, but we want it to be in the 
         % center, so shift the dots up and left, which just means adding half of 
         % the aperture size to both the x and y direction.
-        dot_show = (this_x(:,1:2) - Cfg.d_ppd/2)';
+        dot_show = (this_x(:,1:2) - Cfg.diameter_aperture_ppd/2)';
 
         % Now do next drawing commands
         %Screen('DrawDots', Cfg.win, dot_show, dotSize, dotColor, Cfg.center,2);   %if you want to change location change Cfg.center        
         %Screen('DrawLines', Cfg.win, Cfg.allCoords,Cfg.lineWidthPix, Cfg.fixationCross_color , [Cfg.center(1) Cfg.center(2)], 1);   
         if GetSecs < (movieStartTime+fixationChangeDuration) && eventIsFixationTarget==1
-            Screen('DrawLines', w, Cfg.allCoords,Cfg.lineWidthPix, [255 0 0] , [Cfg.center(1) Cfg.center(2)], 1);  % Draw the fixation cross
+            Screen('DrawLines', w, Cfg.allCoords,ExpParameters.lineWidthPix, [255 0 0] , [Cfg.center(1) Cfg.center(2)], 1);  % Draw the fixation cross
         else
-            Screen('DrawLines', w, Cfg.allCoords,Cfg.lineWidthPix, [255 255 255] , [Cfg.center(1) Cfg.center(2)], 1);  % Draw the fixation cross
+            Screen('DrawLines', w, Cfg.allCoords,ExpParameters.lineWidthPix, [255 255 255] , [Cfg.center(1) Cfg.center(2)], 1);  % Draw the fixation cross
         end
         
         % NaN out-of-circle dots  
         xyDis = dot_show;
-        outCircle = sqrt(xyDis(1,:).^2 + xyDis(2,:).^2) + dotSize/2 > (Cfg.d_ppd/2);        
+        outCircle = sqrt(xyDis(1,:).^2 + xyDis(2,:).^2) + dotSize/2 > (Cfg.diameter_aperture_ppd/2);        
         dots2Display = dot_show;
         dots2Display(:,outCircle) = NaN;
         
@@ -137,7 +141,7 @@ while continue_show
         continue_show = continue_show - 1;
         
     %% response collection
-    if strcmp(Cfg.device,'PC')
+    if strcmp(Cfg.Device,'PC')
         [KeyIsDown,PressedSecs,~] = KbCheck(-1);
         if KeyIsDown
             %response_key_Dots(end+1)= 1 ;
@@ -166,7 +170,7 @@ responseTimeWithinEvent = responseTimeWithinEvent(responseTimeWithinEvent~=0);
 %Screen('Flip', w,0,dontclear);
 
 %Erase last dots
-Screen('DrawLines', w, Cfg.allCoords,Cfg.lineWidthPix, Cfg.fixationCross_color , [Cfg.center(1) Cfg.center(2)], 1);   
+Screen('DrawLines', w, Cfg.allCoords,ExpParameters.lineWidthPix, ExpParameters.fixationCross_color , [Cfg.center(1) Cfg.center(2)], 1);   
 Screen('DrawingFinished',w,dontclear);
 Screen('Flip', w,0,dontclear);
 
