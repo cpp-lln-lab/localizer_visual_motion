@@ -1,4 +1,4 @@
-function SaveOutput(subjectName, logFile, ExpParameters, ExpDesignParameters, input, varargin)
+function [ logFile ] = SaveOutput(subjectName, logFile, ExpParameters, ExpDesignParameters, input, varargin)
 
 if nargin >5
     iBlock = varargin{1};

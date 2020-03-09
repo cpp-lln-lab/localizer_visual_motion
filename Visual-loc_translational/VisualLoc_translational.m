@@ -56,7 +56,7 @@ try
     logFile.allResponses = [] ;
     
     % Prepare for the output logfiles
-    SaveOutput(subjectName, logFile, ExpParameters, ExpDesignParameters, 'open')
+    logFile = SaveOutput(subjectName, logFile, ExpParameters, ExpDesignParameters, 'open');
     
     % % % PUT IT RIGHT BEFORE STARTING THE EXPERIMENT
     % Show instructions
@@ -115,7 +115,7 @@ try
             
             % % % REFACTORE
             % play the dots
-            responseTimeWithinEvent = DoDotMo( Cfg, logFile.iEventDirection, logFile.iEventSpeed, iEventDuration, logFile.iEventIsFixationTarget);
+            responseTimeWithinEvent = DoDotMo( Cfg, ExpParameters, logFile, iEventDuration);
             % % %
             
             %% logfile for responses
@@ -139,7 +139,7 @@ try
             
             % % % NEED TO ASSIGN THE TXT VARIABLE IN A STRUCTURE
             % Save the events txt logfile
-            SaveOutput(subjectName, logFile, ExpParameters, ExpDesignParameters, ...
+            logFile = SaveOutput(subjectName, logFile, ExpParameters, ExpDesignParameters, ...
                 'save Events', iBlock, iEventsPerBlock)
             % % %
             
@@ -160,8 +160,8 @@ try
         
         % % % NEED TO ASSIGN THE TXT VARIABLE IN A STRUCTURE
         % Save the block txt Logfile
-        SaveOutput(subjectName, logFile, ExpParameters, ExpDesignParameters, ...
-            'save Blocks', iBlock, iEventsPerBlock)        
+        logFile = SaveOutput(subjectName, logFile, ExpParameters, ExpDesignParameters, ...
+            'save Blocks', iBlock, iEventsPerBlock)
         % % %
         
     end
@@ -198,7 +198,7 @@ try
     
     % Close the screen
     sca
-%     clear Screen;
+    %     clear Screen;
     
 catch
     % if code crashes, closes serial port and screen
