@@ -199,10 +199,14 @@ try
     % Close the screen
     sca
     %     clear Screen;
+    % Restore keyboard output to Matlab:
+    ListenChar(0);
     
 catch
     % if code crashes, closes serial port and screen
     sca
+    % Restore keyboard output to Matlab:
+    ListenChar(0);
     %     clear Screen;
     error(lasterror) %#ok<LERR> % show default error
 end
