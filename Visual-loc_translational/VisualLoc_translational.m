@@ -36,6 +36,10 @@ try
     
     [ExpParameters, Cfg]  = VisualDegree2Pixels(ExpParameters, Cfg);
     
+    if Cfg.EyeTracker
+    [el] = EyeTracker(Cfg, ExpParameters, subjectName, sessionNumber, runNumber, 'Calibration');
+    end
+    
     % % % REFACTOR THIS FUNCTION
     [ExpDesignParameters] = ExpDesign(ExpParameters);
     % % %
@@ -99,9 +103,14 @@ try
         
         logFile.blockOnsets(iBlock,1)= GetSecs-Cfg.Experiment_start;
         
+        if Cfg.EyeTracker
+        [el] = EyeTracker(Cfg, ExpParameters, subjectName, sessionNumber, runNumber, 'StartRecording');
+        end
+        
         % For each event in the block
         for iEventsPerBlock = 1:ExpParameters.numEventsPerBlock
             
+
             logFile.iEventDirection = ExpDesignParameters.directions(iBlock,iEventsPerBlock);       % Direction of that event
             logFile.iEventSpeed = ExpDesignParameters.speeds(iBlock,iEventsPerBlock);               % Speed of that event
             % % % CAN IT BE PUT ON A STRUCT? IT IS ONLY A NUMBER NEEDED IN
@@ -146,6 +155,10 @@ try
             
             % wait for the inter-stimulus interval
             WaitSecs(ExpParameters.ISI);
+        end
+        
+        if Cfg.EyeTracker
+        [el] = EyeTracker(Cfg, ExpParameters, subjectName, sessionNumber, runNumber, 'StopRecordings');
         end
         
         logFile.blockEnds(iBlock,1)= GetSecs-Cfg.Experiment_start;          % End of the block Time
@@ -195,6 +208,10 @@ try
         'blockNames', ...
         'blockOnsets')
     % % %
+    
+    if Cfg.EyeTracker
+    [el] = EyeTracker(Cfg, ExpParameters, subjectName, sessionNumber, runNumber, 'Shutdown');
+    end
     
     % Close the screen
     sca

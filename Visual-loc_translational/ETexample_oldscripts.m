@@ -2,7 +2,7 @@ if strcmp(GlobalET, 'y') && strcmp(GlobalCali, 'y')
     
     % Eyelink
     
-    status = Eyelink('IsConnected')
+    status = Eyelink('IsConnected');
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     fileEdf = ['eye_ExpID', num2str(GlobalExperimentID), '_RunID' num2str(GlobalRunID), '_SubID', num2str(GlobalSubjectID),'.edf'];
@@ -135,8 +135,8 @@ elseif strcmp(GlobalET, 'y') && strcmp(GlobalCali, 'n')
     Eyelink('Openfile', edfFile);
 end
 
-for
-    
+for i = 1:1
+     
     if strcmp(GlobalET, 'y')
         % Eyelink
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
