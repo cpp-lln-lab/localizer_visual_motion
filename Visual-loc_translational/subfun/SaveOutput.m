@@ -1,6 +1,6 @@
 function [ logFile ] = SaveOutput(subjectName, logFile, ExpParameters, ExpDesignParameters, input, varargin)
 
-if nargin >5
+if nargin > 5
     iBlock = varargin{1};
     iEventsPerBlock = varargin{2};
 end
