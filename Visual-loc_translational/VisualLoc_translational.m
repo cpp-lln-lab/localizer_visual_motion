@@ -37,7 +37,7 @@ try
     [ExpParameters, Cfg]  = VisualDegree2Pixels(ExpParameters, Cfg);
     
     if Cfg.EyeTracker
-    [el] = EyeTracker(Cfg, ExpParameters, subjectName, sessionNumber, runNumber, 'Calibration');
+        [el] = EyeTracker(Cfg, ExpParameters, subjectName, sessionNumber, runNumber, 'Calibration');
     end
     
     % % % REFACTOR THIS FUNCTION
@@ -104,13 +104,13 @@ try
         logFile.blockOnsets(iBlock,1)= GetSecs-Cfg.Experiment_start;
         
         if Cfg.EyeTracker
-        [el] = EyeTracker(Cfg, ExpParameters, subjectName, sessionNumber, runNumber, 'StartRecording');
+            [el] = EyeTracker(Cfg, ExpParameters, subjectName, sessionNumber, runNumber, 'StartRecording');
         end
         
         % For each event in the block
         for iEventsPerBlock = 1:ExpParameters.numEventsPerBlock
             
-
+            
             logFile.iEventDirection = ExpDesignParameters.directions(iBlock,iEventsPerBlock);       % Direction of that event
             logFile.iEventSpeed = ExpDesignParameters.speeds(iBlock,iEventsPerBlock);               % Speed of that event
             % % % CAN IT BE PUT ON A STRUCT? IT IS ONLY A NUMBER NEEDED IN
@@ -146,11 +146,9 @@ try
             
             
             
-            % % % NEED TO ASSIGN THE TXT VARIABLE IN A STRUCTURE
             % Save the events txt logfile
             logFile = SaveOutput(subjectName, logFile, ExpParameters, ExpDesignParameters, ...
-                'save Events', iBlock, iEventsPerBlock)
-            % % %
+                'save Events', iBlock, iEventsPerBlock);
             
             
             % wait for the inter-stimulus interval
@@ -158,7 +156,7 @@ try
         end
         
         if Cfg.EyeTracker
-        [el] = EyeTracker(Cfg, ExpParameters, subjectName, sessionNumber, runNumber, 'StopRecordings');
+            [el] = EyeTracker(Cfg, ExpParameters, subjectName, sessionNumber, runNumber, 'StopRecordings');
         end
         
         logFile.blockEnds(iBlock,1)= GetSecs-Cfg.Experiment_start;          % End of the block Time
@@ -174,7 +172,7 @@ try
         % % % NEED TO ASSIGN THE TXT VARIABLE IN A STRUCTURE
         % Save the block txt Logfile
         logFile = SaveOutput(subjectName, logFile, ExpParameters, ExpDesignParameters, ...
-            'save Blocks', iBlock, iEventsPerBlock)
+            'save Blocks', iBlock, iEventsPerBlock);
         % % %
         
     end
@@ -189,28 +187,28 @@ try
     % End of the run for the BOLD to go down
     WaitSecs(ExpParameters.endDelay);
     
-    % close txt log files
-    fclose(BlockTxtLogFile);
-    fclose(EventTxtLogFile);
-    fclose(ResponsesTxtLogFile);
+    % Close the logfiles
+    logFile = SaveOutput(subjectName, logFile, ExpParameters, ExpDesignParameters, ...
+        'close');
     
     
     TotalExperimentTime = GetSecs-Cfg.Experiment_start;
     
     %% Save mat log files
+    % % % ADD SESSION AND RUN NUMBER
     save(fullfile('logfiles',[subjectName,'_all.mat']))
     
-    % % % CANNOT FIND THE VAR BLOCKDURATION
-    save(fullfile('logfiles',[subjectName,'.mat']),...
-        'Cfg', ...
-        'allResponses', ...
-        'blockDurations', ...
-        'blockNames', ...
-        'blockOnsets')
-    % % %
+    % % %     % % % CANNOT FIND THE VAR BLOCKDURATION
+    % % %     save(fullfile('logfiles',[subjectName,'.mat']),...
+    % % %         'Cfg', ...
+    % % %         'allResponses', ...
+    % % %         'blockDurations', ...
+    % % %         'blockNames', ...
+    % % %         'blockOnsets')
+    % % %     % % %
     
     if Cfg.EyeTracker
-    [el] = EyeTracker(Cfg, ExpParameters, subjectName, sessionNumber, runNumber, 'Shutdown');
+        [el] = EyeTracker(Cfg, ExpParameters, subjectName, sessionNumber, runNumber, 'Shutdown');
     end
     
     % Close the screen

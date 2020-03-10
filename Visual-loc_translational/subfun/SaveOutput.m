@@ -14,7 +14,7 @@ switch input
         end
         
         % Initialize txt logfiles
-        % % % ADD SESSION AND RUN NUMBER      
+        % % % ADD SESSION AND RUN NUMBER
         logFile.EventTxtLogFile = fopen(fullfile('logfiles',[subjectName,'_Events.txt']),'w');
         fprintf(logFile.EventTxtLogFile,'%12s %12s %12s %18s %12s %12s %12s %12s \n', ...
             'BlockNumber', ...
@@ -62,5 +62,14 @@ switch input
             logFile.blockOnsets(iBlock,1), ...
             logFile.blockEnds(iBlock,1), ...
             logFile.blockDurations(iBlock,1));
+        
+    case 'save Responses'
+        
+    case 'close'
+        
+        % close txt log files
+        fclose(logFile.BlockTxtLogFile);
+        fclose(logFile.EventTxtLogFile);
+        fclose(logFile.ResponsesTxtLogFile);
         
 end

@@ -3,10 +3,12 @@ function [ExpParameters, Cfg] = SetParameters
 ExpParameters = struct; % Initialize the parameters variables
 Cfg           = struct; % Initialize the general configuration variables
 
+ExpParameters.task = 'VisualLoc';
+
 %% Debug mode settings
 Cfg.Debug               = true;  % To test the script out of the scanner, skyp PTB sync
 Cfg.TestingSmallScreen  = false; % To test on a part of the screen, change to 1
-Cfg.TestingTranspScreen = true;  % To test with trasparent full size screen 
+Cfg.TestingTranspScreen = false;  % To test with trasparent full size screen 
 Cfg.Device              = 'PC';  % 'PC': does not care about trigger - 'Scanner'
 Cfg.stim_position       = 'PC';  % 'Scanner': means that it removes the lower 1/3 of the screen (the coil hides the lower part of the screen)
 Cfg.EyeTracker          = false; % Set to 'true' if you are testing in MRI and want to record ET data
@@ -34,7 +36,6 @@ Cfg.TextSize         = 18;
 Cfg.TextStyle        = 1;
 
 %% Experiment Design
-ExpParameters.task               = 'VisualLoc';
 ExpParameters.names              = {'static','motion'};
 ExpParameters.possibleDirections = [-1 1]; % 1 motion , -1 static
 ExpParameters.numBlocks          = size(ExpParameters.possibleDirections,2);
