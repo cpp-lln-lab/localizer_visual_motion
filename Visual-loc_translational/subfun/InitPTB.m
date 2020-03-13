@@ -50,6 +50,9 @@ else
     
 end
 
+% Retrieve window size info
+[Cfg.winWidth, Cfg.winHeight] = WindowSize(Cfg.win);
+
 % Set priority for script execution to realtime priority:
 Priority(MaxPriority(Cfg.win));
 
