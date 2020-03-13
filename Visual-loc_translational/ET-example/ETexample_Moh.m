@@ -1,13 +1,26 @@
+%% EYE TRACKER
+GlobalET=input('Eye Tracker? (y/n)', 's');
+if strcmp(GlobalET, 'y')
+	GlobalCali=input('Calibration? (y/n)', 's');
+	
+	if strcmp(GlobalCali, 'y')
+		GlobalCustomCali=input('Custom Calibration? (y/n)', 's');
+	end
+end
+
+
+%% EYE TRACKER INITIATION
+
 if strcmp(GlobalET, 'y') && strcmp(GlobalCali, 'y')
-    
-    %% Init the EyeTracker with default calibration
-    
+	
     % Eyelink
     
     status = Eyelink('IsConnected');
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    fileEdf = ['eye_ExpID', num2str(GlobalExperimentID), '_RunID' num2str(GlobalRunID), '_SubID', num2str(GlobalSubjectID),'.edf'];
+    %fileEdf = ['eye_ExpID', num2str(GlobalExperimentID), '_RunID' num2str(GlobalRunID), '_SubID', num2str(GlobalSubjectID),'.edf'];
+    fileEdf = ['eyeTrackerData_', sub_name,'_Run_',RunNumber,'.edf'];
+    
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
     
@@ -59,7 +72,7 @@ if strcmp(GlobalET, 'y') && strcmp(GlobalCali, 'y')
     % Initialization of the connection with the Eyelink Gazetracker.
     % exit program if this fails.
     if ~EyelinkInit(dummymode, 1)
-        fprintf('Eyelink Init aborted.\n');
+    	fprintf('Eyelink Init aborted.\n');
         cleanup;  % cleanup function
         return;
     end
@@ -89,12 +102,14 @@ if strcmp(GlobalET, 'y') && strcmp(GlobalCali, 'y')
     % set calibration type.
     
     if strcmp(GlobalCustomCali, 'n')
-        Eyelink('command', 'calibration_type = HV5');
+    	Eyelink('command', 'calibration_type = HV5');
         % you must send this command with value NO for custom calibration
         % you must also reset it to YES for subsequent experiments
         Eyelink('command', 'generate_default_targets = YES');
+        %%%%%% WE WILL NOT USE THAT
+        %%%%%% , TRENTO 2/3
     else
-        Eyelink('command', 'calibration_type = HV5');
+    	Eyelink('command', 'calibration_type = HV5');
         % you must send this command with value NO for custom calibration
         % you must also reset it to YES for subsequent experiments
         Eyelink('command', 'generate_default_targets = NO');
@@ -106,12 +121,12 @@ if strcmp(GlobalET, 'y') && strcmp(GlobalCali, 'y')
         Eyelink('command','calibration_samples = 6');
         Eyelink('command','calibration_sequence = 0,1,2,3,4,5');
         Eyelink('command','calibration_targets = %d,%d %d,%d %d,%d %d,%d %d,%d',...
-            640,512, 640,102, 640,614, 128,341, 1152,341 );
+        	640,512, 640,102, 640,614, 128,341, 1152,341 );
         %width/2,height/2,  width/2,height*0.1,  width/2,height*0.6,  width*0.1,height*1/3, width-width*0.1,height*1/3 );
         Eyelink('command','validation_samples = 5');
         Eyelink('command','validation_sequence = 0,1,2,3,4,5');
         Eyelink('command','validation_targets = %d,%d %d,%d %d,%d %d,%d %d,%d',...
-            640,512, 640,102, 640,614, 128,341, 1152,341 );
+        	640,512, 640,102, 640,614, 128,341, 1152,341 );
         %width/2,height/2,  width/2,height*0.1,  width/2,height*0.6,  width*0.1,height*1/3, width-width*0.1,height*1/3 );
     end
     % set EDF file contents
@@ -131,15 +146,18 @@ elseif strcmp(GlobalET, 'y') && strcmp(GlobalCali, 'n')
     status = Eyelink('Initialize')
     status = Eyelink('IsConnected')
     
-    fileEdf = ['eye_ExpID', num2str(GlobalExperimentID), '_RunID' num2str(GlobalRunID), '_SubID', num2str(GlobalSubjectID),'.edf'];
+    %fileEdf = ['eye_ExpID', num2str(GlobalExperimentID), '_RunID' num2str(GlobalRunID), '_SubID', num2str(GlobalSubjectID),'.edf'];
+    fileEdf = ['eyeTrackerData_', sub_name,'_Run_',RunNumber,'.edf'];
+    
     % open file to record data to
     edfFile='demo.edf';
     Eyelink('Openfile', edfFile);
 end
 
-for i = 1:1
-     
-    if strcmp(GlobalET, 'y')
+
+
+%% EyeLink Start recording the block
+if strcmp(GlobalET, 'y')
         % Eyelink
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %if Eyelink('CheckRecording');
@@ -149,7 +167,8 @@ for i = 1:1
         %Eyelink('message',['TRIALID ',num2str(blocks),'_startTrial']);
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     end
-    
+
+    %% EyeLink STOP RECORDING THE BLOCK
     if strcmp(GlobalET, 'y')
         % Eyelink
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -163,14 +182,41 @@ for i = 1:1
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     end
     
-end
+    %% EYELINK - START RECORDING THE IBI
+    
+    if strcmp(GlobalET, 'y')
+        % Eyelink
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %if Eyelink('CheckRecording');
+        Eyelink('StartRecording');
+        %end
+        
+        %Eyelink('message',['TRIALID ',num2str(blocks),'_startTrial']);
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    end
 
-if strcmp(GlobalET, 'y')
+    %% EYELINK - STOP RECORDING THE IBI
+    if strcmp(GlobalET, 'y')
+        % Eyelink
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %Eyelink('message',['TRIALID ',num2str(blocks),'_endTrial'])
+        
+        %     WaitSecs(0.1);
+        %
+        %                Eyelink('message',['TRIALID ',num2str(blocks),'_endRecording']);
+        %                WaitSecs(0.2);
+        Eyelink('stoprecording');
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        
+    end;
+
+
+    if strcmp(GlobalET, 'y')
     % Eyelink
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     Eyelink('CloseFile');
     WaitSecs(1);
     status = Eyelink('receivefile','',fileEdf);
-    Eyelink('shutdown');
+    %Eyelink('shutdown');
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 end
