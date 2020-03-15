@@ -1,3 +1,0 @@
- BlockNumber     Condition        Onset          End     Duration 
-           1       static     5.001038    17.416983    12.415944  
-           2       motion    17.433827    29.833294    12.399466  
