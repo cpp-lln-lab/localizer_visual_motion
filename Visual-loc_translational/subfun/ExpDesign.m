@@ -2,10 +2,32 @@ function [ExpDesignParam] = ExpDesign(ExpParameters, displayFigs)
 % Creates the sequence of blocks and the events in them
 %
 % The conditions are consecutive static and motion blocks (Gives better results than randomised).
+%
+% EVENTS
+%  The numEventsPerBlock should be a multiple of the number of "base"
+%  listed in the motionDirections and staticDirections (4 at the moment).
+%
+%
 % TARGETS:
-% If there are 2 targets per block we make sure that they are at least 2
-% events apart.
-% Targets cannot be on the first or last event of a block
+%  If there are 2 targets per block we make sure that they are at least 2
+%   events apart.
+%  Targets cannot be on the first or last event of a block
+%
+% Input:
+%   - ExpParameters: parameters returned by SetParameters
+%   - displayFigs: a boolean to decide whether to show the basic design
+%   matrix of the design
+%
+% Output:
+%   - ExpDesignParam.blockNames      = cell array (nr_blocks, 1) with the
+%    name for each block
+%   - ExpDesignParam.directions      = array (nr_blocks, numEventsPerBlock) 
+%    with the direction to present in a given block
+%       - 0 90 180 270 indicate the angle
+%       - -1 indicates static
+%   - ExpDesignParam.speeds          = array (nr_blocks, numEventsPerBlock) * speedEvent;
+%   - ExpDesignParam.fixationTargets = array (nr_blocks, numEventsPerBlock)
+%   showing for each event if it should be accompanied by a target
 
 % needed to use the randsample function in octave
 if IsOctave
