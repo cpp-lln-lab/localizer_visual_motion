@@ -6,17 +6,16 @@ Cfg           = struct; % Initialize the general configuration variables
 ExpParameters.task = 'VisualLoc';
 
 %% Debug mode settings
-Cfg.Debug               = false;  % To test the script out of the scanner, skip PTB sync
+Cfg.Debug               = true;  % To test the script out of the scanner, skip PTB sync
 Cfg.TestingSmallScreen  = false; % To test on a part of the screen, change to 1
 Cfg.TestingTranspScreen = false;  % To test with trasparent full size screen 
 Cfg.stim_position       = 'PC';  % 'Scanner': means that it removes the lower 1/3 of the screen (the coil hides the lower part of the screen)
-Cfg.EyeTracker          = true; % Set to 'true' if you are testing in MRI and want to record ET data
 
 %% MRI settings
 Cfg.Device        = 'PC';  % 'PC': does not care about trigger - otherwise use 'Scanner'
 Cfg.triggerKey    = 't';   % Set the letter sent by the trigger to sync stimulation and volume acquisition
 Cfg.numTriggers   = 4;     
-Cfg.EyeTracker    = true; % Set to 'true' if you are testing in MRI and want to record ET data
+Cfg.EyeTracker    = false; % Set to 'true' if you are testing in MRI and want to record ET data
 
 %% Engine parameters
 % Monitor parameters
