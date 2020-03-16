@@ -1,119 +1,151 @@
-function [ExpDesignParameters] = ExpDesign(ExpParameters)
+function [ExpDesignParam] = ExpDesign(ExpParameters, displayFigs)
+% Creates the sequence of blocks and the events in them
+%
+% The conditions are consecutive static and motion blocks (Gives better results than randomised).
+% TARGETS:
+% If there are 2 targets per block we make sure that they are at least 2
+% events apart.
+% Targets cannot be on the first or last event of a block
+
+% needed to use the randsample function in octave
+if IsOctave
+    pkg load statistics
+end
+
+% Set directions for static and motion condition
+motionDirections = [0 90 180 270];
+staticDirections = [-1 -1 -1 -1];
 
 % Initialize the structure
-ExpDesignParameters = struct;
+ExpDesignParam = struct;
 
-% Set to 1 for a visualtion of the trials design order
-displayFigs = 0;
+
+%% Check inputs
 
 % Set variables here for a dummy test of this function
-if nargin<1
-    ExpParameters.names             = {'static','motion'};
-    ExpParameters.numRepetitions    = 1;
+if nargin < 1 || isempty(ExpParameters)
+    ExpParameters.names             = {'static', 'motion'};
+    ExpParameters.numRepetitions    = 4;
     ExpParameters.speedEvent        = 4;
     ExpParameters.numEventsPerBlock = 12;
+    ExpParameters.maxNumFixationTargetPerBlock = 2;
 end
 
-range_targets = [1 ExpParameters.maxNumFixationTargetPerBlock];
+% Set to 1 for a visualtion of the trials design order
+if nargin < 2  || isempty(displayFigs)
+    displayFigs = 1;
+end
 
-%%
+% Get the parameters
+names = ExpParameters.names;
+numRepetitions = ExpParameters.numRepetitions;
+speedEvent = ExpParameters.speedEvent;
+numEventsPerBlock = ExpParameters.numEventsPerBlock;
+maxNumFixTargPerBlock = ExpParameters.maxNumFixationTargetPerBlock;
 
-% nr_trials=2;
-% range_targets = [2 4];
-%% Define the experiment and balance trials, and conditions
-% the blocks are consequtive static and motion blocks (Gives better results than randomised).
-%% Assign the conditions
-condition= repmat(ExpParameters.names, 1,ExpParameters.numRepetitions);
-nr_blocks= length(condition);
+if mod(numEventsPerBlock, length(motionDirections))~=0
+    warning('the number of events per block is not a multiple of the number of motion/static diection')
+end
 
-%% Get the index of each condition
-staticIndex = find(strcmp(condition,'static')) ;
-motionIndex = find(strcmp(condition,'motion')) ;
 
-%% Assign the targets for each condition
+%% Adapt some variables according to input
 
+% Set directions for static and motion condition
+motionDirections = repmat(motionDirections, 1, numEventsPerBlock/length(motionDirections));
+staticDirections = repmat(staticDirections, 1, numEventsPerBlock/length(staticDirections));
+
+% Assign the conditions
+condition = repmat(names, 1, numRepetitions);
+nr_blocks = length(condition);
+% Get the index of each condition
+staticIndex = find( strcmp(condition, 'static') );
+motionIndex = find( strcmp(condition, 'motion') );
+
+
+% Assign the targets for each condition
+range_targets = [1 maxNumFixTargPerBlock];
 % Get random number of targets for one condition
-%target_perCondition = randi(range_targets,1,nr_trials/2);
-target_perCondition = randi(range_targets,1,ExpParameters.numRepetitions);
+target_perCondition = randi(range_targets, 1, numRepetitions);
+% Assign the number of targets for each condition after shuffling
+numTargets = zeros(1, nr_blocks);
+numTargets(staticIndex) = Shuffle(target_perCondition);
+numTargets(motionIndex) = Shuffle(target_perCondition);
 
-% Assign the num of targets for each condition after shuffling
-numTargets=zeros(1,nr_blocks);
-numTargets(staticIndex) = Shuffle(target_perCondition) ;
-numTargets(motionIndex) = Shuffle(target_perCondition) ;
 
 %% Give the blocks the names with condition
-ExpDesignParameters.blockNames=cell(nr_blocks,1);
 
-for block_nr = 1:nr_blocks
-    if strcmp(condition(block_nr),'static')
-        ExpDesignParameters.blockNames(block_nr)={'static'};
-    elseif strcmp(condition(block_nr),'motion')
-        ExpDesignParameters.blockNames(block_nr)={'motion'};
+ExpDesignParam.blockNames      = cell(nr_blocks, 1);
+ExpDesignParam.directions      = zeros(nr_blocks, numEventsPerBlock);
+ExpDesignParam.speeds          = ones(nr_blocks, numEventsPerBlock) * speedEvent;
+ExpDesignParam.fixationTargets = zeros(nr_blocks, numEventsPerBlock);
+
+for iMotionBlock = 1:numRepetitions
+    
+    ExpDesignParam.directions( motionIndex(iMotionBlock), :) = Shuffle(motionDirections);
+    ExpDesignParam.directions( staticIndex(iMotionBlock), :) = Shuffle(staticDirections);
+    
+end
+
+for iBlock = 1:nr_blocks
+    
+    % Set block name
+    switch condition{iBlock}
+        case 'static'
+            thisBlockName = {'static'};
+        case 'motion'
+            thisBlockName = {'motion'};
     end
-end
-
-
-ExpDesignParameters.directions = zeros(nr_blocks,ExpParameters.numEventsPerBlock);
-ExpDesignParameters.speeds  = zeros(nr_blocks,ExpParameters.numEventsPerBlock);
-ExpDesignParameters.fixationTargets = zeros(nr_blocks,ExpParameters.numEventsPerBlock);
-
-
-motionDirections = repmat([0 90 180 270],1,3);
-staticDirections = repmat([-1 -1 -1 -1] ,1,3);
-
-for iMotionBlock = 1:ExpParameters.numRepetitions
-    
-    ExpDesignParameters.directions(motionIndex(iMotionBlock),:)= Shuffle(motionDirections);
-    ExpDesignParameters.directions(staticIndex(iMotionBlock),:)= Shuffle(staticDirections);
+    ExpDesignParam.blockNames(iBlock) = thisBlockName;
     
     
+    % set target
+    % if there are 2 targets per block we make sure that they are at least
+    % 2 events apart
+    % targets cannot be on the first or last event of a block
     
-end
-
-for iBlock=1:nr_blocks
-    
-    ExpDesignParameters.speeds(iBlock,:) = ExpParameters.speedEvent;
-    
-    
-    chosenTarget=[];
-    
+    chosenTarget = [];
     
     tmpTarget = numTargets(iBlock);
     
-    if tmpTarget == 1
+    switch tmpTarget
         
-        chosenTarget = datasample(2:ExpParameters.numEventsPerBlock-1,tmpTarget,'Replace',false);
-        
-        ExpDesignParameters.fixationTargets(iBlock,chosenTarget)=1;
-        
-    elseif tmpTarget == 2
-        
-        targetDifference = 0;
-        while targetDifference <= 2
-            chosenTarget = datasample(2:ExpParameters.numEventsPerBlock-1,tmpTarget,'Replace',false);
+        case 1
             
-            targetDifference = (max(chosenTarget) - min(chosenTarget));
-        end
-        
-        ExpDesignParameters.fixationTargets(iBlock,chosenTarget)=1;
-        
+            chosenTarget = randsample(2:numEventsPerBlock-1, tmpTarget, false);
+            ExpDesignParam.fixationTargets(iBlock, chosenTarget) = 1;
+            
+        case 2
+            
+            targetDifference = 0;
+            
+            while targetDifference <= 2
+                chosenTarget = randsample(2:numEventsPerBlock-1, tmpTarget, false);
+                targetDifference = (max(chosenTarget) - min(chosenTarget));
+            end
+            
+            ExpDesignParam.fixationTargets(iBlock, chosenTarget) = 1;
+            
     end
     
 end
 
 
-
-
-if displayFigs
 %% Visualize the design matrix
-% uniqueNames = unique(ExpDesignParameters.blockNames) ;
-%
-% Ind= zeros(length(ExpDesignParameters.blockNames),length(uniqueNames)) ;
-% for i=1:length(uniqueNames)
-%     CondInd(:,i) = find(strcmp(ExpDesignParameters.blockNames,ExpDesignParameters.blockNames{i})) ;
-%     Ind(CondInd(:,i),i)=1 ;
-% end
-%
-% imagesc(Ind)
-% set(gca,'XTick',1:length(unique(ExpDesignParameters.blockNames')),'XTickLabel',unique(ExpDesignParameters.blockNames'))
+if displayFigs
+    
+    uniqueNames = unique(ExpDesignParam.blockNames) ;
+    
+    Ind = zeros(length(ExpDesignParam.blockNames), length(uniqueNames)) ;
+    
+    for i = 1:length(uniqueNames)
+        CondInd(:,i) = find(strcmp(ExpDesignParam.blockNames, uniqueNames{i})) ; %#ok<*AGROW>
+        Ind(CondInd(:,i), i) = 1 ;
+    end
+    
+    imagesc(Ind)
+    
+    set(gca, ...
+        'XTick',1:length(uniqueNames),...
+        'XTickLabel', uniqueNames)
+    
 end
