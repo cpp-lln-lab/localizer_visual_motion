@@ -19,17 +19,17 @@ function [expParameters] = expDesign(expParameters, displayFigs)
 %   matrix of the design
 %
 % Output:
-%   - ExpDesignParam.designBlockNames      = cell array (nr_blocks, 1) with the
+%   - ExpParameters.designBlockNames      = cell array (nr_blocks, 1) with the
 %    name for each block
 %
-%   - ExpDesignParam.designDirections      = array (nr_blocks, numEventsPerBlock) 
+%   - ExpParameters.designDirections      = array (nr_blocks, numEventsPerBlock) 
 %    with the direction to present in a given block
 %       - 0 90 180 270 indicate the angle
 %       - -1 indicates static
 %
-%   - ExpDesignParam.designSpeeds          = array (nr_blocks, numEventsPerBlock) * speedEvent;
+%   - ExpParameters.designSpeeds          = array (nr_blocks, numEventsPerBlock) * speedEvent;
 %
-%   - ExpDesignParam.designFixationTargets = array (nr_blocks, numEventsPerBlock)
+%   - ExpParameters.designFixationTargets = array (nr_blocks, numEventsPerBlock)
 %   showing for each event if it should be accompanied by a target
 %
 
