@@ -1,4 +1,4 @@
-function [ExpDesignParam] = ExpDesign(ExpParameters, displayFigs)
+function [ExpDesignParam] = expDesign(ExpParameters, displayFigs)
 % Creates the sequence of blocks and the events in them
 %
 % The conditions are consecutive static and motion blocks (Gives better results than randomised).

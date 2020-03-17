@@ -41,7 +41,7 @@ try
     end
     
     % % % REFACTOR THIS FUNCTION
-    [ExpDesignParameters] = ExpDesign(ExpParameters);
+    [ExpDesignParameters] = expDesign(ExpParameters);
     % % %
     
     % Visual degree to pixels converter
