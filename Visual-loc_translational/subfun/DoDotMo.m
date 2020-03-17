@@ -1,17 +1,15 @@
 function responseTimeWithinEvent = DoDotMo(Cfg, ExpParameters, logFile, duration)
-%DODOTMO This function draws a specific type of dots
-%   Detailed explanation goes here
-%duration = Cfg.eventDuration;
+
+% DODOTMO This function draws a specific type of dots
+
+
+
 dontclear = ExpParameters.dontclear;
-% Dot stuff    
 coh = ExpParameters.coh;
-%speed = Cfg.speed;
-%direction = Cfg.direction;    
 dotSize = ExpParameters.dotSize_ppd;
 dotLifeTime = ExpParameters.dotLifeTime; 
 maxDotsPerFrame = ExpParameters.maxDotsPerFrame; 
 Experiment_start = Cfg.Experiment_start ;
-%maxDotsPerFrame = maxDotsPerFrame*3 ;
 
 direction = logFile.iEventDirection;
 dotSpeed = logFile.iEventSpeed;
@@ -80,7 +78,7 @@ while continue_show
         this_s(~L,:) = rand(sum(~L),2);	% get new random locations for the rest                        
     end
 
-    N = sum((this_s > 1 | this_s < 0 | repmat(dotTime(:,1) > dotLifeTime,1,2))')' ~= 0 ;
+    N = sum((this_s > 1 | this_s < 0 | repmat(dotTime(:,1) > dotLifeTime,1,2))')' ~= 0 ; 
 
       %% Re-allocate the dots to random positions
     if sum(N) > 0

@@ -1,5 +1,8 @@
 function [Cfg] = InitPTB(Cfg)
 
+% For octave: to avoid displaying messenging one screen at a time
+more off
+
 % check for OpenGL compatibility, abort otherwise:
 AssertOpenGL;
 
@@ -49,6 +52,9 @@ else
     [Cfg.win, Cfg.winRect] = PsychImaging('OpenWindow', Cfg.Screen, Cfg.Background_color);
     
 end
+
+% Retrieve window size info
+[Cfg.winWidth, Cfg.winHeight] = WindowSize(Cfg.win);
 
 % Set priority for script execution to realtime priority:
 Priority(MaxPriority(Cfg.win));
