@@ -1,6 +1,6 @@
 function Wait4Trigger(Cfg)
 
-if strcmp(Cfg.Device,'Scanner')
+if strcmp(Cfg.device,'Scanner')
     
     fprintf('Waiting for trigger \n');
     

@@ -6,7 +6,7 @@ function responseTimeWithinEvent = DoDotMo(Cfg, ExpParameters, logFile, duration
 
 dontclear = ExpParameters.dontclear;
 coh = ExpParameters.coh;
-dotSize = ExpParameters.dotSize_ppd;
+dotSize = ExpParameters.dotSizePpd;
 dotLifeTime = ExpParameters.dotLifeTime; 
 maxDotsPerFrame = ExpParameters.maxDotsPerFrame; 
 Experiment_start = Cfg.Experiment_start ;
@@ -29,11 +29,11 @@ responseTimeWithinEvent = [];
 w = Cfg.win;
 
 
-ndots = min(maxDotsPerFrame, ceil( Cfg.diameter_aperture_ppd .* Cfg.diameter_aperture_ppd  / Cfg.monRefresh));
+ndots = min(maxDotsPerFrame, ceil( Cfg.diameterAperturePpd .* Cfg.diameterAperturePpd  / Cfg.monRefresh));
 
 % dxdy is an N x 2 matrix that gives jumpsize in units on 0..1
 %   deg/sec * Ap-unit/deg * sec/jump = unit/jump
-dxdy = repmat(dotSpeed * 10/(Cfg.diameter_aperture*10) * (3/Cfg.monRefresh) ...
+dxdy = repmat(dotSpeed * 10/(Cfg.diameterAperture*10) * (3/Cfg.monRefresh) ...
     * [cos(pi*direction/180.0) -sin(pi*direction/180.0)], ndots,1);
 
 % ARRAYS, INDICES for loop
@@ -104,12 +104,12 @@ while continue_show
         dotTime = dotTime + 1; 
 
         % Convert to stuff we can actually plot
-        this_x(:,1:2) = floor(Cfg.diameter_aperture_ppd(1) * this_s); % pix/ApUnit
+        this_x(:,1:2) = floor(Cfg.diameterAperturePpd(1) * this_s); % pix/ApUnit
 
         % This assumes that zero is at the top left, but we want it to be in the 
         % center, so shift the dots up and left, which just means adding half of 
         % the aperture size to both the x and y direction.
-        dot_show = (this_x(:,1:2) - Cfg.diameter_aperture_ppd/2)';
+        dot_show = (this_x(:,1:2) - Cfg.diameterAperturePpd/2)';
 
         % Now do next drawing commands
         %Screen('DrawDots', Cfg.win, dot_show, dotSize, dotColor, Cfg.center,2);   %if you want to change location change Cfg.center        
@@ -122,7 +122,7 @@ while continue_show
         
         % NaN out-of-circle dots  
         xyDis = dot_show;
-        outCircle = sqrt(xyDis(1,:).^2 + xyDis(2,:).^2) + dotSize/2 > (Cfg.diameter_aperture_ppd/2);        
+        outCircle = sqrt(xyDis(1,:).^2 + xyDis(2,:).^2) + dotSize/2 > (Cfg.diameterAperturePpd/2);        
         dots2Display = dot_show;
         dots2Display(:,outCircle) = NaN;
         
@@ -139,7 +139,7 @@ while continue_show
         continue_show = continue_show - 1;
         
     %% response collection
-    if strcmp(Cfg.Device,'PC')
+    if strcmp(Cfg.device,'PC')
         [KeyIsDown,PressedSecs,~] = KbCheck(-1);
         if KeyIsDown
             %response_key_Dots(end+1)= 1 ;
