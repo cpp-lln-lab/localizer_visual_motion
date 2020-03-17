@@ -41,7 +41,7 @@ try
     end
     
     % % % REFACTOR THIS FUNCTION
-    [ExpDesignParameters] = ExpDesign(ExpParameters);
+    [ExpParameters] = expDesign(ExpParameters);
     % % %
     
     % Visual degree to pixels converter
@@ -60,7 +60,7 @@ try
     logFile.allResponses = [] ;
     
     % Prepare for the output logfiles
-    logFile = SaveOutput(subjectName, logFile, ExpParameters, ExpDesignParameters, 'open');
+    logFile = SaveOutput(subjectName, logFile, ExpParameters, 'open');
     
     % % % PUT IT RIGHT BEFORE STARTING THE EXPERIMENT
     % Show instructions
@@ -111,13 +111,13 @@ try
         for iEventsPerBlock = 1:ExpParameters.numEventsPerBlock
             
             
-            logFile.iEventDirection = ExpDesignParameters.directions(iBlock,iEventsPerBlock);       % Direction of that event
-            logFile.iEventSpeed = ExpDesignParameters.speeds(iBlock,iEventsPerBlock);               % Speed of that event
+            logFile.iEventDirection = ExpParameters.designDirections(iBlock,iEventsPerBlock);       % Direction of that event
+            logFile.iEventSpeed = ExpParameters.designSpeeds(iBlock,iEventsPerBlock);               % Speed of that event
             % % % CAN IT BE PUT ON A STRUCT? IT IS ONLY A NUMBER NEEDED IN
             % DODOTMO
             iEventDuration = ExpParameters.eventDuration ;                        % Duration of normal events
             % % %
-            logFile.iEventIsFixationTarget = ExpDesignParameters.fixationTargets(iBlock,iEventsPerBlock);
+            logFile.iEventIsFixationTarget = ExpParameters.designFixationTargets(iBlock,iEventsPerBlock);
             
             % Event Onset
             logFile.eventOnsets(iBlock,iEventsPerBlock) = GetSecs-Cfg.Experiment_start;
@@ -147,8 +147,7 @@ try
             
             
             % Save the events txt logfile
-            logFile = SaveOutput(subjectName, logFile, ExpParameters, ExpDesignParameters, ...
-                'save Events', iBlock, iEventsPerBlock);
+            logFile = SaveOutput(subjectName, logFile, ExpParameters, 'save Events', iBlock, iEventsPerBlock);
             
             
             % wait for the inter-stimulus interval
@@ -171,14 +170,14 @@ try
         
         % % % NEED TO ASSIGN THE TXT VARIABLE IN A STRUCTURE
         % Save the block txt Logfile
-        logFile = SaveOutput(subjectName, logFile, ExpParameters, ExpDesignParameters, ...
+        logFile = SaveOutput(subjectName, logFile, ExpParameters, ...
             'save Blocks', iBlock, iEventsPerBlock);
         % % %
         
     end
     
     % % % HERE needed for saving single vars, is it needed?
-    blockNames = ExpDesignParameters.blockNames ;
+    blockNames = ExpParameters.designBlockNames ;
     blockDurations = logFile.blockDurations;
     blockOnsets = logFile.blockOnsets;
     
@@ -188,8 +187,7 @@ try
     WaitSecs(ExpParameters.endDelay);
     
     % Close the logfiles
-    logFile = SaveOutput(subjectName, logFile, ExpParameters, ExpDesignParameters, ...
-        'close');
+    logFile = SaveOutput(subjectName, logFile, ExpParameters, 'close');
     
     
     TotalExperimentTime = GetSecs-Cfg.Experiment_start;

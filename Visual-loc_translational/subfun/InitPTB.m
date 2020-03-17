@@ -1,5 +1,8 @@
 function [Cfg] = InitPTB(Cfg)
 
+% For octave: to avoid displaying messenging one screen at a time
+more off
+
 % check for OpenGL compatibility, abort otherwise:
 AssertOpenGL;
 
