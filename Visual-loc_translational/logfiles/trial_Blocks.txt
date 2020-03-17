@@ -1,2 +1,0 @@
- BlockNumber     Condition        Onset          End     Duration 
-           1       static     5.000548    31.226316    26.225768  

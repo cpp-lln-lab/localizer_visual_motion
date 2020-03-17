@@ -36,8 +36,12 @@ try
     
     [ExpParameters, Cfg]  = VisualDegree2Pixels(ExpParameters, Cfg);
     
+    if Cfg.eyeTracker
+        [el] = EyeTracker(Cfg, ExpParameters, subjectName, sessionNumber, runNumber, 'Calibration');
+    end
+    
     % % % REFACTOR THIS FUNCTION
-    [ExpDesignParameters] = ExpDesign(ExpParameters);
+    [ExpParameters] = expDesign(ExpParameters);
     % % %
     
     % Visual degree to pixels converter
@@ -56,7 +60,7 @@ try
     logFile.allResponses = [] ;
     
     % Prepare for the output logfiles
-    logFile = SaveOutput(subjectName, logFile, ExpParameters, ExpDesignParameters, 'open');
+    logFile = SaveOutput(subjectName, logFile, ExpParameters, 'open');
     
     % % % PUT IT RIGHT BEFORE STARTING THE EXPERIMENT
     % Show instructions
@@ -83,7 +87,7 @@ try
     % Show the fixation cross
     if ExpParameters.Task1
         Screen('DrawLines', Cfg.win, Cfg.allCoords,ExpParameters.lineWidthPix, ...
-            Cfg.White , [Cfg.center(1) Cfg.center(2)], 1);
+            Cfg.white , [Cfg.center(1) Cfg.center(2)], 1);
         Screen('Flip',Cfg.win);
     end
     
@@ -99,16 +103,21 @@ try
         
         logFile.blockOnsets(iBlock,1)= GetSecs-Cfg.Experiment_start;
         
+        if Cfg.eyeTracker
+            [el] = EyeTracker(Cfg, ExpParameters, subjectName, sessionNumber, runNumber, 'StartRecording');
+        end
+        
         % For each event in the block
         for iEventsPerBlock = 1:ExpParameters.numEventsPerBlock
             
-            logFile.iEventDirection = ExpDesignParameters.directions(iBlock,iEventsPerBlock);       % Direction of that event
-            logFile.iEventSpeed = ExpDesignParameters.speeds(iBlock,iEventsPerBlock);               % Speed of that event
+            
+            logFile.iEventDirection = ExpParameters.designDirections(iBlock,iEventsPerBlock);       % Direction of that event
+            logFile.iEventSpeed = ExpParameters.designSpeeds(iBlock,iEventsPerBlock);               % Speed of that event
             % % % CAN IT BE PUT ON A STRUCT? IT IS ONLY A NUMBER NEEDED IN
             % DODOTMO
             iEventDuration = ExpParameters.eventDuration ;                        % Duration of normal events
             % % %
-            logFile.iEventIsFixationTarget = ExpDesignParameters.fixationTargets(iBlock,iEventsPerBlock);
+            logFile.iEventIsFixationTarget = ExpParameters.designFixationTargets(iBlock,iEventsPerBlock);
             
             % Event Onset
             logFile.eventOnsets(iBlock,iEventsPerBlock) = GetSecs-Cfg.Experiment_start;
@@ -131,21 +140,22 @@ try
             logFile.allResponses = [logFile.allResponses responseTimeWithinEvent];
             
             Screen('DrawLines', Cfg.win, Cfg.allCoords,ExpParameters.lineWidthPix, ...
-                Cfg.White , [Cfg.center(1) Cfg.center(2)], 1);
+                Cfg.white , [Cfg.center(1) Cfg.center(2)], 1);
             Screen('Flip',Cfg.win);
             
             
             
             
-            % % % NEED TO ASSIGN THE TXT VARIABLE IN A STRUCTURE
             % Save the events txt logfile
-            logFile = SaveOutput(subjectName, logFile, ExpParameters, ExpDesignParameters, ...
-                'save Events', iBlock, iEventsPerBlock)
-            % % %
+            logFile = SaveOutput(subjectName, logFile, ExpParameters, 'save Events', iBlock, iEventsPerBlock);
             
             
             % wait for the inter-stimulus interval
             WaitSecs(ExpParameters.ISI);
+        end
+        
+        if Cfg.eyeTracker
+            [el] = EyeTracker(Cfg, ExpParameters, subjectName, sessionNumber, runNumber, 'StopRecordings');
         end
         
         logFile.blockEnds(iBlock,1)= GetSecs-Cfg.Experiment_start;          % End of the block Time
@@ -153,21 +163,21 @@ try
         
         %Screen('DrawTexture',Cfg.win,imagesTex.Event(1));
         Screen('DrawLines', Cfg.win, Cfg.allCoords,ExpParameters.lineWidthPix, ...
-            Cfg.White , [Cfg.center(1) Cfg.center(2)], 1);
+            Cfg.white , [Cfg.center(1) Cfg.center(2)], 1);
         Screen('Flip',Cfg.win);
         
         WaitSecs(ExpParameters.IBI);
         
         % % % NEED TO ASSIGN THE TXT VARIABLE IN A STRUCTURE
         % Save the block txt Logfile
-        logFile = SaveOutput(subjectName, logFile, ExpParameters, ExpDesignParameters, ...
-            'save Blocks', iBlock, iEventsPerBlock)
+        logFile = SaveOutput(subjectName, logFile, ExpParameters, ...
+            'save Blocks', iBlock, iEventsPerBlock);
         % % %
         
     end
     
     % % % HERE needed for saving single vars, is it needed?
-    blockNames = ExpDesignParameters.blockNames ;
+    blockNames = ExpParameters.designBlockNames ;
     blockDurations = logFile.blockDurations;
     blockOnsets = logFile.blockOnsets;
     
@@ -176,33 +186,40 @@ try
     % End of the run for the BOLD to go down
     WaitSecs(ExpParameters.endDelay);
     
-    % close txt log files
-    fclose(BlockTxtLogFile);
-    fclose(EventTxtLogFile);
-    fclose(ResponsesTxtLogFile);
+    % Close the logfiles
+    logFile = SaveOutput(subjectName, logFile, ExpParameters, 'close');
     
     
     TotalExperimentTime = GetSecs-Cfg.Experiment_start;
     
     %% Save mat log files
+    % % % ADD SESSION AND RUN NUMBER
     save(fullfile('logfiles',[subjectName,'_all.mat']))
     
-    % % % CANNOT FIND THE VAR BLOCKDURATION
-    save(fullfile('logfiles',[subjectName,'.mat']),...
-        'Cfg', ...
-        'allResponses', ...
-        'blockDurations', ...
-        'blockNames', ...
-        'blockOnsets')
-    % % %
+    % % %     % % % CANNOT FIND THE VAR BLOCKDURATION
+    % % %     save(fullfile('logfiles',[subjectName,'.mat']),...
+    % % %         'Cfg', ...
+    % % %         'allResponses', ...
+    % % %         'blockDurations', ...
+    % % %         'blockNames', ...
+    % % %         'blockOnsets')
+    % % %     % % %
+    
+    if Cfg.eyeTracker
+        [el] = EyeTracker(Cfg, ExpParameters, subjectName, sessionNumber, runNumber, 'Shutdown');
+    end
     
     % Close the screen
     sca
     %     clear Screen;
+    % Restore keyboard output to Matlab:
+    ListenChar(0);
     
 catch
     % if code crashes, closes serial port and screen
     sca
+    % Restore keyboard output to Matlab:
+    ListenChar(0);
     %     clear Screen;
     error(lasterror) %#ok<LERR> % show default error
 end

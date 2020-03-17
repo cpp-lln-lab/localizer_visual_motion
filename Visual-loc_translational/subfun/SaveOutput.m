@@ -1,6 +1,6 @@
-function [ logFile ] = SaveOutput(subjectName, logFile, ExpParameters, ExpDesignParameters, input, varargin)
+function [ logFile ] = SaveOutput(subjectName, logFile, ExpParameters, input, varargin)
 
-if nargin >5
+if nargin > 5
     iBlock = varargin{1};
     iEventsPerBlock = varargin{2};
 end
@@ -14,7 +14,7 @@ switch input
         end
         
         % Initialize txt logfiles
-        % % % ADD SESSION AND RUN NUMBER      
+        % % % ADD SESSION AND RUN NUMBER
         logFile.EventTxtLogFile = fopen(fullfile('logfiles',[subjectName,'_Events.txt']),'w');
         fprintf(logFile.EventTxtLogFile,'%12s %12s %12s %18s %12s %12s %12s %12s \n', ...
             'BlockNumber', ...
@@ -58,9 +58,18 @@ switch input
         % Block txt_Logfile
         fprintf(logFile.BlockTxtLogFile,'%12.0f %12s %12f %12f %12f  \n',...
             iBlock, ...
-            ExpDesignParameters.blockNames{iBlock,1}, ...
+            ExpParameters.designBlockNames{iBlock,1}, ...
             logFile.blockOnsets(iBlock,1), ...
             logFile.blockEnds(iBlock,1), ...
             logFile.blockDurations(iBlock,1));
+        
+    case 'save Responses'
+        
+    case 'close'
+        
+        % close txt log files
+        fclose(logFile.BlockTxtLogFile);
+        fclose(logFile.EventTxtLogFile);
+        fclose(logFile.ResponsesTxtLogFile);
         
 end
