@@ -36,7 +36,7 @@ try
     
     [ExpParameters, Cfg]  = VisualDegree2Pixels(ExpParameters, Cfg);
     
-    if Cfg.EyeTracker
+    if Cfg.eyeTracker
         [el] = EyeTracker(Cfg, ExpParameters, subjectName, sessionNumber, runNumber, 'Calibration');
     end
     
@@ -87,7 +87,7 @@ try
     % Show the fixation cross
     if ExpParameters.Task1
         Screen('DrawLines', Cfg.win, Cfg.allCoords,ExpParameters.lineWidthPix, ...
-            Cfg.White , [Cfg.center(1) Cfg.center(2)], 1);
+            Cfg.white , [Cfg.center(1) Cfg.center(2)], 1);
         Screen('Flip',Cfg.win);
     end
     
@@ -103,7 +103,7 @@ try
         
         logFile.blockOnsets(iBlock,1)= GetSecs-Cfg.Experiment_start;
         
-        if Cfg.EyeTracker
+        if Cfg.eyeTracker
             [el] = EyeTracker(Cfg, ExpParameters, subjectName, sessionNumber, runNumber, 'StartRecording');
         end
         
@@ -140,7 +140,7 @@ try
             logFile.allResponses = [logFile.allResponses responseTimeWithinEvent];
             
             Screen('DrawLines', Cfg.win, Cfg.allCoords,ExpParameters.lineWidthPix, ...
-                Cfg.White , [Cfg.center(1) Cfg.center(2)], 1);
+                Cfg.white , [Cfg.center(1) Cfg.center(2)], 1);
             Screen('Flip',Cfg.win);
             
             
@@ -154,7 +154,7 @@ try
             WaitSecs(ExpParameters.ISI);
         end
         
-        if Cfg.EyeTracker
+        if Cfg.eyeTracker
             [el] = EyeTracker(Cfg, ExpParameters, subjectName, sessionNumber, runNumber, 'StopRecordings');
         end
         
@@ -163,7 +163,7 @@ try
         
         %Screen('DrawTexture',Cfg.win,imagesTex.Event(1));
         Screen('DrawLines', Cfg.win, Cfg.allCoords,ExpParameters.lineWidthPix, ...
-            Cfg.White , [Cfg.center(1) Cfg.center(2)], 1);
+            Cfg.white , [Cfg.center(1) Cfg.center(2)], 1);
         Screen('Flip',Cfg.win);
         
         WaitSecs(ExpParameters.IBI);
@@ -205,7 +205,7 @@ try
     % % %         'blockOnsets')
     % % %     % % %
     
-    if Cfg.EyeTracker
+    if Cfg.eyeTracker
         [el] = EyeTracker(Cfg, ExpParameters, subjectName, sessionNumber, runNumber, 'Shutdown');
     end
     

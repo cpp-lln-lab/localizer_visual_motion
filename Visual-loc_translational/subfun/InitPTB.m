@@ -31,25 +31,25 @@ PsychImaging('PrepareConfiguration');
 InitializePsychSound(1);
 
 % init PTB with different options in concordance to the Debug Parameters
-if Cfg.Debug
+if Cfg.debug
     
     % set to one because we don not care about time
     Screen('Preference', 'SkipSyncTests', 2);
     Screen('Preference', 'Verbosity', 0);
     Screen('Preferences', 'SuppressAllWarnings', 2);
     
-    if Cfg.TestingSmallScreen
-        [Cfg.win, Cfg.winRect] = PsychImaging('OpenWindow', Cfg.Screen, Cfg.Background_color,  [0,0, 480, 270]);
+    if Cfg.testingSmallScreen
+        [Cfg.win, Cfg.winRect] = PsychImaging('OpenWindow', Cfg.screen, Cfg.backgroundColor,  [0,0, 480, 270]);
     else
-        if Cfg.TestingTranspScreen
+        if Cfg.testingTranspScreen
         PsychDebugWindowConfiguration
         end
-        [Cfg.win, Cfg.winRect] = PsychImaging('OpenWindow', Cfg.Screen, Cfg.Background_color);
+        [Cfg.win, Cfg.winRect] = PsychImaging('OpenWindow', Cfg.screen, Cfg.backgroundColor);
     end
     
 else
     Screen('Preference','SkipSyncTests', 0);
-    [Cfg.win, Cfg.winRect] = PsychImaging('OpenWindow', Cfg.Screen, Cfg.Background_color);
+    [Cfg.win, Cfg.winRect] = PsychImaging('OpenWindow', Cfg.screen, Cfg.backgroundColor);
     
 end
 
@@ -59,14 +59,14 @@ end
 % Set priority for script execution to realtime priority:
 Priority(MaxPriority(Cfg.win));
 
-if strcmp(Cfg.stim_position,'Scanner')
+if strcmp(Cfg.stimPosition,'Scanner')
     Cfg.winRect(1,4) = Cfg.winRect(1,4)*2/3;
 end
 
 % Select specific text font, style and size:
-Screen('TextFont',Cfg.win, Cfg.TextFont );
-Screen('TextSize',Cfg.win, Cfg.TextSize);
-Screen('TextStyle', Cfg.win, Cfg.TextStyle);
+Screen('TextFont',Cfg.win, Cfg.textFont );
+Screen('TextSize',Cfg.win, Cfg.textSize);
+Screen('TextStyle', Cfg.win, Cfg.textStyle);
 
 % Get the Center of the Screen
 Cfg.center = [Cfg.winRect(3), Cfg.winRect(4)]/2;
