@@ -8,7 +8,7 @@ ExpParameters.task = 'VisualLoc';
 %% Debug mode settings
 Cfg.debug               = true;  % To test the script out of the scanner, skip PTB sync
 Cfg.testingSmallScreen  = false; % To test on a part of the screen, change to 1
-Cfg.testingTranspScreen = false;  % To test with trasparent full size screen 
+Cfg.testingTranspScreen = true;  % To test with trasparent full size screen 
 Cfg.stimPosition        = 'PC';  % 'Scanner': means that it removes the lower 1/3 of the screen (the coil hides the lower part of the screen)
 
 %% MRI settings
