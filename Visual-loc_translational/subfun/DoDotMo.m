@@ -221,7 +221,7 @@ responseTimeWithinEvent = responseTimeWithinEvent(responseTimeWithinEvent~=0);
 %% Erase last dots
 
 Screen('DrawLines', Cfg.win, Cfg.allCoords, ExpParameters.lineWidthPix, ...
-    ExpParameters.fixationCross_color , [Cfg.center(1) Cfg.center(2)], 1);
+    ExpParameters.fixationCrossColor , [Cfg.center(1) Cfg.center(2)], 1);
 
 Screen('DrawingFinished', Cfg.win,dontClear);
 
