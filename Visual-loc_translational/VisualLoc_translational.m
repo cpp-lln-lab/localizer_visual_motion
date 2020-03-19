@@ -210,18 +210,13 @@ try
         [el] = EyeTracker(Cfg, ExpParameters, subjectName, sessionNumber, runNumber, 'Shutdown');
     end
     
-    % Close the screen
-    sca
-    %     clear Screen;
-    % Restore keyboard output to Matlab:
-    ListenChar(0);
+    
+    CleanUp()
     
 catch
-    % if code crashes, closes serial port and screen
-    sca
-    % Restore keyboard output to Matlab:
-    ListenChar(0);
-    %     clear Screen;
-    error(lasterror) %#ok<LERR> % show default error
+    
+    CleanUp()
+    psychrethrow(psychlasterror);
+    
 end
 
