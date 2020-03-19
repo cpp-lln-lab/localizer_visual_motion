@@ -21,11 +21,13 @@ if ~ismac
 end
 
 % make sure we got access to all the required functions and inputs
-addpath(fullfile(pwd, 'subfun'))
+addpath(genpath(fullfile(pwd, 'subfun')))
+
+[ExpParameters, Cfg] = SetParameters;
 
 % set and load all the parameters to run the experiment
-[subjectName, runNumber, sessionNumber] = UserInputs;
-[ExpParameters, Cfg] = SetParameters;
+[subjectName, runNumber, sessionNumber] = UserInputs(Cfg);
+
 
 %%  Experiment
 
