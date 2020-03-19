@@ -113,7 +113,8 @@ try
             
             logFile.iEventDirection = ExpParameters.designDirections(iBlock,iEventsPerBlock);       % Direction of that event
             logFile.iEventSpeed = ExpParameters.designSpeeds(iBlock,iEventsPerBlock);               % Speed of that event
-            % % % CAN IT BE PUT ON A STRUCT? IT IS ONLY A NUMBER NEEDED IN
+            % % % initially an input for DoDotMo func, now from
+            % ExpParameters.eventDuration, to be tested
             % DODOTMO
             iEventDuration = ExpParameters.eventDuration ;                        % Duration of normal events
             % % %
@@ -124,7 +125,7 @@ try
             
             % % % REFACTORE
             % play the dots
-            responseTimeWithinEvent = DoDotMo( Cfg, ExpParameters, logFile, iEventDuration);
+            responseTimeWithinEvent = DoDotMo( Cfg, ExpParameters, logFile);
             % % %
             
             %% logfile for responses

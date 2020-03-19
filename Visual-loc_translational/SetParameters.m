@@ -27,6 +27,7 @@ Cfg.diameterAperture = 8;   % Diameter/length of side of aperture in Visual angl
 Cfg.screen           = max(Screen('Screens')); % Main screen
 Cfg.white            = [255 255 255];
 Cfg.black            = [ 0   0   0 ];
+Cfg.red              = [255  0   0 ];
 Cfg.grey             = mean([Cfg.black; Cfg.white]);
 Cfg.backgroundColor = Cfg.black;
 Cfg.textColor        = Cfg.white;
@@ -53,7 +54,7 @@ ExpParameters.eventDuration     = .9;
 ExpParameters.coh               = 1;       % Coherence Level (0-1)
 ExpParameters.maxDotsPerFrame   = 300;     % Maximum number dots per frame (Number must be divisible by 3)
 ExpParameters.dotLifeTime       = 0.2;     % Dot life time in seconds
-ExpParameters.dontclear         = 0;
+ExpParameters.dontClear         = 0;
 ExpParameters.dotSize           = 0.1;     % Dot Size (dot width) in visual angles.
 ExpParameters.dotColor          = Cfg.white;
 
@@ -73,7 +74,8 @@ if ExpParameters.Task1
     ExpParameters.fixationChangeDuration       = 0.15; % In secs
     ExpParameters.xDisplacementFixCross        = 0;   % Manual displacement of the fixation cross
     ExpParameters.yDisplacementFixCross        = 0;   % Manual displacement of the fixation cross
-    ExpParameters.fixationCross_color          = Cfg.white;
+    ExpParameters.fixationCrossColor           = Cfg.white;
+    ExpParameters.fixationCrossColorTarget     = Cfg.red;
 end
 
 %% Setting some defaults: no need to change things here
