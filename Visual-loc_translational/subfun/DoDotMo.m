@@ -56,9 +56,6 @@ ss = rand(ndots*3, 2);
 % Divide dots into three sets
 Ls = cumsum(ones(ndots,3)) + repmat([0 ndots ndots*2], ndots, 1);
 
-% Loops through the three sets of dots
-loopi = 1;
-
 % Set for how many frames to show the dots
 continueShow = floor(ExpParameters.eventDuration/Cfg.ifi);
 
@@ -79,22 +76,10 @@ while continueShow
     % Ls picks out the previous set (1:5, 6:10, or 11:15)
     Lthis  = Ls(:,1);
     
-    %     % Lthis picks out the loop from 3 times ago, which is what is then
-    %     %  moved in the current loop
-    %     Lthis  = Ls(:,loopi);
     
     % This is a matrix of random #s - starting position
     this_s = ss(Lthis,:);
-    
-    % Update the loop pointer
-    loopi = loopi+1;
-    
-    if loopi == 4
-        
-        loopi = 1;
-        
-    end
-    
+  
     % Compute new locations, L are the dots that will be moved
     L = rand(ndots,1) < coh;
     
