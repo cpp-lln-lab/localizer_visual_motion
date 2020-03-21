@@ -50,6 +50,7 @@ try
     [ExpParameters, Cfg] = VisualDegree2Pixels(ExpParameters, Cfg);
     
     % Empty vectors and matrices for speed
+    
     % % %     blockNames     = cell(ExpParameters.numBlocks,1);
     logFile.blockOnsets    = zeros(ExpParameters.numBlocks, 1);
     logFile.blockEnds      = zeros(ExpParameters.numBlocks, 1);
@@ -64,6 +65,9 @@ try
     % Prepare for the output logfiles
     logFile = SaveOutput(subjectName, logFile, ExpParameters, 'open');
     
+    
+    
+    
     % % % PUT IT RIGHT BEFORE STARTING THE EXPERIMENT
     % Show instructions
     if ExpParameters.Task1
@@ -72,6 +76,9 @@ try
         Screen('Flip', Cfg.win);
     end
     % % %
+    
+    
+    
     
     % Prepare for fixation Cross
     if ExpParameters.Task1
@@ -88,8 +95,7 @@ try
     
     % Show the fixation cross
     if ExpParameters.Task1
-        Screen('DrawLines', Cfg.win, Cfg.allCoords,ExpParameters.lineWidthPix, ...
-            Cfg.white , [Cfg.center(1) Cfg.center(2)], 1);
+        DrawFixationCross(Cfg, ExpParameters, ExpParameters.fixationCrossColor)
         Screen('Flip',Cfg.win);
     end
     
@@ -115,6 +121,8 @@ try
             
             logFile.iEventDirection = ExpParameters.designDirections(iBlock,iEventsPerBlock);       % Direction of that event
             logFile.iEventSpeed = ExpParameters.designSpeeds(iBlock,iEventsPerBlock);               % Speed of that event
+            
+            
             % % % initially an input for DoDotMo func, now from
             % ExpParameters.eventDuration, to be tested
             % DODOTMO
@@ -125,10 +133,16 @@ try
             % Event Onset
             logFile.eventOnsets(iBlock,iEventsPerBlock) = GetSecs-Cfg.experimentStart;
             
+            
+            
+            
             % % % REFACTORE
             % play the dots
             responseTimeWithinEvent = DoDotMo( Cfg, ExpParameters, logFile);
             % % %
+            
+            
+            
             
             %% logfile for responses
             if ~isempty(responseTimeWithinEvent)
@@ -141,13 +155,7 @@ try
             
             % concatenate the new event responses with the old responses vector
             logFile.allResponses = [logFile.allResponses responseTimeWithinEvent];
-            
-            Screen('DrawLines', Cfg.win, Cfg.allCoords,ExpParameters.lineWidthPix, ...
-                Cfg.white , [Cfg.center(1) Cfg.center(2)], 1);
-            Screen('Flip',Cfg.win);
-            
-            
-            
+
             
             % Save the events txt logfile
             logFile = SaveOutput(subjectName, logFile, ExpParameters, 'save Events', iBlock, iEventsPerBlock);
@@ -164,10 +172,6 @@ try
         logFile.blockEnds(iBlock,1)= GetSecs-Cfg.experimentStart;          % End of the block Time
         logFile.blockDurations(iBlock,1)= logFile.blockEnds(iBlock,1) - logFile.blockOnsets(iBlock,1); % Block Duration
         
-        %Screen('DrawTexture',Cfg.win,imagesTex.Event(1));
-        Screen('DrawLines', Cfg.win, Cfg.allCoords,ExpParameters.lineWidthPix, ...
-            Cfg.white , [Cfg.center(1) Cfg.center(2)], 1);
-        Screen('Flip',Cfg.win);
         
         WaitSecs(ExpParameters.IBI);
         

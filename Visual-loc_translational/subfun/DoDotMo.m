@@ -139,18 +139,13 @@ while continueShow
     
     % Draw the fixation cross
     if GetSecs < (movieStartTime+fixationChangeDuration) && eventIsFixationTarget==1
-        
         % Target
-        Screen('DrawLines', Cfg.win, Cfg.allCoords, ExpParameters.lineWidthPix, ...
-            ExpParameters.fixationCrossColorTarget, [Cfg.center(1) Cfg.center(2)], 1);
-        
+        color = ExpParameters.fixationCrossColorTarget;
     else
-        
         % Not target
-        Screen('DrawLines', Cfg.win, Cfg.allCoords,ExpParameters.lineWidthPix, ...
-            ExpParameters.fixationCrossColor , [Cfg.center(1) Cfg.center(2)], 1);
-        
+        color = ExpParameters.fixationCrossColor;
     end
+    DrawFixationCross(Cfg, ExpParameters, color)
     
     % NaN out-of-circle dots
     xyDis = dotShow;
@@ -222,10 +217,11 @@ responseTimeWithinEvent = responseTimeWithinEvent(responseTimeWithinEvent~=0);
 
 %% Erase last dots
 
-Screen('DrawLines', Cfg.win, Cfg.allCoords, ExpParameters.lineWidthPix, ...
-    ExpParameters.fixationCrossColor , [Cfg.center(1) Cfg.center(2)], 1);
+DrawFixationCross(Cfg, ExpParameters, ExpParameters.fixationCrossColor)
 
 Screen('DrawingFinished', Cfg.win,dontClear);
 
 Screen('Flip', Cfg.win, 0, dontClear);
 
+
+end
