@@ -34,6 +34,9 @@ dotSpeed = logFile.iEventSpeed;
 eventIsFixationTarget = logFile.iEventIsFixationTarget;
 fixationChangeDuration = ExpParameters.fixationChangeDuration;
 
+diamAperture = Cfg.diameterAperture;
+diamAperturePpd = Cfg.diameterAperturePpd;
+
 % Check if it is a static or motion block
 if direction == -1
     dotSpeed = 0;
@@ -50,7 +53,7 @@ xy = rand(ndots, 2);
 
 % Set a N x 2 matrix that gives jumpsize in units on 0 1
 %  deg/sec * Ap-unit/deg * sec/jump = unit/jump
-dxdy = repmat(dotSpeed*10/(Cfg.diameterAperture*10)*(3/Cfg.monRefresh) ...
+dxdy = repmat(dotSpeed*10/(diamAperture*10)*(3/Cfg.monRefresh) ...
     *(cos(pi*direction/180.0)-sin(pi*direction/180.0)), ndots, 1);
 
 % Divide dots into three sets
@@ -123,16 +126,16 @@ while continueShow
     dotTime = dotTime + 1;
     
     % Convert to stuff we can actually plot (pix/ApUnit)
-    this_x(:,1:2) = floor(Cfg.diameterAperturePpd(1)*this_s);
+    this_x(:,1:2) = floor(diamAperturePpd(1)*this_s);
     
     % This assumes that zero is at the top left, but we want it to be
     %  in the center, so shift the dots up and left, which just means
     %  adding half of the aperture size to both the x and y direction.
-    dotShow = (this_x(:,1:2)-Cfg.diameterAperturePpd/2)';
+    dotShow = (this_x(:,1:2)-diamAperturePpd/2)';
     
     % NaN out-of-circle dots
     xyDis = dotShow;
-    outCircle = sqrt(xyDis(1,:).^2+xyDis(2,:).^2)+dotSize/2 > (Cfg.diameterAperturePpd/2);
+    outCircle = sqrt(xyDis(1,:).^2+xyDis(2,:).^2)+dotSize/2 > (diamAperturePpd/2);
     dots2Display = dotShow;
     dots2Display(:,outCircle) = NaN;
     
