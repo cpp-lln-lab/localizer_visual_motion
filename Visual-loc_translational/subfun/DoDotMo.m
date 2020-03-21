@@ -56,7 +56,7 @@ dxdy = repmat(dotSpeed*10/(Cfg.diameterAperture*10)*(3/Cfg.monRefresh) ...
 ss = rand(ndots*3, 2);
 
 % Divide dots into three sets
-Ls = cumsum(ones(ndots,3)) + repmat([0 ndots ndots*2], ndots, 1);
+Ls = cumsum(ones(ndots,1));
 
 % Set for how many frames to show the dots
 continueShow = floor(ExpParameters.eventDuration/Cfg.ifi);
@@ -65,7 +65,7 @@ continueShow = floor(ExpParameters.eventDuration/Cfg.ifi);
 dotLifeTime = ceil(dotLifeTime/Cfg.ifi);
 
 % Create a ones vector to update to dotlife time of each dot
-dotTime = ones(size(Ls,1),2);
+dotTime = ones(size(Ls,1),1);
 
 %% Start the dots presentation
 movieStartTime= GetSecs();
@@ -75,12 +75,8 @@ while continueShow
     % Get ss & xs from the big matrices. xs and ss are matrices that have
     %  stuff for dots from the last 2 positions + current.
     
-    % Ls picks out the previous set (1:5, 6:10, or 11:15)
-    Lthis  = Ls(:,1);
-    
-    
     % This is a matrix of random #s - starting position
-    this_s = ss(Lthis,:);
+    this_s = ss(Ls,:);
   
     % Compute new locations, L are the dots that will be moved
     L = rand(ndots,1) < coh;
@@ -161,7 +157,7 @@ while continueShow
     Screen('Flip', Cfg.win, 0, dontClear );
     
     % Update the array so xor works next time ????????
-    ss(Lthis, :) = this_s;
+    ss(Ls, :) = this_s;
     
     % Check for end of loop
     continueShow = continueShow - 1;
