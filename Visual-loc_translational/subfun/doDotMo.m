@@ -49,6 +49,8 @@ responseTimeWithinEvent = [];
 
 % Set an array of dot positions [xposition, yposition]
 % These can never be bigger than 1 or lower than 0
+% [0,0] is the top / left of the square that contains the square aperture
+% [1,1] is the bottom / right of the square that contains the square aperture
 xy = rand(ndots, 2);
 
 % Set a N x 2 matrix that gives jumpsize in units on 0 1
@@ -71,64 +73,43 @@ movieStartTime = GetSecs();
 
 while continueShow
     
-    % Compute new locations, L are the dots that will be moved
+    % L are the dots that will be moved
     L = rand(ndots,1) < coh;
     
-    % Offset the selected dots
+    % Move the selected dots
     xy(L,:) = xy(L,:) + dxdy(L,:);
     
-    % If not 100% coherence
+    % If not 100% coherence, we get new random locations for the other dots
     if sum(~L) > 0
-        
-        % Get new random locations for the rest
         xy(~L,:) = rand(sum(~L),2);
-        
     end
     
-    % ??????????????????
-    N = sum((xy > 1 | xy < 0 | repmat(dotTime(:,1) > dotLifeTime,1,2))')' ~= 0 ;  %#ok<UDIM>
+    % Create a logical vector to detect any dot that has:
+    % - an xy position inferior to 0
+    % - an xy position superior to 1
+    % - has exceeded its liftime
+    N = any([xy > 1, xy < 0, dotTime > dotLifeTime], 2) ;
     
-    % Re-allocate the dots to random positions
-    if sum(N) > 0
-        
-        % Re-allocate the chosen dots to random positions
+    % If there is any such dot we relocate it to a new random position
+    % and change its lifetime to 1
+    if any(N)
         xy(N,:) = rand(sum(N), 2);
-        
-        % Find the dots that were re-allocated and change its lifetime to 1
-        dotTime(find(N==1),:) = 1;
-        
+        dotTime(N, 1) = 1;
     end
     
-    %     % Reallocate to the border of the aperture
-    %     if sum(N) > 0
-    %         xdir = sin(pi*direction/180.0);
-    %         ydir = cos(pi*direction/180.0);
-    %         % Flip a weighted coin to see which edge to put the replaced dots
-    %         if rand < abs(xdir)/(abs(xdir) + abs(ydir))
-    %             xy(find(N==1),:) = [rand(sum(N),1) (xdir > 0)*ones(sum(N),1)];
-    %             dotTime(find(N==1),:) = 1;
-    %         else
-    %             xy(find(N==1),:) = [(ydir < 0)*ones(sum(N),1) rand(sum(N),1)];
-    %             dotTime(find(N==1),:) = 1;
-    %         end
-    %     end
-    
-    % Add one frame to the dot lifetime to each dot
-    dotTime = dotTime + 1;
-    
-    % Convert to stuff we can actually plot (pix/ApUnit)
-    this_x = floor( xy * diamAperturePpd );
+    % Convert the dot position to pixels
+    xy_pix = floor( xy * diamAperturePpd );
     
     % This assumes that zero is at the top left, but we want it to be
     %  in the center, so shift the dots up and left, which just means
     %  adding half of the aperture size to both the x and y direction.
-    dotShow = (this_x(:,1:2)-diamAperturePpd/2)';
+    xy_pix = (xy_pix - diamAperturePpd/2)';
     
     % NaN out-of-circle dots
-    xyDis = dotShow;
-    outCircle = sqrt(xyDis(1,:).^2+xyDis(2,:).^2)+dotSize/2 > (diamAperturePpd/2);
-    dots2Display = dotShow;
-    dots2Display(:,outCircle) = NaN;
+    % We use Pythagore's theorem to figure out which dots are out of the
+    % circle
+    outCircle = sqrt(xy_pix(1,:).^2 + xy_pix(2,:).^2) + dotSize/2 > (diamAperturePpd / 2);
+    xy_pix(:, outCircle) = NaN;
     
     
     %% PTB draws the dots stimulation
@@ -142,17 +123,20 @@ while continueShow
     drawFixationCross(Cfg, ExpParameters, color)
     
     % Draw the dots
-    Screen('DrawDots', Cfg.win, dots2Display, dotSize, dotColor, Cfg.center, 2);
+    Screen('DrawDots', Cfg.win, xy_pix, dotSize, dotColor, Cfg.center, 2);
     
     Screen('DrawingFinished', Cfg.win, dontClear );
     
     Screen('Flip', Cfg.win, 0, dontClear );
     
     
-    %% Update loop counter counter
+    %% Update counters
 
     % Check for end of loop
     continueShow = continueShow - 1;
+    
+    % Add one frame to the dot lifetime to each dot
+    dotTime = dotTime + 1;
     
     
     %% Response collection
