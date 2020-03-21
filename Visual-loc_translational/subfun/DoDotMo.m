@@ -22,7 +22,7 @@ experimentStart = Cfg.experimentStart;
 dontClear  = ExpParameters.dontClear;
 
 coh = ExpParameters.coh;
-maxDotsPerFrame = ExpParameters.maxDotsPerFrame;
+ndots = ExpParameters.maxDotsPerFrame;
 direction = logFile.iEventDirection;
 
 dotSize = ExpParameters.dotSizePpd;
@@ -44,16 +44,13 @@ end
 
 responseTimeWithinEvent = [];
 
-% Claculate the number of dots per event ????????????
-ndots = min(maxDotsPerFrame, ceil(Cfg.diameterAperturePpd.*Cfg.diameterAperturePpd/Cfg.monRefresh));
-
 % Set a N x 2 matrix that gives jumpsize in units on 0 1
 %  deg/sec * Ap-unit/deg * sec/jump = unit/jump
 dxdy = repmat(dotSpeed*10/(Cfg.diameterAperture*10)*(3/Cfg.monRefresh) ...
     *(cos(pi*direction/180.0)-sin(pi*direction/180.0)), ndots, 1);
 
 % Set loop indices in a array of dot positions raw [xposition, yposition]
-ss = rand(ndots*3, 2);
+ss = rand(ndots, 2);
 
 % Divide dots into three sets
 Ls = cumsum(ones(ndots,1));
