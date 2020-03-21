@@ -44,7 +44,7 @@ ExpParameters.numRepetitions     = 1;      %AT THE MOMENT IT IS NOT SET IN THE M
 ExpParameters.IBI                = 0; %8;      
 ExpParameters.ISI                = 0.1;    % Time between events in secs
 ExpParameters.onsetDelay         = 5;      % Number of seconds before the motion stimuli are presented
-ExpParameters.endDelay           = 5;      % Number of seconds after the end all the stimuli before ending the run
+ExpParameters.endDelay           = 1;      % Number of seconds after the end all the stimuli before ending the run
 
 
 %% Visual Stimulation
