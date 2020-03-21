@@ -94,7 +94,7 @@ try
     end
     
     %% Experiment Start
-    Cfg.Experiment_start = GetSecs;
+    Cfg.experimentStart = GetSecs;
     
     WaitSecs(ExpParameters.onsetDelay);
     
@@ -103,7 +103,7 @@ try
         
         fprintf('Running Block %.0f \n',iBlock)
         
-        logFile.blockOnsets(iBlock,1)= GetSecs-Cfg.Experiment_start;
+        logFile.blockOnsets(iBlock,1)= GetSecs-Cfg.experimentStart;
         
         if Cfg.eyeTracker
             [el] = EyeTracker(Cfg, ExpParameters, subjectName, sessionNumber, runNumber, 'StartRecording');
@@ -123,7 +123,7 @@ try
             logFile.iEventIsFixationTarget = ExpParameters.designFixationTargets(iBlock,iEventsPerBlock);
             
             % Event Onset
-            logFile.eventOnsets(iBlock,iEventsPerBlock) = GetSecs-Cfg.Experiment_start;
+            logFile.eventOnsets(iBlock,iEventsPerBlock) = GetSecs-Cfg.experimentStart;
             
             % % % REFACTORE
             % play the dots
@@ -136,7 +136,7 @@ try
             end
             
             %% Event End and Duration
-            logFile.eventEnds(iBlock,iEventsPerBlock) = GetSecs-Cfg.Experiment_start;
+            logFile.eventEnds(iBlock,iEventsPerBlock) = GetSecs-Cfg.experimentStart;
             logFile.eventDurations(iBlock,iEventsPerBlock) = logFile.eventEnds(iBlock,iEventsPerBlock) - logFile.eventOnsets(iBlock,iEventsPerBlock);
             
             % concatenate the new event responses with the old responses vector
@@ -161,7 +161,7 @@ try
             [el] = EyeTracker(Cfg, ExpParameters, subjectName, sessionNumber, runNumber, 'StopRecordings');
         end
         
-        logFile.blockEnds(iBlock,1)= GetSecs-Cfg.Experiment_start;          % End of the block Time
+        logFile.blockEnds(iBlock,1)= GetSecs-Cfg.experimentStart;          % End of the block Time
         logFile.blockDurations(iBlock,1)= logFile.blockEnds(iBlock,1) - logFile.blockOnsets(iBlock,1); % Block Duration
         
         %Screen('DrawTexture',Cfg.win,imagesTex.Event(1));
@@ -193,7 +193,7 @@ try
     logFile = SaveOutput(subjectName, logFile, ExpParameters, 'close');
     
     
-    TotalExperimentTime = GetSecs-Cfg.Experiment_start;
+    TotalExperimentTime = GetSecs-Cfg.experimentStart;
     
     %% Save mat log files
     % % % ADD SESSION AND RUN NUMBER

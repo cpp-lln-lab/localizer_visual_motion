@@ -17,19 +17,22 @@ function responseTimeWithinEvent = DoDotMo(Cfg, ExpParameters, logFile)
 %
 
 % Get the parameters
-Experiment_start = Cfg.Experiment_start;
+experimentStart = Cfg.Experiment_start;
 
 dontClear  = ExpParameters.dontClear;
+
 coh = ExpParameters.coh;
+maxDotsPerFrame = ExpParameters.maxDotsPerFrame;
+direction = logFile.iEventDirection;
+
 dotSize = ExpParameters.dotSizePpd;
 dotLifeTime = ExpParameters.dotLifeTime;
-maxDotsPerFrame = ExpParameters.maxDotsPerFrame;
 dotColor = ExpParameters.dotColor;
-fixationChangeDuration = ExpParameters.fixationChangeDuration;
-
-direction = logFile.iEventDirection;
 dotSpeed = logFile.iEventSpeed;
+
+
 eventIsFixationTarget = logFile.iEventIsFixationTarget;
+fixationChangeDuration = ExpParameters.fixationChangeDuration;
 
 % Check if it is a static or motion block
 if direction == -1
@@ -183,7 +186,7 @@ while continueShow
         if KeyIsDown
             
             % Add the response with RT
-            responseTimeWithinEvent(end+1)= PressedSecs - Experiment_start;
+            responseTimeWithinEvent(end+1)= PressedSecs - experimentStart;
             
         elseif ~KeyIsDown
             
