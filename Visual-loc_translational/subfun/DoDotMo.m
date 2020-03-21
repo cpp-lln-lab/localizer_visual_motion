@@ -17,7 +17,7 @@ function responseTimeWithinEvent = DoDotMo(Cfg, ExpParameters, logFile)
 %
 
 % Get the parameters
-experimentStart = Cfg.Experiment_start;
+experimentStart = Cfg.experimentStart;
 
 dontClear  = ExpParameters.dontClear;
 
@@ -29,7 +29,6 @@ dotSize = ExpParameters.dotSizePpd;
 dotLifeTime = ExpParameters.dotLifeTime;
 dotColor = ExpParameters.dotColor;
 dotSpeed = logFile.iEventSpeed;
-
 
 eventIsFixationTarget = logFile.iEventIsFixationTarget;
 fixationChangeDuration = ExpParameters.fixationChangeDuration;
