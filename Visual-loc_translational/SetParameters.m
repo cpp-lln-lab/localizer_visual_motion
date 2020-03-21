@@ -35,6 +35,7 @@ Cfg.textFont         = 'Courier New';
 Cfg.textSize         = 18;
 Cfg.textStyle        = 1;
 
+
 %% Experiment Design
 ExpParameters.names              = {'static','motion'};
 ExpParameters.possibleDirections = [-1 1]; % 1 motion , -1 static
@@ -57,6 +58,7 @@ ExpParameters.dotLifeTime       = 0.2;     % Dot life time in seconds
 ExpParameters.dontClear         = 0;
 ExpParameters.dotSize           = 0.1;     % Dot Size (dot width) in visual angles.
 ExpParameters.dotColor          = Cfg.white;
+
 
 %% Task(s)
 

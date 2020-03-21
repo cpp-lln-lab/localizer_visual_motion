@@ -36,7 +36,9 @@ try
     %% Init the experiment
     [Cfg] = InitPTB(Cfg);
     
-    [ExpParameters, Cfg]  = VisualDegree2Pixels(ExpParameters, Cfg);
+    % Convert some values from degrees to pixels
+    Cfg = deg2Pix('diameterAperture', Cfg, Cfg);
+    ExpParameters = deg2Pix('dotSize', ExpParameters, Cfg);
     
     if Cfg.eyeTracker
         [el] = EyeTracker(Cfg, ExpParameters, subjectName, sessionNumber, runNumber, 'Calibration');
@@ -45,10 +47,7 @@ try
     % % % REFACTOR THIS FUNCTION
     [ExpParameters] = expDesign(ExpParameters);
     % % %
-    
-    % Visual degree to pixels converter
-    [ExpParameters, Cfg] = VisualDegree2Pixels(ExpParameters, Cfg);
-    
+
     % Empty vectors and matrices for speed
     
     % % %     blockNames     = cell(ExpParameters.numBlocks,1);

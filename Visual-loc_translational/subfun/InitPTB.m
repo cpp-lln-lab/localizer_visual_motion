@@ -63,6 +63,10 @@ if strcmp(Cfg.stimPosition,'Scanner')
     Cfg.winRect(1,4) = Cfg.winRect(1,4)*2/3;
 end
 
+% Computes the number of pixels per degree given the distance to screen and
+% monitor width
+V = 2*(180*(atan(Cfg.monitorWidth/(2*Cfg.screenDistance))/pi));
+Cfg.ppd = Cfg.winRect(3)/V;
 % Select specific text font, style and size:
 Screen('TextFont',Cfg.win, Cfg.textFont );
 Screen('TextSize',Cfg.win, Cfg.textSize);
