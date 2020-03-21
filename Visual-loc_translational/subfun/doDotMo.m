@@ -47,8 +47,8 @@ end
 %% initialize variables
 responseTimeWithinEvent = [];
 
-
-% Set loop indices in a array of dot positions raw [xposition, yposition]
+% Set an array of dot positions [xposition, yposition]
+% These can never be bigger than 1 or lower than 0
 xy = rand(ndots, 2);
 
 % Set a N x 2 matrix that gives jumpsize in units on 0 1
@@ -57,7 +57,7 @@ dxdy = repmat(dotSpeed*10/(diamAperture*10)*(3/Cfg.monRefresh) ...
     *(cos(pi*direction/180.0)-sin(pi*direction/180.0)), ndots, 1);
 
 % Create a ones vector to update to dotlife time of each dot
-dotTime = ones(size(xy));
+dotTime = ones(size(xy, 1), 1);
 
 % Set for how many frames to show the dots
 continueShow = floor(ExpParameters.eventDuration/Cfg.ifi);
@@ -117,7 +117,7 @@ while continueShow
     dotTime = dotTime + 1;
     
     % Convert to stuff we can actually plot (pix/ApUnit)
-    this_x(:,1:2) = floor(diamAperturePpd(1)*xy);
+    this_x = floor( xy * diamAperturePpd );
     
     % This assumes that zero is at the top left, but we want it to be
     %  in the center, so shift the dots up and left, which just means
@@ -134,12 +134,10 @@ while continueShow
     %% PTB draws the dots stimulation
     
     % Draw the fixation cross
+    color = ExpParameters.fixationCrossColor;
+    % If this frame shows a target we change the color
     if GetSecs < (movieStartTime+fixationChangeDuration) && eventIsFixationTarget==1
-        % Target
         color = ExpParameters.fixationCrossColorTarget;
-    else
-        % Not target
-        color = ExpParameters.fixationCrossColor;
     end
     drawFixationCross(Cfg, ExpParameters, color)
     
