@@ -16,7 +16,8 @@ function responseTimeWithinEvent = DoDotMo(Cfg, ExpParameters, logFile)
 %   - responseTimeWithinEvent = subject response for the task
 %
 
-% Get the parameters
+
+%% Get parameters
 experimentStart = Cfg.experimentStart;
 
 dontClear  = ExpParameters.dontClear;
@@ -35,25 +36,28 @@ fixationChangeDuration = ExpParameters.fixationChangeDuration;
 
 % Check if it is a static or motion block
 if direction == -1
-    
     dotSpeed = 0;
-    
     dotLifeTime = ExpParameters.eventDuration;
-    
 end
 
+
+%% initialize variables
 responseTimeWithinEvent = [];
+
+
+% Set loop indices in a array of dot positions raw [xposition, yposition]
+xy = rand(ndots, 2);
 
 % Set a N x 2 matrix that gives jumpsize in units on 0 1
 %  deg/sec * Ap-unit/deg * sec/jump = unit/jump
 dxdy = repmat(dotSpeed*10/(Cfg.diameterAperture*10)*(3/Cfg.monRefresh) ...
     *(cos(pi*direction/180.0)-sin(pi*direction/180.0)), ndots, 1);
 
-% Set loop indices in a array of dot positions raw [xposition, yposition]
-ss = rand(ndots, 2);
-
 % Divide dots into three sets
 Ls = cumsum(ones(ndots,1));
+
+% Create a ones vector to update to dotlife time of each dot
+dotTime = ones(size(Ls));
 
 % Set for how many frames to show the dots
 continueShow = floor(ExpParameters.eventDuration/Cfg.ifi);
@@ -61,11 +65,9 @@ continueShow = floor(ExpParameters.eventDuration/Cfg.ifi);
 % Covert the dotLifeTime from seconds to frames
 dotLifeTime = ceil(dotLifeTime/Cfg.ifi);
 
-% Create a ones vector to update to dotlife time of each dot
-dotTime = ones(size(Ls,1),1);
 
 %% Start the dots presentation
-movieStartTime= GetSecs();
+movieStartTime = GetSecs();
 
 while continueShow
     
@@ -73,7 +75,7 @@ while continueShow
     %  stuff for dots from the last 2 positions + current.
     
     % This is a matrix of random #s - starting position
-    this_s = ss(Ls,:);
+    this_s = xy(Ls,:);
   
     % Compute new locations, L are the dots that will be moved
     L = rand(ndots,1) < coh;
@@ -128,6 +130,13 @@ while continueShow
     %  adding half of the aperture size to both the x and y direction.
     dotShow = (this_x(:,1:2)-Cfg.diameterAperturePpd/2)';
     
+    % NaN out-of-circle dots
+    xyDis = dotShow;
+    outCircle = sqrt(xyDis(1,:).^2+xyDis(2,:).^2)+dotSize/2 > (Cfg.diameterAperturePpd/2);
+    dots2Display = dotShow;
+    dots2Display(:,outCircle) = NaN;
+    
+    
     %% PTB draws the dots stimulation
     
     % Draw the fixation cross
@@ -140,12 +149,6 @@ while continueShow
     end
     DrawFixationCross(Cfg, ExpParameters, color)
     
-    % NaN out-of-circle dots
-    xyDis = dotShow;
-    outCircle = sqrt(xyDis(1,:).^2+xyDis(2,:).^2)+dotSize/2 > (Cfg.diameterAperturePpd/2);
-    dots2Display = dotShow;
-    dots2Display(:,outCircle) = NaN;
-    
     % Draw the dots
     Screen('DrawDots', Cfg.win, dots2Display, dotSize, dotColor, Cfg.center, 2);
     
@@ -153,11 +156,14 @@ while continueShow
     
     Screen('Flip', Cfg.win, 0, dontClear );
     
+    
+    %% Update parameters and loop counter counter
     % Update the array so xor works next time ????????
-    ss(Ls, :) = this_s;
+    xy(Ls, :) = this_s;
     
     % Check for end of loop
     continueShow = continueShow - 1;
+    
     
     %% Response collection
     
@@ -184,6 +190,7 @@ while continueShow
         
     end
     
+    
 end
 
 %% Remove duplicate responses coming from the same button press
@@ -207,6 +214,7 @@ end
 % % % % % WHY???
 
 responseTimeWithinEvent = responseTimeWithinEvent(responseTimeWithinEvent~=0);
+
 
 %% Erase last dots
 
