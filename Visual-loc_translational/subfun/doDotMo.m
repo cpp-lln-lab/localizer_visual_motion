@@ -1,10 +1,9 @@
 function responseTimeWithinEvent = doDotMo(Cfg, ExpParameters, logFile)
-% Draws the stimulation of static/moving in 4 directions dots or staticand
+% Draws the stimulation of static/moving in 4 directions dots or static and
 %  collects the task responses inside an event (1 direction)
 %
 % DIRECTIONS
 %  0=Right; 90=Up; 180=Left; 270=down
-%
 %
 % Input:
 %   - Cfg: PTB/machine configurations returned by SetParameters and initPTB
@@ -15,6 +14,10 @@ function responseTimeWithinEvent = doDotMo(Cfg, ExpParameters, logFile)
 %     % % % could we put this directly in the logFile struct?
 %   - responseTimeWithinEvent = subject response for the task
 %
+% The dots are drawn on a square that contains the round aperture, then any
+% dots outside of the aperture is turned into a NaN so effectively the
+% actual number of dots on the screen at any given time is not the one that you input but a
+% smaller number (nDots / Area of aperture) on average.
 
 
 %% Get parameters
