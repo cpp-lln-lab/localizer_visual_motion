@@ -23,10 +23,10 @@ end
 % make sure we got access to all the required functions and inputs
 addpath(genpath(fullfile(pwd, 'subfun')))
 
-[ExpParameters, Cfg] = SetParameters;
+[ExpParameters, Cfg] = setParameters;
 
 % set and load all the parameters to run the experiment
-[subjectName, runNumber, sessionNumber] = UserInputs(Cfg);
+[subjectName, runNumber, sessionNumber] = userInputs(Cfg);
 
 
 %%  Experiment
@@ -34,14 +34,14 @@ addpath(genpath(fullfile(pwd, 'subfun')))
 % Safety loop: close the screen if code crashes
 try
     %% Init the experiment
-    [Cfg] = InitPTB(Cfg);
+    [Cfg] = initPTB(Cfg);
     
     % Convert some values from degrees to pixels
     Cfg = deg2Pix('diameterAperture', Cfg, Cfg);
     ExpParameters = deg2Pix('dotSize', ExpParameters, Cfg);
     
     if Cfg.eyeTracker
-        [el] = EyeTracker(Cfg, ExpParameters, subjectName, sessionNumber, runNumber, 'Calibration');
+        [el] = eyeTracker(Cfg, ExpParameters, subjectName, sessionNumber, runNumber, 'Calibration');
     end
     
     % % % REFACTOR THIS FUNCTION
@@ -62,7 +62,7 @@ try
     logFile.allResponses = [] ;
     
     % Prepare for the output logfiles
-    logFile = SaveOutput(subjectName, logFile, ExpParameters, 'open');
+    logFile = saveOutput(subjectName, logFile, ExpParameters, 'open');
     
     
     
@@ -90,11 +90,11 @@ try
     pressSpace4me
     
     % Wait for Trigger from Scanner
-    Wait4Trigger(Cfg)
+    wait4Trigger(Cfg)
     
     % Show the fixation cross
     if ExpParameters.Task1
-        DrawFixationCross(Cfg, ExpParameters, ExpParameters.fixationCrossColor)
+        drawFixationCross(Cfg, ExpParameters, ExpParameters.fixationCrossColor)
         Screen('Flip',Cfg.win);
     end
     
@@ -111,7 +111,7 @@ try
         logFile.blockOnsets(iBlock,1)= GetSecs-Cfg.experimentStart;
         
         if Cfg.eyeTracker
-            [el] = EyeTracker(Cfg, ExpParameters, subjectName, sessionNumber, runNumber, 'StartRecording');
+            [el] = eyeTracker(Cfg, ExpParameters, subjectName, sessionNumber, runNumber, 'StartRecording');
         end
         
         % For each event in the block
@@ -137,7 +137,7 @@ try
             
             % % % REFACTORE
             % play the dots
-            responseTimeWithinEvent = DoDotMo( Cfg, ExpParameters, logFile);
+            responseTimeWithinEvent = doDotMo( Cfg, ExpParameters, logFile);
             % % %
             
             
@@ -157,7 +157,7 @@ try
 
             
             % Save the events txt logfile
-            logFile = SaveOutput(subjectName, logFile, ExpParameters, 'save Events', iBlock, iEventsPerBlock);
+            logFile = saveOutput(subjectName, logFile, ExpParameters, 'save Events', iBlock, iEventsPerBlock);
             
             
             % wait for the inter-stimulus interval
@@ -165,7 +165,7 @@ try
         end
         
         if Cfg.eyeTracker
-            [el] = EyeTracker(Cfg, ExpParameters, subjectName, sessionNumber, runNumber, 'StopRecordings');
+            [el] = eyeTracker(Cfg, ExpParameters, subjectName, sessionNumber, runNumber, 'StopRecordings');
         end
         
         logFile.blockEnds(iBlock,1)= GetSecs-Cfg.experimentStart;          % End of the block Time
@@ -176,7 +176,7 @@ try
         
         % % % NEED TO ASSIGN THE TXT VARIABLE IN A STRUCTURE
         % Save the block txt Logfile
-        logFile = SaveOutput(subjectName, logFile, ExpParameters, ...
+        logFile = saveOutput(subjectName, logFile, ExpParameters, ...
             'save Blocks', iBlock, iEventsPerBlock);
         % % %
         
@@ -193,7 +193,7 @@ try
     WaitSecs(ExpParameters.endDelay);
     
     % Close the logfiles
-    logFile = SaveOutput(subjectName, logFile, ExpParameters, 'close');
+    logFile = saveOutput(subjectName, logFile, ExpParameters, 'close');
     
     
     TotalExperimentTime = GetSecs-Cfg.experimentStart;
@@ -212,15 +212,15 @@ try
     % % %     % % %
     
     if Cfg.eyeTracker
-        [el] = EyeTracker(Cfg, ExpParameters, subjectName, sessionNumber, runNumber, 'Shutdown');
+        [el] = eyeTracker(Cfg, ExpParameters, subjectName, sessionNumber, runNumber, 'Shutdown');
     end
     
     
-    CleanUp()
+    cleanUp()
     
 catch
     
-    CleanUp()
+    cleanUp()
     psychrethrow(psychlasterror);
     
 end

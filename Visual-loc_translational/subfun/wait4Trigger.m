@@ -1,4 +1,4 @@
-function Wait4Trigger(Cfg)
+function wait4Trigger(Cfg)
 
 if strcmp(Cfg.device,'Scanner')
     

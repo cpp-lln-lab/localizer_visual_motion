@@ -1,4 +1,4 @@
-function [Cfg] = InitPTB(Cfg)
+function [Cfg] = initPTB(Cfg)
 % This seems a good candidate function to have as a common function across
 % experiments
 % We might want to add a couple of IF in case the experiment does not use

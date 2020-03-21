@@ -56,7 +56,7 @@ end
 
 % Set to 1 for a visualtion of the trials design order
 if nargin < 2  || isempty(displayFigs)
-    displayFigs = 1;
+    displayFigs = 0;
 end
 
 % Get the parameters

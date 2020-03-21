@@ -1,4 +1,4 @@
-function [subjectName, runNumber, sessionNumber] = UserInputs(Cfg)
+function [subjectName, runNumber, sessionNumber] = userInputs(Cfg)
 % Get Subject Name, run number and session number
 
 

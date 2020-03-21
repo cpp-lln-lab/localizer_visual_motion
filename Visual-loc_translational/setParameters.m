@@ -1,4 +1,4 @@
-function [ExpParameters, Cfg] = SetParameters
+function [ExpParameters, Cfg] = setParameters
 
 ExpParameters = struct; % Initialize the parameters variables
 Cfg           = struct; % Initialize the general configuration variables

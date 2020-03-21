@@ -1,4 +1,4 @@
-function responseTimeWithinEvent = DoDotMo(Cfg, ExpParameters, logFile)
+function responseTimeWithinEvent = doDotMo(Cfg, ExpParameters, logFile)
 % Draws the stimulation of static/moving in 4 directions dots or staticand
 %  collects the task responses inside an event (1 direction)
 %
@@ -56,11 +56,8 @@ xy = rand(ndots, 2);
 dxdy = repmat(dotSpeed*10/(diamAperture*10)*(3/Cfg.monRefresh) ...
     *(cos(pi*direction/180.0)-sin(pi*direction/180.0)), ndots, 1);
 
-% Divide dots into three sets
-Ls = cumsum(ones(ndots,1));
-
 % Create a ones vector to update to dotlife time of each dot
-dotTime = ones(size(Ls));
+dotTime = ones(size(xy));
 
 % Set for how many frames to show the dots
 continueShow = floor(ExpParameters.eventDuration/Cfg.ifi);
@@ -74,34 +71,28 @@ movieStartTime = GetSecs();
 
 while continueShow
     
-    % Get ss & xs from the big matrices. xs and ss are matrices that have
-    %  stuff for dots from the last 2 positions + current.
-    
-    % This is a matrix of random #s - starting position
-    this_s = xy(Ls,:);
-  
     % Compute new locations, L are the dots that will be moved
     L = rand(ndots,1) < coh;
     
     % Offset the selected dots
-    this_s(L,:) = this_s(L,:) + dxdy(L,:);
+    xy(L,:) = xy(L,:) + dxdy(L,:);
     
     % If not 100% coherence
     if sum(~L) > 0
         
         % Get new random locations for the rest
-        this_s(~L,:) = rand(sum(~L),2);
+        xy(~L,:) = rand(sum(~L),2);
         
     end
     
     % ??????????????????
-    N = sum((this_s > 1 | this_s < 0 | repmat(dotTime(:,1) > dotLifeTime,1,2))')' ~= 0 ;  %#ok<UDIM>
+    N = sum((xy > 1 | xy < 0 | repmat(dotTime(:,1) > dotLifeTime,1,2))')' ~= 0 ;  %#ok<UDIM>
     
     % Re-allocate the dots to random positions
     if sum(N) > 0
         
         % Re-allocate the chosen dots to random positions
-        this_s(N,:) = rand(sum(N), 2);
+        xy(N,:) = rand(sum(N), 2);
         
         % Find the dots that were re-allocated and change its lifetime to 1
         dotTime(find(N==1),:) = 1;
@@ -114,10 +105,10 @@ while continueShow
     %         ydir = cos(pi*direction/180.0);
     %         % Flip a weighted coin to see which edge to put the replaced dots
     %         if rand < abs(xdir)/(abs(xdir) + abs(ydir))
-    %             this_s(find(N==1),:) = [rand(sum(N),1) (xdir > 0)*ones(sum(N),1)];
+    %             xy(find(N==1),:) = [rand(sum(N),1) (xdir > 0)*ones(sum(N),1)];
     %             dotTime(find(N==1),:) = 1;
     %         else
-    %             this_s(find(N==1),:) = [(ydir < 0)*ones(sum(N),1) rand(sum(N),1)];
+    %             xy(find(N==1),:) = [(ydir < 0)*ones(sum(N),1) rand(sum(N),1)];
     %             dotTime(find(N==1),:) = 1;
     %         end
     %     end
@@ -126,7 +117,7 @@ while continueShow
     dotTime = dotTime + 1;
     
     % Convert to stuff we can actually plot (pix/ApUnit)
-    this_x(:,1:2) = floor(diamAperturePpd(1)*this_s);
+    this_x(:,1:2) = floor(diamAperturePpd(1)*xy);
     
     % This assumes that zero is at the top left, but we want it to be
     %  in the center, so shift the dots up and left, which just means
@@ -150,7 +141,7 @@ while continueShow
         % Not target
         color = ExpParameters.fixationCrossColor;
     end
-    DrawFixationCross(Cfg, ExpParameters, color)
+    drawFixationCross(Cfg, ExpParameters, color)
     
     % Draw the dots
     Screen('DrawDots', Cfg.win, dots2Display, dotSize, dotColor, Cfg.center, 2);
@@ -160,10 +151,8 @@ while continueShow
     Screen('Flip', Cfg.win, 0, dontClear );
     
     
-    %% Update parameters and loop counter counter
-    % Update the array so xor works next time ????????
-    xy(Ls, :) = this_s;
-    
+    %% Update loop counter counter
+
     % Check for end of loop
     continueShow = continueShow - 1;
     
@@ -221,9 +210,9 @@ responseTimeWithinEvent = responseTimeWithinEvent(responseTimeWithinEvent~=0);
 
 %% Erase last dots
 
-DrawFixationCross(Cfg, ExpParameters, ExpParameters.fixationCrossColor)
+drawFixationCross(Cfg, ExpParameters, ExpParameters.fixationCrossColor)
 
-Screen('DrawingFinished', Cfg.win,dontClear);
+Screen('DrawingFinished', Cfg.win, dontClear);
 
 Screen('Flip', Cfg.win, 0, dontClear);
 
