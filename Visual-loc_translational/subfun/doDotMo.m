@@ -26,7 +26,7 @@ coh = ExpParameters.coh;
 ndots = ExpParameters.maxDotsPerFrame;
 direction = logFile.iEventDirection;
 
-dotSize = ExpParameters.dotSizePpd;
+dotSizePix = ExpParameters.dotSizePix;
 dotLifeTime = ExpParameters.dotLifeTime;
 dotColor = ExpParameters.dotColor;
 dotSpeed = logFile.iEventSpeed;
@@ -35,7 +35,7 @@ eventIsFixationTarget = logFile.iEventIsFixationTarget;
 fixationChangeDuration = ExpParameters.fixationChangeDuration;
 
 diamAperture = Cfg.diameterAperture;
-diamAperturePpd = Cfg.diameterAperturePpd;
+diamAperturePix = Cfg.diameterAperturePix;
 
 % Check if it is a static or motion block
 if direction == -1
@@ -98,17 +98,17 @@ while continueShow
     end
     
     % Convert the dot position to pixels
-    xy_pix = floor( xy * diamAperturePpd );
+    xy_pix = floor( xy * diamAperturePix );
     
     % This assumes that zero is at the top left, but we want it to be
     %  in the center, so shift the dots up and left, which just means
     %  adding half of the aperture size to both the x and y direction.
-    xy_pix = (xy_pix - diamAperturePpd/2)';
+    xy_pix = (xy_pix - diamAperturePix/2)';
     
     % NaN out-of-circle dots
     % We use Pythagore's theorem to figure out which dots are out of the
     % circle
-    outCircle = sqrt(xy_pix(1,:).^2 + xy_pix(2,:).^2) + dotSize/2 > (diamAperturePpd / 2);
+    outCircle = sqrt(xy_pix(1,:).^2 + xy_pix(2,:).^2) + dotSizePix/2 > (diamAperturePix / 2);
     xy_pix(:, outCircle) = NaN;
     
     
@@ -123,7 +123,7 @@ while continueShow
     drawFixationCross(Cfg, ExpParameters, color)
     
     % Draw the dots
-    Screen('DrawDots', Cfg.win, xy_pix, dotSize, dotColor, Cfg.center, 2);
+    Screen('DrawDots', Cfg.win, xy_pix, dotSizePix, dotColor, Cfg.center, 2);
     
     Screen('DrawingFinished', Cfg.win, dontClear );
     
