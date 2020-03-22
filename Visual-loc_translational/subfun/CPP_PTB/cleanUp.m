@@ -4,5 +4,8 @@ Priority(0);
 ListenChar();
 ShowCursor
 sca
-clear Screen % remove PsychDebugWindowConfiguration
+if ~ismac
+    % remove PsychDebugWindowConfiguration
+    clear Screen 
+end
 end

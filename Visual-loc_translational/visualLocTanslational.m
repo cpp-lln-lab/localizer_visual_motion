@@ -2,7 +2,7 @@
 %  (up- down- left and right-ward)
 
 % by Mohamed Rezk 2018
-% adapted by MarcoB 2020
+% adapted by MarcoB and RemiG 2020
 
 
 % % % Different duratons for different number of repetitions (may add a few TRs to this number just for safety)
@@ -106,7 +106,7 @@ try
     %% For Each Block
     for iBlock = 1:ExpParameters.numBlocks
         
-        fprintf('Running Block %.0f \n',iBlock)
+        fprintf('\n - Running Block %.0f \n',iBlock)
         
         logFile.blockOnsets(iBlock,1)= GetSecs-Cfg.experimentStart;
         
@@ -116,10 +116,11 @@ try
         
         % For each event in the block
         for iEventsPerBlock = 1:ExpParameters.numEventsPerBlock
-            
-            
-            logFile.iEventDirection = ExpParameters.designDirections(iBlock,iEventsPerBlock);       % Direction of that event
-            logFile.iEventSpeed = ExpParameters.designSpeeds(iBlock,iEventsPerBlock);               % Speed of that event
+                        
+            % Direction of that event
+            logFile.iEventDirection = ExpParameters.designDirections(iBlock,iEventsPerBlock); 
+            % Speed of that event
+            logFile.iEventSpeed = ExpParameters.designSpeeds(iBlock,iEventsPerBlock);               
             
             
             % % % initially an input for DoDotMo func, now from

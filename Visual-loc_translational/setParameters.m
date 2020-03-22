@@ -49,7 +49,7 @@ ExpParameters.endDelay           = 1;      % Number of seconds after the end all
 
 %% Visual Stimulation
 ExpParameters.experimentType    = 'Dots';  % Visual modality is in RDKs %NOT USED IN THE MAIN SCIPT
-ExpParameters.speedEvent        = 4;       % speed in visual angles
+ExpParameters.speedEvent        = 8;       % speed in visual angles
 ExpParameters.numEventsPerBlock = 12;      % Number of events per block (should not be changed)
 ExpParameters.eventDuration     = .9;
 ExpParameters.coh               = 1;       % Coherence Level (0-1)
