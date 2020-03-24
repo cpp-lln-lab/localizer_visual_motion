@@ -34,16 +34,23 @@ dotLifeTime = ExpParameters.dotLifeTime;
 dotColor = ExpParameters.dotColor;
 
 logFile = deg2Pix('iEventSpeed', logFile, Cfg);
-dotSpeedPix = logFile.iEventSpeedPix;
+% dotSpeedPix = logFile.iEventSpeedPix;
+
+dotSpeed = logFile.iEventSpeed;
 
 eventIsFixationTarget = logFile.iEventIsFixationTarget;
 fixationChangeDuration = ExpParameters.fixationChangeDuration;
 
 diamAperturePix = Cfg.diameterAperturePix;
+diamAperture = Cfg.diameterAperture;
 
 % Check if it is a static or motion block
 if direction == -1
-    dotSpeedPix = 0;
+
+    %dotSpeedPix = 0;
+
+    dotSpeed = 0;
+
     dotLifeTime = ExpParameters.eventDuration;
 end
 
@@ -60,9 +67,13 @@ xy = rand(ndots, 2);
 % Set a N x 2 matrix that gives jump size in pixels 
 %  pix/sec * sec/frame = pix / frame
 dxdy = repmat(...
-    dotSpeedPix / Cfg.ifi ...
-    * (cos(pi*direction/180) - sin(pi*direction/180)), ...
-    ndots, 1);
+    dotSpeed * 10/(diamAperture*10) * (3/Cfg.monRefresh) ...
+    * [cos(pi*direction/180.0) -sin(pi*direction/180.0)], ndots,1);
+
+% dxdy = repmat(...
+%     dotSpeedPix / Cfg.ifi ...
+%     * (cos(pi*direction/180) - sin(pi*direction/180)), ...
+%     ndots, 1);
 
 % Create a ones vector to update to dotlife time of each dot
 dotTime = ones(size(xy, 1), 1);
