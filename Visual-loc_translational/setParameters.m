@@ -145,6 +145,7 @@ if ExpParameters.Task1
     ExpParameters.yDisplacementFixCross        = 0;    % Manual displacement of the fixation cross
     ExpParameters.fixationCrossColor           = Cfg.white;
     ExpParameters.fixationCrossColorTarget     = Cfg.red;
+    ExpParameters.responseKey                  = {'space'};
 end
 
 
