@@ -36,6 +36,10 @@ Cfg.responseBox = [];
 
 
 %% Engine parameters
+
+% Keyboard
+Cfg.escapeKey        = 'Escape';
+
 % Monitor parameters
 Cfg.monitorWidth  	  = 42;  % Monitor Width in cm
 Cfg.screenDistance    = 134; % Distance from the screen in cm
@@ -47,7 +51,7 @@ Cfg.white            = [255 255 255];
 Cfg.black            = [ 0   0   0 ];
 Cfg.red              = [255  0   0 ];
 Cfg.grey             = mean([Cfg.black; Cfg.white]);
-Cfg.backgroundColor = Cfg.black;
+Cfg.backgroundColor  = Cfg.black;
 Cfg.textColor        = Cfg.white;
 Cfg.textFont         = 'Courier New';
 Cfg.textSize         = 18;
@@ -83,6 +87,7 @@ ExpParameters.dotColor          = Cfg.white;
 % Instruction
 ExpParameters.TaskInstruction = '1-Detect the RED fixation cross\n \n\n';
 
+
 %% Task 1 - Fixation cross
 ExpParameters.Task1 = true; % true / false
 
@@ -96,10 +101,11 @@ if ExpParameters.Task1
     ExpParameters.yDisplacementFixCross        = 0;   % Manual displacement of the fixation cross
     ExpParameters.fixationCrossColor           = Cfg.white;
     ExpParameters.fixationCrossColorTarget     = Cfg.red;
+    ExpParameters.responseKey                  = {'space'};
 end
 
-%% Setting some defaults: no need to change things here
 
+%% Setting some defaults: no need to change things here
 if mod(ExpParameters.maxDotsPerFrame,3) ~= 0
     error('Number of dots should be divisible by 3.')
 end

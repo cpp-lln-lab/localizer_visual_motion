@@ -1,6 +1,5 @@
-function responseTimeWithinEvent = doDotMo(Cfg, ExpParameters, logFile)
-% Draws the stimulation of static/moving in 4 directions dots or static and
-%  collects the task responses inside an event (1 direction)
+function doDotMo(Cfg, ExpParameters, logFile)
+% Draws the stimulation of static/moving in 4 directions dots or static
 %
 % DIRECTIONS
 %  0=Right; 90=Up; 180=Left; 270=down
@@ -21,8 +20,6 @@ function responseTimeWithinEvent = doDotMo(Cfg, ExpParameters, logFile)
 
 
 %% Get parameters
-experimentStart = Cfg.experimentStart;
-
 dontClear  = ExpParameters.dontClear;
 
 coh = ExpParameters.coh;
@@ -56,7 +53,6 @@ end
 
 
 %% initialize variables
-responseTimeWithinEvent = [];
 
 % Set an array of dot positions [xposition, yposition]
 % These can never be bigger than 1 or lower than 0
@@ -154,57 +150,8 @@ while continueShow
     
     % Add one frame to the dot lifetime to each dot
     dotTime = dotTime + 1;
-    
-    
-    %% Response collection
-    
-    % % % % % % % % % % % % % % % % %     might need refactoring considering
-    % that the scanne provide a letter (keystroke) as trigger as well as the
-    % button box. Solution is to have KbCheck looking for a specific input
-    % letter     % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-    
-    if strcmp(Cfg.device, 'PC')
-        
-        [KeyIsDown, PressedSecs, ~] = KbCheck(-1);
-        
-        if KeyIsDown
-            
-            % Add the response with RT
-            responseTimeWithinEvent(end+1)= PressedSecs - experimentStart;
-            
-        elseif ~KeyIsDown
-            
-            % Assigne 0 if no response
-            responseTimeWithinEvent(end+1)= 0;
-            
-        end
-        
-    end
-    
-    
+
 end
-
-%% Remove duplicate responses coming from the same button press
-
-% % % % %  TO CHECK WHAT IT DOES
-
-for iResponse = length(responseTimeWithinEvent):-1:2
-    
-    % If preceeding response exists
-    if responseTimeWithinEvent(iResponse-1)~=0
-        
-        % Cancel the current one.
-        responseTimeWithinEvent(iResponse)=0 ;
-        
-    end
-    
-end
-
-% remove the zeros response times
-
-% % % % % WHY???
-
-responseTimeWithinEvent = responseTimeWithinEvent(responseTimeWithinEvent~=0);
 
 
 %% Erase last dots

@@ -89,6 +89,11 @@ try
     % Wait for space key to be pressed
     pressSpace4me
     
+    getResponse('init', Cfg, ExpParameters, 1);
+
+    getResponse('start', Cfg, ExpParameters, 1);
+    
+    
     % Wait for Trigger from Scanner
     wait4Trigger(Cfg)
     
@@ -116,7 +121,17 @@ try
         
         % For each event in the block
         for iEventsPerBlock = 1:ExpParameters.numEventsPerBlock
-                        
+              
+            
+            % Check for experiment abortion from operator
+            [keyIsDown, ~, keyCode] = KbCheck(Cfg.keyboard);
+            if (keyIsDown==1 && keyCode(Cfg.escapeKey))
+                break;
+            end
+            
+            
+            
+            
             % Direction of that event
             logFile.iEventDirection = ExpParameters.designDirections(iBlock,iEventsPerBlock); 
             % Speed of that event
@@ -132,29 +147,27 @@ try
             
             % Event Onset
             logFile.eventOnsets(iBlock,iEventsPerBlock) = GetSecs-Cfg.experimentStart;
-            
-            
-            
+
             
             % % % REFACTORE
             % play the dots
-            responseTimeWithinEvent = doDotMo( Cfg, ExpParameters, logFile);
-            % % %
+            doDotMo(Cfg, ExpParameters, logFile);
             
-            
-            
-            
+
             %% logfile for responses
-            if ~isempty(responseTimeWithinEvent)
-                fprintf(ResponsesTxtLogFile,'%8.6f \n',responseTimeWithinEvent);
-            end
             
+            responseEvents = getResponse('check', Cfg, ExpParameters);
+
+            % concatenate the new event responses with the old responses vector
+%             logFile.allResponses = [logFile.allResponses responseTimeWithinEvent];
+                
+
+                
             %% Event End and Duration
             logFile.eventEnds(iBlock,iEventsPerBlock) = GetSecs-Cfg.experimentStart;
             logFile.eventDurations(iBlock,iEventsPerBlock) = logFile.eventEnds(iBlock,iEventsPerBlock) - logFile.eventOnsets(iBlock,iEventsPerBlock);
             
-            % concatenate the new event responses with the old responses vector
-            logFile.allResponses = [logFile.allResponses responseTimeWithinEvent];
+
 
             
             % Save the events txt logfile
@@ -163,6 +176,11 @@ try
             
             % wait for the inter-stimulus interval
             WaitSecs(ExpParameters.ISI);
+            
+            
+            getResponse('flush', Cfg, ExpParameters);
+            
+            
         end
         
         if Cfg.eyeTracker
@@ -215,6 +233,8 @@ try
     if Cfg.eyeTracker
         [el] = eyeTracker(Cfg, ExpParameters, subjectName, sessionNumber, runNumber, 'Shutdown');
     end
+    
+    getResponse('stop', Cfg, ExpParameters, 1);
     
     
     cleanUp()
