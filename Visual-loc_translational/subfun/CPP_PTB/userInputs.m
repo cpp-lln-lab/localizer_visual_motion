@@ -1,27 +1,40 @@
-function [subjectName, runNumber, sessionNumber] = userInputs(cfg)
+function [expParameters] = userInputs(cfg, expParameters)
 % Get subject, run and session number and mae sure they are
 % positive integer values
+
+if nargin<1
+    cfg.debug = false;
+end
+
+if nargin<2
+    expParameters = [];
+end
 
 
 if cfg.debug
     
-    subjectName = 666;
-    runNumber = 666;
-    sessionNumber = 666;
+    subjectNb = 666;
+    runNb = 666;
+    sessionNb = 666;
     
 else
         
-    subjectName = str2double(input('Enter subject number: ', 's') );
-    subjectName = checkInput(subjectName);
-
+    subjectNb = str2double(input('Enter subject number: ', 's') );
+    subjectNb = checkInput(subjectNb);
     
-    runNumber = str2double(input('Enter the run number: ', 's'));
-    runNumber = checkInput(runNumber);
-    
-    sessionNumber = str2double(input('Enter the session (i.e day) number: ', 's'));
-    sessionNumber = checkInput(sessionNumber);
+    sessionNb = str2double(input('Enter the session (i.e day) number: ', 's'));
+    sessionNb = checkInput(sessionNb);
 
+    runNb = str2double(input('Enter the run number: ', 's'));
+    runNb = checkInput(runNb);
+    
 end
+
+
+expParameters.subjectNb = subjectNb;
+expParameters.sessionNb = sessionNb;
+expParameters.runNb = runNb;
+
 
 end
 

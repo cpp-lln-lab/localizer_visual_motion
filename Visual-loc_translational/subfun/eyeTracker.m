@@ -1,4 +1,10 @@
-function [ el ] = EyeTracker(Cfg, ExpParameters, subjectName, sessionNumber, runNumber, input)
+function [ el ] = eyeTracker(cfg, expParameters, input)
+
+
+subjectNb = expParameters.subjectNb;
+sessionNb = expParameters.sessionNb;
+runNb = expParameters.runNb;
+
 
 switch input
     
@@ -9,7 +15,7 @@ switch input
         %  and perform some initializations. The information is returned
         %  in a structure that also contains useful defaults
         %  and control codes (e.g. tracker state bit and Eyelink key values).
-        el = EyelinkInitDefaults(Cfg.win);
+        el = EyelinkInitDefaults(cfg.win);
         
         % calibration has silver background with black targets, sound and smaller
         %  targets
@@ -58,10 +64,10 @@ switch input
         end
         
         edfFile = fullfile('eyetracker', ...
-            ['sub-', subjectName, ...
-            '_ses-', sessionNumber, ...
-            '_task-', ExpParameters.task, ...
-            '_run-', runNumber ...
+            ['sub-', subjectNb, ...
+            '_ses-', sessionNb, ...
+            '_task-', expParameters.task, ...
+            '_run-', runNb ...
             '_eyetracker.edf']);
         
         Eyelink('Openfile', edfFile);
@@ -74,8 +80,8 @@ switch input
         
         % This command is crucial to map the gaze positions from the tracker to
         %  screen pixel positions to determine fixation
-        Eyelink('command','screen_pixel_coords = %ld %ld %ld %ld', 0, 0, Cfg.winWidth-1, Cfg.winHeight-1);
-        Eyelink('message', 'DISPLAY_COORDS %ld %ld %ld %ld', 0, 0, Cfg.winWidth-1, Cfg.winHeight-1);
+        Eyelink('command','screen_pixel_coords = %ld %ld %ld %ld', 0, 0, cfg.winWidth-1, cfg.winHeight-1);
+        Eyelink('message', 'DISPLAY_COORDS %ld %ld %ld %ld', 0, 0, cfg.winWidth-1, cfg.winHeight-1);
         
         % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
         % DEFAULT CALIBRATION

@@ -26,7 +26,9 @@ addpath(genpath(fullfile(pwd, 'subfun')))
 [ExpParameters, Cfg] = setParameters;
 
 % set and load all the parameters to run the experiment
-[subjectName, runNumber, sessionNumber] = userInputs(Cfg);
+expParameters = userInputs(Cfg, ExpParameters);
+
+subjectNb
 
 
 %%  Experiment
@@ -41,7 +43,7 @@ try
     ExpParameters = deg2Pix('dotSize', ExpParameters, Cfg);
     
     if Cfg.eyeTracker
-        [el] = eyeTracker(Cfg, ExpParameters, subjectName, sessionNumber, runNumber, 'Calibration');
+        [el] = eyeTracker(Cfg, ExpParameters, 'Calibration');
     end
     
     % % % REFACTOR THIS FUNCTION
@@ -62,7 +64,7 @@ try
     logFile.allResponses = [] ;
     
     % Prepare for the output logfiles
-    logFile = saveOutput(subjectName, logFile, ExpParameters, 'open');
+    logFile = saveOutput(logFile, ExpParameters, 'open');
     
     
     
@@ -116,7 +118,7 @@ try
         logFile.blockOnsets(iBlock,1)= GetSecs-Cfg.experimentStart;
         
         if Cfg.eyeTracker
-            [el] = eyeTracker(Cfg, ExpParameters, subjectName, sessionNumber, runNumber, 'StartRecording');
+            [el] = eyeTracker(Cfg, ExpParameters, 'StartRecording');
         end
         
         % For each event in the block
@@ -171,7 +173,7 @@ try
 
             
             % Save the events txt logfile
-            logFile = saveOutput(subjectName, logFile, ExpParameters, 'save Events', iBlock, iEventsPerBlock);
+            logFile = saveOutput(logFile, ExpParameters, 'save Events', iBlock, iEventsPerBlock);
             
             
             % wait for the inter-stimulus interval
@@ -184,7 +186,7 @@ try
         end
         
         if Cfg.eyeTracker
-            [el] = eyeTracker(Cfg, ExpParameters, subjectName, sessionNumber, runNumber, 'StopRecordings');
+            [el] = eyeTracker(Cfg, ExpParameters, 'StopRecordings');
         end
         
         logFile.blockEnds(iBlock,1)= GetSecs-Cfg.experimentStart;          % End of the block Time
@@ -195,7 +197,7 @@ try
         
         % % % NEED TO ASSIGN THE TXT VARIABLE IN A STRUCTURE
         % Save the block txt Logfile
-        logFile = saveOutput(subjectName, logFile, ExpParameters, ...
+        logFile = saveOutput(logFile, ExpParameters, ...
             'save Blocks', iBlock, iEventsPerBlock);
         % % %
         
@@ -212,14 +214,14 @@ try
     WaitSecs(ExpParameters.endDelay);
     
     % Close the logfiles
-    logFile = saveOutput(subjectName, logFile, ExpParameters, 'close');
+    logFile = saveOutput(logFile, ExpParameters, 'close');
     
     
     TotalExperimentTime = GetSecs-Cfg.experimentStart;
     
     %% Save mat log files
     % % % ADD SESSION AND RUN NUMBER
-    save(fullfile('logfiles',[subjectName,'_all.mat']))
+    save(fullfile('logfiles',[ExpParameters.subjectNb,'_all.mat']))
     
     % % %     % % % CANNOT FIND THE VAR BLOCKDURATION
     % % %     save(fullfile('logfiles',[subjectName,'.mat']),...
@@ -231,7 +233,7 @@ try
     % % %     % % %
     
     if Cfg.eyeTracker
-        [el] = eyeTracker(Cfg, ExpParameters, subjectName, sessionNumber, runNumber, 'Shutdown');
+        [el] = eyeTracker(Cfg, ExpParameters, 'Shutdown');
     end
     
     getResponse('stop', Cfg, ExpParameters, 1);
