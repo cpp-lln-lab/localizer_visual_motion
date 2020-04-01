@@ -1,47 +1,37 @@
-function [subjectName, runNumber, sessionNumber] = userInputs(Cfg)
-% Get Subject Name, run number and session number
+function [subjectName, runNumber, sessionNumber] = userInputs(cfg)
+% Get subject, run and session number and mae sure they are
+% positive integer values
 
 
-if Cfg.debug
+if cfg.debug
     
-    subjectName = [];
-    runNumber = [];
-    sessionNumber = [];
+    subjectName = 666;
+    runNumber = 666;
+    sessionNumber = 666;
     
 else
+        
+    subjectName = str2double(input('Enter subject number: ', 's') );
+    subjectName = checkInput(subjectName);
+
     
-    subjectName = input('Enter Subject Name: ','s');
-    runNumber = input('Enter the run Number: ','s');
-    sessionNumber = input('Enter the session Number: ','s');
+    runNumber = str2double(input('Enter the run number: ', 's'));
+    runNumber = checkInput(runNumber);
     
-    
-    
-    % ADD A WAY TO CHECK INPUTS (e.g  make sure they are numbers)
-    
-    
-    
+    sessionNumber = str2double(input('Enter the session (i.e day) number: ', 's'));
+    sessionNumber = checkInput(sessionNumber);
+
 end
 
-if isempty(subjectName)
-    subjectName = '001';
-end
-
-if isempty(runNumber)
-    runNumber = '666';
-end
-
-if isempty(sessionNumber)
-    sessionNumber = '999';
 end
 
 
+function input2check = checkInput(input2check)
 
 
-%     if exist(fullfile(pwd, '..', 'logfiles',[subjectName,'_run_',num2str(runNumber),num2str(sessionNumber),'.mat']),'file')>0
-%         error('This file is already present in your logfiles. Delete the old file or rename your run!!')
-%     end
-
-
+while isnan(input2check) || fix(input2check) ~= input2check || input2check<0
+  input2check = str2double(input('Please enter a positive integer: ', 's'));
+end
 
 
 end
