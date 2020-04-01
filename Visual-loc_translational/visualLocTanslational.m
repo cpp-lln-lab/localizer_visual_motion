@@ -42,14 +42,14 @@ try
     Cfg = deg2Pix('diameterAperture', Cfg, Cfg);
     ExpParameters = deg2Pix('dotSize', ExpParameters, Cfg);
     
-    if Cfg.eyeTracker
-        [el] = eyeTracker(Cfg, ExpParameters, 'Calibration');
-    end
+    
+    [el] = eyeTracker(Cfg, ExpParameters, 'Calibration');
+    
     
     % % % REFACTOR THIS FUNCTION
     [ExpParameters] = expDesign(ExpParameters);
     % % %
-
+    
     % Empty vectors and matrices for speed
     
     % % %     blockNames     = cell(ExpParameters.numBlocks,1);
@@ -92,7 +92,7 @@ try
     pressSpace4me
     
     getResponse('init', Cfg, ExpParameters, 1);
-
+    
     getResponse('start', Cfg, ExpParameters, 1);
     
     
@@ -117,13 +117,13 @@ try
         
         logFile.blockOnsets(iBlock,1)= GetSecs-Cfg.experimentStart;
         
-        if Cfg.eyeTracker
-            [el] = eyeTracker(Cfg, ExpParameters, 'StartRecording');
-        end
+        
+        [el] = eyeTracker(Cfg, ExpParameters, 'StartRecording');
+        
         
         % For each event in the block
         for iEventsPerBlock = 1:ExpParameters.numEventsPerBlock
-              
+            
             
             % Check for experiment abortion from operator
             [keyIsDown, ~, keyCode] = KbCheck(Cfg.keyboard);
@@ -135,9 +135,9 @@ try
             
             
             % Direction of that event
-            logFile.iEventDirection = ExpParameters.designDirections(iBlock,iEventsPerBlock); 
+            logFile.iEventDirection = ExpParameters.designDirections(iBlock,iEventsPerBlock);
             % Speed of that event
-            logFile.iEventSpeed = ExpParameters.designSpeeds(iBlock,iEventsPerBlock);               
+            logFile.iEventSpeed = ExpParameters.designSpeeds(iBlock,iEventsPerBlock);
             
             
             % % % initially an input for DoDotMo func, now from
@@ -149,28 +149,28 @@ try
             
             % Event Onset
             logFile.eventOnsets(iBlock,iEventsPerBlock) = GetSecs-Cfg.experimentStart;
-
+            
             
             % % % REFACTORE
             % play the dots
             doDotMo(Cfg, ExpParameters, logFile);
             
-
+            
             %% logfile for responses
             
             responseEvents = getResponse('check', Cfg, ExpParameters);
-
+            
             % concatenate the new event responses with the old responses vector
-%             logFile.allResponses = [logFile.allResponses responseTimeWithinEvent];
-                
-
-                
+            %             logFile.allResponses = [logFile.allResponses responseTimeWithinEvent];
+            
+            
+            
             %% Event End and Duration
             logFile.eventEnds(iBlock,iEventsPerBlock) = GetSecs-Cfg.experimentStart;
             logFile.eventDurations(iBlock,iEventsPerBlock) = logFile.eventEnds(iBlock,iEventsPerBlock) - logFile.eventOnsets(iBlock,iEventsPerBlock);
             
-
-
+            
+            
             
             % Save the events txt logfile
             logFile = saveOutput(logFile, ExpParameters, 'save Events', iBlock, iEventsPerBlock);
@@ -185,9 +185,9 @@ try
             
         end
         
-        if Cfg.eyeTracker
-            [el] = eyeTracker(Cfg, ExpParameters, 'StopRecordings');
-        end
+        
+        [el] = eyeTracker(Cfg, ExpParameters, 'StopRecordings');
+        
         
         logFile.blockEnds(iBlock,1)= GetSecs-Cfg.experimentStart;          % End of the block Time
         logFile.blockDurations(iBlock,1)= logFile.blockEnds(iBlock,1) - logFile.blockOnsets(iBlock,1); % Block Duration
@@ -232,9 +232,9 @@ try
     % % %         'blockOnsets')
     % % %     % % %
     
-    if Cfg.eyeTracker
-        [el] = eyeTracker(Cfg, ExpParameters, 'Shutdown');
-    end
+    
+    [el] = eyeTracker(Cfg, ExpParameters, 'Shutdown');
+    
     
     getResponse('stop', Cfg, ExpParameters, 1);
     
