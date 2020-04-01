@@ -105,7 +105,7 @@ switch action
         
     case 'stop'
         
-        fprintf('\n stopping to listen to keypresses\n')
+        fprintf('\n stopping to listen to keypresses\n\n')
         
         KbQueueRelease(responseBox);
         
