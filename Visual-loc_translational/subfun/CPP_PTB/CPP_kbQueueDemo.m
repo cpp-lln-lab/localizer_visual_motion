@@ -28,6 +28,10 @@ cfg.responseBox = [];
 KbName('UnifyKeyNames');
 
 
+% Prevent spilling of keystrokes into console:
+ListenChar(-1);
+
+
 % we ask PTB to tell us which keyboard devices are connected to the computer
 [cfg.keyboardNumbers, cfg.keyboardNames] = GetKeyboardIndices;
 
