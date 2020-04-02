@@ -1,7 +1,8 @@
 function [expParameters, cfg] = setParameters
 
-ExpParameters = struct; % Initialize the parameters variables
-Cfg           = struct; % Initialize the general configuration variables
+% Initialize the parameters and general configuration variables
+expParameters = struct;
+cfg           = struct;
 
 expParameters.task = 'VisualLoc';
 
