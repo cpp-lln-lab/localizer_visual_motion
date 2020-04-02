@@ -75,15 +75,6 @@ switch action
         if verbose
             fprintf('\n checking recent keypresses\n')
         end
-        
-        % Get all the keypresses and return them as an array responseEvents
-        %
-        % Time   Keycode   Pressed
-        % 
-        % Pressed == 1  --> the key was pressed
-        % Pressed == 0  --> the key was released
-        %
-        % KbName(responseEvents(:,2)) will give all the keys pressed
          
         while KbEventAvail(responseBox)
             
