@@ -5,17 +5,35 @@ Cfg           = struct; % Initialize the general configuration variables
 
 ExpParameters.task = 'VisualLoc';
 
+
 %% Debug mode settings
 Cfg.debug               = true;  % To test the script out of the scanner, skip PTB sync
 Cfg.testingSmallScreen  = false; % To test on a part of the screen, change to 1
 Cfg.testingTranspScreen = true;  % To test with trasparent full size screen 
 Cfg.stimPosition        = 'PC';  % 'Scanner': means that it removes the lower 1/3 of the screen (the coil hides the lower part of the screen)
 
+
 %% MRI settings
 Cfg.device        = 'PC';  % 'PC': does not care about trigger - otherwise use 'Scanner'
 Cfg.triggerKey    = 't';   % Set the letter sent by the trigger to sync stimulation and volume acquisition
 Cfg.numTriggers   = 4;     
 Cfg.eyeTracker    = false; % Set to 'true' if you are testing in MRI and want to record ET data
+
+
+%% Keyboards
+
+% cfg.responseBox would be the device used by the participant to give his/her response: 
+%   like the button box in the scanner or a separate keyboard for a behavioral experiment
+%
+% cfg.keyboard is the keyboard on which the experimenter will type or press the keys necessary 
+%   to start or abort the experiment.
+%   The two can be different or the same.
+
+% Using empty vectors should work for linux when to select the "main"
+% keyboard. You might have to try some other values for MacOS or Windows
+Cfg.keyboard = []; 
+Cfg.responseBox = []; 
+
 
 %% Engine parameters
 % Monitor parameters

@@ -1,3 +1,25 @@
+%% KbQueue demo from the CPP lab
+% This small script shows how to use the KbQueue wrapper function made for
+% the CPP lab.
+
+
+%% set parameters
+
+ExpParameters.responseKey = {'space', 'm'};
+
+% cfg.responseBox would be the device used by the participant to give his/her response: 
+%   like the button box in the scanner or a separate keyboard for a behavioral experiment
+%
+% cfg.keyboard is the keyboard on which the experimenter will type or press the keys necessary 
+%   to start or abort the experiment.
+%   The two can be different or the same.
+
+% Using empty vectors should work for linux when to select the "main"
+% keyboard. You might have to try some other values for MacOS or Windows
+cfg.keyboard = []; 
+cfg.responseBox = []; 
+
+
 %% init
 
 % Keyboard
@@ -5,24 +27,16 @@
 % Apple MacOS/X, MS-Windows and GNU/Linux:
 KbName('UnifyKeyNames');
 
+
+% we ask PTB to tell us which keyboard devices are connected to the computer
 [cfg.keyboardNumbers, cfg.keyboardNames] = GetKeyboardIndices;
 
 cfg.keyboardNumbers
 cfg.keyboardNames
 
-% Computer keyboard to quit if it is necessary
-cfg.keyboard = []; 
-
-% For key presses for the subject
-cfg.responseBox = []; 
 
 % Test that the keyboards are correctly configured
 testKeyboards(cfg)
-
-
-%% set parameters
-
-ExpParameters.responseKey = {'space', 'm'};
 
 
 %% run demo
