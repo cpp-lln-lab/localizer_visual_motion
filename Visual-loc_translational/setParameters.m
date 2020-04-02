@@ -5,6 +5,12 @@ Cfg           = struct; % Initialize the general configuration variables
 
 expParameters.task = 'VisualLoc';
 
+% by default the data will be stored an output folder created where the
+% setParamters.m file is
+% change that if you want the data to be saved somewhere else
+expParameters.dataDir = fullfile(...
+    fileparts(mfilename('fullpath')), ...
+    'output');
 
 %% Debug mode settings
 cfg.debug               = true;  % To test the script out of the scanner, skip PTB sync
@@ -148,9 +154,30 @@ if expParameters.Task1
 end
 
 
+
+%% Checking some inputs
+
+
+
 %% Setting some defaults: no need to change things here
-if mod(ExpParameters.maxDotsPerFrame,3) ~= 0
-    error('Number of dots should be divisible by 3.')
+if ~isfield(expParameters, 'outputDir')
+    expParameters.dataDir = fullfile(...
+        fileparts(mfilename('fullpath')), ...
+        'output');
+end
+
+% set empty values for a series of field if they have not been specified
+fields2Check = { ...
+    'ce', ...
+    'dir', ...  % For BIDS file naming: phase encoding direction of acquisition for fMRI
+    'rec', ...  % For BIDS file naming: reconstruction of fMRI images
+    'echo', ... % For BIDS file naming: echo fMRI images
+    'acq'       % For BIDS file naming: acquisition of fMRI images
+    };
+for iField = 1:numel(fields2Check)
+    if ~isfield(expParameters, fields2Check{iField})
+        expParameters = setfield(expParameters, fields2Check{iField}, []); %#ok<SFLD>
+    end
 end
 
 
