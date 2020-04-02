@@ -11,7 +11,7 @@ if cfg.eyeTracker
         
         case 'Calibration'
             
-            % STEP 2
+            %% STEP 2
             % Provide Eyelink with details about the graphics environment
             %  and perform some initializations. The information is returned
             %  in a structure that also contains useful defaults
@@ -31,7 +31,8 @@ if cfg.eyeTracker
             %  affect
             EyelinkUpdateDefaults(el);
             
-            % STEP 3
+            
+            %% STEP 3
             % Initialization of the connection with the Eyelink Gazetracker.
             %  exit program if this fails.
             
@@ -60,20 +61,13 @@ if cfg.eyeTracker
             Eyelink('Command', 'link_sample_data = LEFT,RIGHT,GAZE,AREA');
             
             % open file to record data to
-            if ~exist('eyetracker','dir')
-                mkdir('eyetracker')
-            end
-            
-            edfFile = fullfile('eyetracker', ...
-                ['sub-', subjectNb, ...
-                '_ses-', sessionNb, ...
-                '_task-', expParameters.task, ...
-                '_run-', runNb ...
-                '_eyetracker.edf']);
+            edfFile = [expParameters.outputDir, 'eyetracker', ...
+                expParameters.fileName.eyetracker];
             
             Eyelink('Openfile', edfFile);
             
-            % STEP 4
+            
+            %% STEP 4
             % SET UP TRACKER CONFIGURATION
             % Setting the proper recording resolution, proper calibration type,
             %   as well as the data file content;
@@ -145,9 +139,10 @@ if cfg.eyeTracker
             %             return;
             %         end
             
+            
         case 'StartRecording'
             
-            % STEP 5
+            %% STEP 5
             % EyeLink Start recording the block
             Eyelink('Command', 'set_idle_mode');
             WaitSecs(0.05);
@@ -173,9 +168,10 @@ if cfg.eyeTracker
             % to mark the beginning of the trial
             Eyelink('Message', 'SYNCTIME');
             
+            
         case 'StopRecordings'
             
-            % STEP 8
+            %% STEP 8
             % finish up: stop recording eye-movements,
             % EyeLink Stop recording the block
             Eyelink('Message', 'BLANK_SCREEN');
@@ -184,9 +180,10 @@ if cfg.eyeTracker
             % close graphics window, close data file and shut down tracker
             Eyelink('StopRecording');
             
+            
         case 'Shutdown'
             
-            % STEP 6
+            %% STEP 6
             % At the end of the experiment, save the edf file and shut down connection
             %  with Eyelink
             
@@ -209,7 +206,6 @@ if cfg.eyeTracker
             end
             
             Eyelink('shutdown');
-            Screen('CloseAll');
             
             
     end
