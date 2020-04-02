@@ -47,6 +47,9 @@ InitializePsychSound(1);
 
 
 %% Visual
+
+cfg.screen = max(Screen('Screens')); % Main screen
+
 % Open a fullscreen, onscreen window with gray background. Enable 32bpc
 % floating point framebuffer via imaging pipeline on it.
 PsychImaging('PrepareConfiguration');

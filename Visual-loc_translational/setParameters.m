@@ -43,7 +43,6 @@ Cfg.screenDistance    = 134; % Distance from the screen in cm
 Cfg.diameterAperture  = 8;   % Diameter/length of side of aperture in Visual angles
 
 % Monitor parameters for PTB
-cfg.screen           = max(Screen('Screens')); % Main screen
 cfg.white            = [255 255 255];
 cfg.black            = [ 0   0   0 ];
 cfg.red              = [255  0   0 ];
