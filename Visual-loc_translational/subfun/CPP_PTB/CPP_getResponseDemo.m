@@ -1,7 +1,7 @@
 %% Demo showing how to use the getResponse function
 
 % This small script shows how to use the getReponse function 
-%   (a wrapper around the KbQueue function from PTB)
+%  (a wrapper around the KbQueue function from PTB)
 
 %% set parameters
 
@@ -41,7 +41,7 @@ cfg.keyboardNames
 
 
 % Test that the keyboards are correctly configured
-hk
+testKeyboards(cfg)
 
 
 %% Run demo
