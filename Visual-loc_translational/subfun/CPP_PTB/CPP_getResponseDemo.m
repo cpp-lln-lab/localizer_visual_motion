@@ -17,7 +17,7 @@ cfg.keyboard = [];
 cfg.responseBox = [];
 
 % We set which keys are "valid", any keys other than those will be ignored
-ExpParameters.responseKey = {'space', 'm'};
+ExpParameters.responseKey = {};
 
 
 %% init
@@ -28,7 +28,7 @@ ExpParameters.responseKey = {'space', 'm'};
 KbName('UnifyKeyNames');
 
 
-% Prevent spilling of keystrokes into console:
+% Prevent spilling of keystrokes into console
 ListenChar(-1);
 
 
@@ -73,6 +73,11 @@ getResponse('flush', cfg, ExpParameters, 1);
 
 % If you wan to stop listening to key presses.
 getResponse('stop', cfg, ExpParameters, 1);
+
+
+
+% Give me my keyboard back... Pretty please.
+ListenChar();
 
 
 %% Now we look what keys were pressed and when

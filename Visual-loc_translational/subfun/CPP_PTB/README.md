@@ -6,21 +6,23 @@ Most of the functions here are mostly wrappers around some PTB functions to faci
 
 ## Code guidestyle
 
-We use the `pascalCase` to more easily differentiates those functions from the ones from PTB that use a `CamelCase`.
+We use the `pascalCase` to more easily differentiates our functions from the ones from PTB that use a `CamelCase`.
 
-# setParameters
+## Structure and function details
 
-# initPTB
+### setParameters
 
-# getResponse
+### initPTB
+
+### getResponse
 It is wrapper function to use KbQueue which is definitely what you should used to collect responses.
 
 You can easily collect responses while running some other code at the same time.
 
-It will only take responses from the `response box` which can simply be a keyboard.
+It will only take responses from the `response box` which can simply be the "main keyboard" or another keyboard connected to the computer or the response box that the participant is using.
 
 You can use it in a way so that it only takes responses from certain keys.
 
-If you want to know more on how to use it check its help section and the `CPP_kbQueueDemo.m`.
+If you want to know more on how to use it check its help section and the `CPP_getResponseDemo.m`.
 
-# cleanUp
+### cleanUp
