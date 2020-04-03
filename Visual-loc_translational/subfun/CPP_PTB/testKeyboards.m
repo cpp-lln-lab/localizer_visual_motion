@@ -6,7 +6,7 @@ timeOut = 5;
 
 % Main keyboard used by the experimenter to quit the experiment if it is necessary
 % cfg.keyboard
-fprintf('\n This is a test: press any key to on the experimenter keyboard\n');
+fprintf('\n This is a test: press any key on the experimenter keyboard\n');
 t = GetSecs;
 [~, keyCode, ~] = KbPressWait(cfg.keyboard, t+timeOut);
 throwError(keyCode, cfg.keyboard)
@@ -14,10 +14,10 @@ throwError(keyCode, cfg.keyboard)
 
 % For key presses for the subject
 % cfg.responseBox
-fprintf('\n This is a test: press any key to on the participant response box\n');
+fprintf('\n This is a test: press any key on the participant response box\n');
 t = GetSecs;
 [~, keyCode, ~] = KbPressWait(cfg.responseBox, t+timeOut);
-throwError(keyCode)
+throwError(keyCode, cfg.responseBox)
 
 end
 
@@ -32,6 +32,9 @@ errorText = 'No key was pressed. Did you configure the keyboards properly? See m
 
 
 if all(keyCode==0)
+    
+    % Give me my keyboard back... Pretty please.
+    ListenChar();
     
     fprintf(text1);
     
