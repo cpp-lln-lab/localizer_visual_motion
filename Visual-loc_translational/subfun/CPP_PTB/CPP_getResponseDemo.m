@@ -1,23 +1,23 @@
-%% KbQueue demo from the CPP lab
-% This small script shows how to use the KbQueue wrapper function made for
-% the CPP lab.
+%% Demo showing how to use the getResponse function
 
+% This small script shows how to use the getReponse function (a wrapper around the KbQueue function from PTB)
 
 %% set parameters
 
-ExpParameters.responseKey = {'space', 'm'};
-
-% cfg.responseBox would be the device used by the participant to give his/her response: 
+% cfg.responseBox would be the device used by the participant to give his/her response:
 %   like the button box in the scanner or a separate keyboard for a behavioral experiment
 %
-% cfg.keyboard is the keyboard on which the experimenter will type or press the keys necessary 
+% cfg.keyboard is the keyboard on which the experimenter will type or press the keys necessary
 %   to start or abort the experiment.
 %   The two can be different or the same.
 
 % Using empty vectors should work for linux when to select the "main"
 % keyboard. You might have to try some other values for MacOS or Windows
-cfg.keyboard = []; 
-cfg.responseBox = []; 
+cfg.keyboard = [];
+cfg.responseBox = [];
+
+% We set which keys are "valid", any keys other than those will be ignored
+ExpParameters.responseKey = {'space', 'm'};
 
 
 %% init
@@ -43,26 +43,39 @@ cfg.keyboardNames
 testKeyboards(cfg)
 
 
-%% run demo
+%% Run demo
 
 fprintf('\nPress space bar or m several times during the next 5 seconds\n\n');
 
+% Create the keyboard queue to collect responses.
 getResponse('init', cfg, ExpParameters, 1);
 
+% Start collecting responses for 5 seconds
+% Each new key press is added to the queue of events recorded by KbQueue
 startSecs = GetSecs();
-
 getResponse('start', cfg, ExpParameters, 1);
 
+
+
+% Here we wait for 5 seconds but are still collecting responses.
+% So you could still be doing something else (presenting audio and visual stim) and
+% still collect responses.
 WaitSecs(5);
 
+
+
+
+% Check what keys were pressed (all of them)
 responseEvents = getResponse('check', cfg, ExpParameters, 1);
 
+% This can be used to flush the queue: empty all events that are still present in the queue
 getResponse('flush', cfg, ExpParameters, 1);
 
+% If you wan to stop listening to key presses.
 getResponse('stop', cfg, ExpParameters, 1);
 
 
-% look what keys were pressed and when
+%% Now we look what keys were pressed and when
 for iEvent = 1:size(responseEvents, 1)
 
     if responseEvents(iEvent,3)
@@ -70,7 +83,7 @@ for iEvent = 1:size(responseEvents, 1)
     else
         eventType = 'released';
     end
-    
+
     fprintf('%s was %s at time %.3f seconds\n', ...
         KbName(responseEvents(iEvent,2)), ...
         eventType, ...

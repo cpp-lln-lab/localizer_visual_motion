@@ -1,5 +1,5 @@
 function responseEvents = getResponse(action, cfg, expParameters, verbose)
-% wrapper fucntion to use KbQueue
+% wrapper function to use KbQueue
 % The queue will be listening to key presses on the response box as defined
 % in the cfg structure : see setParameters for more details
 %
