@@ -30,7 +30,7 @@ Cfg.eyeTracker    = false; % Set to 'true' if you are testing in MRI and want to
 %   The two can be different or the same.
 
 % Using empty vectors should work for linux when to select the "main"
-% keyboard. You might have to try some other values for MacOS or Windows
+%   keyboard. You might have to try some other values for MacOS or Windows
 Cfg.keyboard = []; 
 Cfg.responseBox = []; 
 
@@ -43,7 +43,7 @@ Cfg.escapeKey        = 'Escape';
 % Monitor parameters
 Cfg.monitorWidth  	  = 42;  % Monitor Width in cm
 Cfg.screenDistance    = 134; % Distance from the screen in cm
-Cfg.diameterAperture = 8;   % Diameter/length of side of aperture in Visual angles
+Cfg.diameterAperture  = 8;   % Diameter/length of side of aperture in Visual angles
 
 % Monitor parameters for PTB
 Cfg.screen           = max(Screen('Screens')); % Main screen
@@ -85,6 +85,10 @@ ExpParameters.dotColor          = Cfg.white;
 %% Task(s)
 
 % Instruction
+
+
+
+
 ExpParameters.TaskInstruction = '1-Detect the RED fixation cross\n \n\n';
 
 
@@ -97,8 +101,8 @@ if ExpParameters.Task1
     ExpParameters.lineWidthPix                 = 4;    % Set the line width (in Pixels) for our fixation cross
     ExpParameters.maxNumFixationTargetPerBlock = 2;
     ExpParameters.fixationChangeDuration       = 0.15; % In secs
-    ExpParameters.xDisplacementFixCross        = 0;   % Manual displacement of the fixation cross
-    ExpParameters.yDisplacementFixCross        = 0;   % Manual displacement of the fixation cross
+    ExpParameters.xDisplacementFixCross        = 0;    % Manual displacement of the fixation cross
+    ExpParameters.yDisplacementFixCross        = 0;    % Manual displacement of the fixation cross
     ExpParameters.fixationCrossColor           = Cfg.white;
     ExpParameters.fixationCrossColorTarget     = Cfg.red;
     ExpParameters.responseKey                  = {'space'};
