@@ -9,7 +9,7 @@ timeOut = 5;
 fprintf('\n This is a test: press any key on the experimenter keyboard\n');
 t = GetSecs;
 [~, keyCode, ~] = KbPressWait(cfg.keyboard, t+timeOut);
-throwError(keyCode, cfg.keyboard)
+throwError(keyCode, cfg.keyboard, 1)
 
 
 % For key presses for the subject
@@ -22,9 +22,17 @@ throwError(keyCode, cfg.responseBox)
 end
 
 
-function throwError(keyCode, deviceNumber)
+function throwError(keyCode, deviceNumber, keyboardType)
 
-text1 = '\nYou asked for this keyboard device number to be used as experimenter keyboard.\n\n';
+switch keyboardType
+    case 1
+        keyboardType = 'experimenter keyboard';
+    case 2
+        keyboardType = 'response box';
+end
+
+
+text1 = ['\nYou asked for this keyboard device number to be used as ' keyboardType '.\n\n'];
 
 text2 = '\nThese are the devices currently connected.\n\n';
 
