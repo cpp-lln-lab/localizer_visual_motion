@@ -3,14 +3,25 @@
 % This small script shows how to use the getReponse function 
 %  (a wrapper around the KbQueue function from PTB)
 
+% start with a clean slate
+clear; clc; 
+if IsOctave
+    more off % for a better display experience
+end
+
 %% set parameters
 
-% cfg.responseBox would be the device used by the participant to give his/her response:
-%  like the button box in the scanner or a separate keyboard for a behavioral experiment
+% cfg.responseBox would be the device number of the device used by the participant to give his/her 
+% response: like the button box in the scanner or a separate keyboard for a behavioral experiment
 %
-% cfg.keyboard is the keyboard on which the experimenter will type or press the keys necessary
-%  to start or abort the experiment.
-%  The two can be different or the same.
+% cfg.keyboard would be the device number of the keyboard on which the experimenter will type or 
+% press the keys necessary to start or abort the experiment.
+
+%  cfg.responseBox and cfg.keyboard can be different or the same.
+
+% If you want to know the device number of all the keyboards and responses
+% boxes connected to the computer you can use the following code.
+% [cfg.keyboardNumbers, cfg.keyboardNames] = GetKeyboardIndices
 
 % Using empty vectors should work for linux when to select the "main"
 %  keyboard. You might have to try some other values for Windows. To
@@ -19,7 +30,7 @@ cfg.keyboard = [];
 cfg.responseBox = [];
 
 % We set which keys are "valid", any keys other than those will be ignored
-ExpParameters.responseKey = {};
+expParameters.responseKey = {};
 
 
 %% init
@@ -30,10 +41,6 @@ ExpParameters.responseKey = {};
 KbName('UnifyKeyNames');
 
 
-% Prevent spilling of keystrokes into console
-ListenChar(-1);
-
-
 % we ask PTB to tell us which keyboard devices are connected to the computer
 [cfg.keyboardNumbers, cfg.keyboardNames] = GetKeyboardIndices;
 
@@ -41,24 +48,38 @@ cfg.keyboardNumbers
 cfg.keyboardNames
 
 
+
+% Prevent spilling of keystrokes into console
+ListenChar(-1);
+
 % Test that the keyboards are correctly configured
-testKeyboards(cfg)
+testKeyboards(cfg);
 
 % Give the time to the test key to be released and not listened
 WaitSecs(1);
 
 
+fprintf('\nDuring the next 5 seconds we will collect responses on the following keys: \n\n');
+if isempty(expParameters.responseKey)
+    fprintf('\nALL KEYS\n\n');    
+else
+    for iKey=1:numel(expParameters.responseKey)
+        fprintf('\n%s', expParameters.responseKey{iKey});  
+    end
+    fprintf('\n\n');
+end
+
+
+
 %% Run demo
 
-fprintf('\nPress space bar or m several times during the next 5 seconds\n\n');
-
 % Create the keyboard queue to collect responses.
-getResponse('init', cfg, ExpParameters, 1);
+getResponse('init', cfg, expParameters, 1);
 
 % Start collecting responses for 5 seconds
 %  Each new key press is added to the queue of events recorded by KbQueue
 startSecs = GetSecs();
-getResponse('start', cfg, ExpParameters, 1);
+getResponse('start', cfg, expParameters, 1);
 
 
 
@@ -69,20 +90,19 @@ WaitSecs(5);
 
 
 
-
 % Check what keys were pressed (all of them)
-responseEvents = getResponse('check', cfg, ExpParameters, 1);
+responseEvents = getResponse('check', cfg, expParameters, 1);
 
 % This can be used to flush the queue: empty all events that are still present in the queue
-getResponse('flush', cfg, ExpParameters, 1);
+getResponse('flush', cfg, expParameters, 1);
 
 % If you wan to stop listening to key presses.
-getResponse('stop', cfg, ExpParameters, 1);
+getResponse('stop', cfg, expParameters, 1);
 
 
 
 % Give me my keyboard back... Pretty please.
-ListenChar();
+ListenChar(0);
 
 
 %% Now we look what keys were pressed and when
