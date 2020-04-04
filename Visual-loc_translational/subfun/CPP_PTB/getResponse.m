@@ -31,6 +31,9 @@ switch action
     
     case 'init'
         
+        % Clean and realease any queue that might be opened
+        KbQueueRelease(responseBox);
+        
         %% Defines keys
         % list all the response keys we want KbQueue to listen to
         

@@ -17,7 +17,7 @@ throwError(keyCode, cfg.keyboard, 1)
 fprintf('\n This is a test: press any key on the participant response box\n');
 t = GetSecs;
 [~, keyCode, ~] = KbPressWait(cfg.responseBox, t+timeOut);
-throwError(keyCode, cfg.responseBox)
+throwError(keyCode, cfg.responseBox, 2)
 
 end
 
