@@ -13,7 +13,8 @@
 %  The two can be different or the same.
 
 % Using empty vectors should work for linux when to select the "main"
-%  keyboard. You might have to try some other values for MacOS or Windows
+%  keyboard. You might have to try some other values for Windows. To
+%  assigne a specific keyboard input the kb assigned value (see README)
 cfg.keyboard = [];
 cfg.responseBox = [];
 
@@ -42,6 +43,9 @@ cfg.keyboardNames
 
 % Test that the keyboards are correctly configured
 testKeyboards(cfg)
+
+% Give the time to the test key to be released and not listened
+WaitSecs(1);
 
 
 %% Run demo

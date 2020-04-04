@@ -25,4 +25,14 @@ You can use it in a way so that it only takes responses from certain keys.
 
 If you want to know more on how to use it check its help section and the `CPP_getResponseDemo.m`.
 
+To select a specific keyboard to be used by experimenter/participant, you need to know the assigned MATLAB value. To copy-paste this on the command wuindow:
+
+```
+[keyboardNumbers, keyboardNames] = GetKeyboardIndices;
+
+keyboardNumbers
+keyboardNames
+```
+
+
 ### cleanUp

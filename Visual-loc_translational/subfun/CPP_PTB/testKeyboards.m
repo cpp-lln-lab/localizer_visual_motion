@@ -46,7 +46,11 @@ if all(keyCode==0)
     
     fprintf(text1);
     
-    disp(deviceNumber)
+    if isempty(deviceNumber)
+        disp(' - no keyboard selected, default is the main keyboard')
+    else
+        disp(deviceNumber)
+    end
     
     fprintf(text2);
     
