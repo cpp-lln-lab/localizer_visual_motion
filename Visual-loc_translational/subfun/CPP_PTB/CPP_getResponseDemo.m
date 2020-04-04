@@ -44,6 +44,9 @@ cfg.keyboardNames
 % Test that the keyboards are correctly configured
 testKeyboards(cfg)
 
+% Give the time to the test key to be released and not listened
+WaitSecs(1);
+
 
 %% Run demo
 
