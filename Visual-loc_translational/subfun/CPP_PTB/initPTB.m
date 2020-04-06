@@ -18,52 +18,6 @@ AssertOpenGL;
 % Apple MacOS/X, MS-Windows and GNU/Linux:
 KbName('UnifyKeyNames');
 
-
-[Cfg.keyboardNumbers, Cfg.keyboardNames] = GetKeyboardIndices;
-
-Cfg.keyboardNumbers
-
-Cfg.keyboardNames
-
-% Computer keyboard to quit if it is necessary
-% Cfg.keyboard
-% 
-% For key presses for the subject
-% Cfg.responseBox
-
-
-switch Cfg.device
-    
-    
-    % this part might need to be adapted because the "default" device
-    % number might be different for different OS or set up
-    
-    
-    case 'PC'
-        % Computer keyboard to quit if it is necessary
-        Cfg.keyboard = [];
-        
-        % For key presses for the subject
-        Cfg.responseBox = [];
-        
-        
-        
-        
-        
-    case 'scanner'
-        
-    otherwise
-        
-        % Cfg.keyboard = max(Cfg.keyboardNumbers);
-        % Cfg.responseBox = min(Cfg.keyboardNumbers);
-        
-        Cfg.keyboard = [];
-        
-        Cfg.responseBox = [];
-        
-end
-
-
 testKeyboards(Cfg)
 
 

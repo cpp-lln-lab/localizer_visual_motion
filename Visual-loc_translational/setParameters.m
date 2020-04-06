@@ -58,6 +58,34 @@ Cfg.textSize         = 18;
 Cfg.textStyle        = 1;
 
 
+switch Cfg.device
+    
+    
+    % this part might need to be adapted because the "default" device
+    % number might be different for different OS or set up
+
+    case 'PC'
+        
+        Cfg.keyboard = [];
+        Cfg.responseBox = [];
+        
+        if ismac
+            Cfg.keyboard = [];
+            Cfg.responseBox = [];
+        end
+
+    case 'scanner'
+        
+    otherwise
+        
+        % Cfg.keyboard = max(Cfg.keyboardNumbers);
+        % Cfg.responseBox = min(Cfg.keyboardNumbers);
+        
+        Cfg.keyboard = [];
+        Cfg.responseBox = [];
+        
+end
+
 %% Experiment Design
 ExpParameters.names              = {'static','motion'};
 ExpParameters.possibleDirections = [-1 1]; % 1 motion , -1 static
