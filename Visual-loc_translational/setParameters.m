@@ -37,9 +37,6 @@ Cfg.responseBox = [];
 
 %% Engine parameters
 
-% Keyboard
-Cfg.escapeKey        = 'Escape';
-
 % Monitor parameters
 Cfg.monitorWidth  	  = 42;  % Monitor Width in cm
 Cfg.screenDistance    = 134; % Distance from the screen in cm
@@ -56,6 +53,23 @@ Cfg.textColor        = Cfg.white;
 Cfg.textFont         = 'Courier New';
 Cfg.textSize         = 18;
 Cfg.textStyle        = 1;
+
+% Keyboard
+Cfg.escapeKey        = 'Escape';
+
+
+
+% The code below will help you decide which keyboard device to use for the partipant and the experimenter 
+
+% Computer keyboard to quit if it is necessary
+% Cfg.keyboard
+% 
+% For key presses for the subject
+% Cfg.responseBox
+
+[Cfg.keyboardNumbers, Cfg.keyboardNames] = GetKeyboardIndices;
+Cfg.keyboardNumbers
+Cfg.keyboardNames
 
 
 switch Cfg.device
@@ -113,11 +127,9 @@ ExpParameters.dotColor          = Cfg.white;
 %% Task(s)
 
 % Instruction
-
-
-
-
 ExpParameters.TaskInstruction = '1-Detect the RED fixation cross\n \n\n';
+
+ExpParameters.responseKey = {'space'};
 
 
 %% Task 1 - Fixation cross
@@ -133,7 +145,6 @@ if ExpParameters.Task1
     ExpParameters.yDisplacementFixCross        = 0;    % Manual displacement of the fixation cross
     ExpParameters.fixationCrossColor           = Cfg.white;
     ExpParameters.fixationCrossColorTarget     = Cfg.red;
-    ExpParameters.responseKey                  = {'space'};
 end
 
 
