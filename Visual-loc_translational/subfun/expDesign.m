@@ -91,6 +91,10 @@ rangeTargets = [1 maxNumFixTargPerBlock];
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% % % IT COULD BE A PROBLEM IF WE SET THE N OF TARGETS RANDOMLY (TOO CHOOSE 
+% % % RANDOMLY B/W 1 AND 2 FOR N TIMES) BECAUSE AT THE END EACH PARTICIPANT
+% % % HAS A DIFFERENET NUMBER OF TARKETS TO GET, LMK
+
 % Get random number of targets for one condition
 targetPerCondition = randi(rangeTargets, 1, numRepetitions);
 % Assign the number of targets for each condition after shuffling
@@ -116,7 +120,7 @@ for iMotionBlock = 1:numRepetitions
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
     % % % THIS IS SHUFFLING A SET OF THE SAME NUMBER
-    expParameters.designDirections( staticIndex(iMotionBlock), :) = Shuffle(staticDirections);
+    expParameters.designDirections( staticIndex(iMotionBlock), :) = staticDirections;
     
 end
 
