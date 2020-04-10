@@ -7,7 +7,7 @@ function responseTimeWithinEvent = doDotMo(Cfg, ExpParameters, logFile)
 %
 % Input:
 %   - Cfg: PTB/machine configurations returned by SetParameters and initPTB
-%   - ExpParameters: parameters returned by SetParameters
+%   - ExpParameters: parameters returned by SetParameters and expDesign
 %   - logFile: structur that stores the experiment logfile to be saved
 %
 % Output:

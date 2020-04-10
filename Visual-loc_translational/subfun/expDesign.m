@@ -22,7 +22,7 @@ function [expParameters] = expDesign(expParameters, displayFigs)
 %   - ExpParameters.designBlockNames      = cell array (nr_blocks, 1) with the
 %    name for each block
 %
-%   - ExpParameters.designDirections      = array (nr_blocks, numEventsPerBlock) 
+%   - ExpParameters.designDirections      = array (nr_blocks, numEventsPerBlock)
 %    with the direction to present in a given block
 %       - 0 90 180 270 indicate the angle
 %       - -1 indicates static
@@ -54,9 +54,10 @@ if nargin < 1 || isempty(expParameters)
     expParameters.maxNumFixationTargetPerBlock = 2;
 end
 
-% Set to 1 for a visualtion of the trials design order
-if nargin < 2  || isempty(displayFigs)
-    displayFigs = 0;
+% Set to 1 for a visualtion of the trials design order in case of you want
+%   to run the script as stand-alone
+if nargin == 0  || ~isempty(displayFigs)
+    displayFigs = 1;
 end
 
 % Get the parameters
@@ -87,6 +88,9 @@ motionIndex = find( strcmp(condition, 'motion') );
 
 % Assign the targets for each condition
 rangeTargets = [1 maxNumFixTargPerBlock];
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 % Get random number of targets for one condition
 targetPerCondition = randi(rangeTargets, 1, numRepetitions);
 % Assign the number of targets for each condition after shuffling
@@ -94,6 +98,7 @@ numTargets = zeros(1, nrBlocks);
 numTargets(staticIndex) = Shuffle(targetPerCondition);
 numTargets(motionIndex) = Shuffle(targetPerCondition);
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% Give the blocks the names with condition
 
@@ -104,70 +109,119 @@ expParameters.designFixationTargets = zeros(nrBlocks, numEventsPerBlock);
 
 for iMotionBlock = 1:numRepetitions
     
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % Shuffle and set motion direction order
     expParameters.designDirections( motionIndex(iMotionBlock), :) = Shuffle(motionDirections);
+    
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
+    % % % THIS IS SHUFFLING A SET OF THE SAME NUMBER
     expParameters.designDirections( staticIndex(iMotionBlock), :) = Shuffle(staticDirections);
     
 end
 
-for iBlock = 1:nrBlocks
-    
-    % Set block name
-    switch condition{iBlock}
-        case 'static'
-            thisBlockName = {'static'};
-        case 'motion'
-            thisBlockName = {'motion'};
-    end
-    expParameters.designBlockNames(iBlock) = thisBlockName;
-    
-    
-    % set target
-    % if there are 2 targets per block we make sure that they are at least
-    % 2 events apart
-    % targets cannot be on the first or last event of a block
-    
-    chosenTarget = [];
-    
-    tmpTarget = numTargets(iBlock);
-    
-    switch tmpTarget
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+d=1;
+while 1 
+    disp(d)
+    for iBlock = 1:nrBlocks
         
-        case 1
+        
+        % Set block name
+        switch condition{iBlock}
+            case 'static'
+                thisBlockName = {'static'};
+            case 'motion'
+                thisBlockName = {'motion'};
+        end
+        
+        
+        
+        expParameters.designBlockNames(iBlock) = thisBlockName;
+        
+        
+        % set target
+        % if there are 2 targets per block we make sure that they are at least
+        % 2 events apart
+        % targets cannot be on the first or last event of a block
+        
+        chosenTarget = [];
+        
+        tmpTarget = numTargets(iBlock);
+        
+        switch tmpTarget
             
-            chosenTarget = randsample(2:numEventsPerBlock-1, tmpTarget, false);
-            
-        case 2
-            
-            targetDifference = 0;
-            
-            while targetDifference <= 2
+            case 1
+                
                 chosenTarget = randsample(2:numEventsPerBlock-1, tmpTarget, false);
-                targetDifference = (max(chosenTarget) - min(chosenTarget));
-            end  
-            
+                
+            case 2
+                
+                targetDifference = 0;
+                
+                while targetDifference <= 2
+                    chosenTarget = randsample(2:numEventsPerBlock-1, tmpTarget, false);
+                    targetDifference = (max(chosenTarget) - min(chosenTarget));
+                end
+                
+        end
+        
+        expParameters.designFixationTargets(iBlock, chosenTarget) = 1;
+        
     end
     
-    expParameters.designFixationTargets(iBlock, chosenTarget) = 1;
+    if max(sum(expParameters.designFixationTargets)) < 3
+        break
+    else
+        expParameters.designBlockNames      = cell(nrBlocks, 1);
+        expParameters.designFixationTargets = zeros(nrBlocks, numEventsPerBlock);
+    end
+    
+    d=d+1;
+    
     
 end
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% Visualize the design matrix
 if displayFigs
     
-    uniqueNames = unique(expParameters.designBlockNames) ;
+    figure();
     
-    Ind = zeros(length(expParameters.designBlockNames), length(uniqueNames)) ;
-    
+    subplot(2,2,1)
+    uniqueNames = unique(expParameters.designBlockNames);
+    Ind = zeros(length(expParameters.designBlockNames), length(uniqueNames));
     for i = 1:length(uniqueNames)
-        CondInd(:,i) = find(strcmp(expParameters.designBlockNames, uniqueNames{i})) ; %#ok<*AGROW>
-        Ind(CondInd(:,i), i) = 1 ;
+        CondInd(:,i) = find(strcmp(expParameters.designBlockNames, uniqueNames{i})); %#ok<*AGROW>
+        Ind(CondInd(:,i), i) = 1;
     end
-    
     imagesc(Ind)
-    
     set(gca, ...
         'XTick',1:length(uniqueNames),...
         'XTickLabel', uniqueNames)
+    title('Block Type')
+    
+    subplot(2,2,2)
+    imagesc(expParameters.designFixationTargets)
+    title('Fixation Targets design')
+    
+    subplot(2,2,3)
+    itargetPosition = [];
+    for i=1:nrBlocks
+        itargetPosition = [ itargetPosition find(expParameters.designFixationTargets(i,:)==1) ];
+    end
+    hist(itargetPosition)
+    title('Fixation Targets position distribution')
+    
+    sum(expParameters.designFixationTargets)
+    
+    max(sum(expParameters.designFixationTargets))
+    
+    expParameters.designFixationTargets
+    
     
 end
