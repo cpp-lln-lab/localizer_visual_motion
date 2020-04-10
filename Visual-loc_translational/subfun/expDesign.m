@@ -8,10 +8,12 @@ function [expParameters] = expDesign(expParameters, displayFigs)
 %  listed in the motionDirections and staticDirections (4 at the moment).
 %
 %
-% TARGETS:
-%  If there are 2 targets per block we make sure that they are at least 2
-%   events apart.
-%  Targets cannot be on the first or last event of a block
+% TARGETS, pseudorandomization rules:
+%  (1) If there are 2 targets per block we make sure that they are at least 2
+%      events apart.
+%  (2) Targets cannot be on the first or last event of a block
+%  (3) Targets can not be present more than 2 times in the same event
+%      position across blocks
 %
 % Input:
 %   - ExpParameters: parameters returned by SetParameters
@@ -91,7 +93,7 @@ rangeTargets = [1 maxNumFixTargPerBlock];
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% % % IT COULD BE A PROBLEM IF WE SET THE N OF TARGETS RANDOMLY (TOO CHOOSE 
+% % % IT COULD BE A PROBLEM IF WE SET THE N OF TARGETS RANDOMLY (TOO CHOOSE
 % % % RANDOMLY B/W 1 AND 2 FOR N TIMES) BECAUSE AT THE END EACH PARTICIPANT
 % % % HAS A DIFFERENET NUMBER OF TARKETS TO GET, LMK
 
@@ -119,7 +121,6 @@ for iMotionBlock = 1:numRepetitions
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
-    % % % THIS IS SHUFFLING A SET OF THE SAME NUMBER
     expParameters.designDirections( staticIndex(iMotionBlock), :) = staticDirections;
     
 end
@@ -129,7 +130,7 @@ end
 
 
 d=1;
-while 1 
+while 1
     disp(d)
     for iBlock = 1:nrBlocks
         
@@ -194,31 +195,49 @@ end
 %% Visualize the design matrix
 if displayFigs
     
-    figure();
+    figure(1);
+    
+    designDirection = expParameters.designDirections;
+    designDirection(designDirection==-1) = -90;
     
     subplot(2,2,1)
-    uniqueNames = unique(expParameters.designBlockNames);
-    Ind = zeros(length(expParameters.designBlockNames), length(uniqueNames));
-    for i = 1:length(uniqueNames)
-        CondInd(:,i) = find(strcmp(expParameters.designBlockNames, uniqueNames{i})); %#ok<*AGROW>
-        Ind(CondInd(:,i), i) = 1;
-    end
-    imagesc(Ind)
-    set(gca, ...
-        'XTick',1:length(uniqueNames),...
-        'XTickLabel', uniqueNames)
-    title('Block Type')
+    imagesc(designDirection)
+    ylabel('Blocks', 'Fontsize', 8);
+    xlabel('Events', 'Fontsize', 8);
+    caxis([-90-37, 270+37])
+    myColorMap = lines(5);
+    colormap(myColorMap);
+    colorbar
+    c = colorbar
+    c.Ticks = ([-90, 0, 90, 180, 270])
+    c.TickLabels = {'static','0','90','180', '270'}
+    title('Block (static and motion) & Events (motion direction)')
     
-    subplot(2,2,2)
-    imagesc(expParameters.designFixationTargets)
-    title('Fixation Targets design')
+    
+%     subplot(2,2,2)
+%     itargetPosition = [];
+%     for i=1:nrBlocks
+%         itargetPosition = [ itargetPosition find(expParameters.designFixationTargets(i,:)==1) ];
+%     end
+%     hist(itargetPosition)
+%     ylabel('freq.', 'Fontsize', 8);
+%     xlabel('Events', 'Fontsize', 8);
+%     title('Motion Direction position distribution')
     
     subplot(2,2,3)
+    imagesc(expParameters.designFixationTargets)
+    ylabel('Blocks', 'Fontsize', 8);
+    xlabel('Events', 'Fontsize', 8);
+    title('Fixation Targets design')
+    
+    subplot(2,2,4)
     itargetPosition = [];
     for i=1:nrBlocks
         itargetPosition = [ itargetPosition find(expParameters.designFixationTargets(i,:)==1) ];
     end
     hist(itargetPosition)
+    ylabel('freq.', 'Fontsize', 8);
+    xlabel('Events', 'Fontsize', 8);
     title('Fixation Targets position distribution')
     
     sum(expParameters.designFixationTargets)
