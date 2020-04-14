@@ -21,8 +21,6 @@ addpath(genpath(fullfile(pwd, 'subfun')))
 % set and load all the parameters to run the experiment
 expParameters = userInputs(Cfg, ExpParameters);
 
-subjectNb
-
 
 %%  Experiment
 
