@@ -30,16 +30,17 @@ Cfg.eyeTracker    = false; % Set to 'true' if you are testing in MRI and want to
 %   The two can be different or the same.
 
 % Using empty vectors should work for linux when to select the "main"
-% keyboard. You might have to try some other values for MacOS or Windows
+%   keyboard. You might have to try some other values for MacOS or Windows
 Cfg.keyboard = []; 
 Cfg.responseBox = []; 
 
 
 %% Engine parameters
+
 % Monitor parameters
 Cfg.monitorWidth  	  = 42;  % Monitor Width in cm
 Cfg.screenDistance    = 134; % Distance from the screen in cm
-Cfg.diameterAperture = 8;   % Diameter/length of side of aperture in Visual angles
+Cfg.diameterAperture  = 8;   % Diameter/length of side of aperture in Visual angles
 
 % Monitor parameters for PTB
 Cfg.screen           = max(Screen('Screens')); % Main screen
@@ -47,12 +48,57 @@ Cfg.white            = [255 255 255];
 Cfg.black            = [ 0   0   0 ];
 Cfg.red              = [255  0   0 ];
 Cfg.grey             = mean([Cfg.black; Cfg.white]);
-Cfg.backgroundColor = Cfg.black;
+Cfg.backgroundColor  = Cfg.black;
 Cfg.textColor        = Cfg.white;
 Cfg.textFont         = 'Courier New';
 Cfg.textSize         = 18;
 Cfg.textStyle        = 1;
 
+% Keyboard
+Cfg.escapeKey        = 'Escape';
+
+
+
+% The code below will help you decide which keyboard device to use for the partipant and the experimenter 
+
+% Computer keyboard to quit if it is necessary
+% Cfg.keyboard
+% 
+% For key presses for the subject
+% Cfg.responseBox
+
+[Cfg.keyboardNumbers, Cfg.keyboardNames] = GetKeyboardIndices;
+Cfg.keyboardNumbers
+Cfg.keyboardNames
+
+
+switch Cfg.device
+    
+    
+    % this part might need to be adapted because the "default" device
+    % number might be different for different OS or set up
+
+    case 'PC'
+        
+        Cfg.keyboard = [];
+        Cfg.responseBox = [];
+        
+        if ismac
+            Cfg.keyboard = [];
+            Cfg.responseBox = [];
+        end
+
+    case 'scanner'
+        
+    otherwise
+        
+        % Cfg.keyboard = max(Cfg.keyboardNumbers);
+        % Cfg.responseBox = min(Cfg.keyboardNumbers);
+        
+        Cfg.keyboard = [];
+        Cfg.responseBox = [];
+        
+end
 
 %% Experiment Design
 ExpParameters.names              = {'static','motion'};
@@ -83,6 +129,9 @@ ExpParameters.dotColor          = Cfg.white;
 % Instruction
 ExpParameters.TaskInstruction = '1-Detect the RED fixation cross\n \n\n';
 
+ExpParameters.responseKey = {'space'};
+
+
 %% Task 1 - Fixation cross
 ExpParameters.Task1 = true; % true / false
 
@@ -92,14 +141,14 @@ if ExpParameters.Task1
     ExpParameters.lineWidthPix                 = 4;    % Set the line width (in Pixels) for our fixation cross
     ExpParameters.maxNumFixationTargetPerBlock = 2;
     ExpParameters.fixationChangeDuration       = 0.15; % In secs
-    ExpParameters.xDisplacementFixCross        = 0;   % Manual displacement of the fixation cross
-    ExpParameters.yDisplacementFixCross        = 0;   % Manual displacement of the fixation cross
+    ExpParameters.xDisplacementFixCross        = 0;    % Manual displacement of the fixation cross
+    ExpParameters.yDisplacementFixCross        = 0;    % Manual displacement of the fixation cross
     ExpParameters.fixationCrossColor           = Cfg.white;
     ExpParameters.fixationCrossColorTarget     = Cfg.red;
 end
 
-%% Setting some defaults: no need to change things here
 
+%% Setting some defaults: no need to change things here
 if mod(ExpParameters.maxDotsPerFrame,3) ~= 0
     error('Number of dots should be divisible by 3.')
 end

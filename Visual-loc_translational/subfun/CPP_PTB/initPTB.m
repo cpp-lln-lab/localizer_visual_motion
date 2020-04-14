@@ -18,8 +18,23 @@ AssertOpenGL;
 % Apple MacOS/X, MS-Windows and GNU/Linux:
 KbName('UnifyKeyNames');
 
+
+
+
+% ---------- FIX LATER ---------- %
+% might be over agressive to test this at every PTB init maybe make it
+% dependent on a debug "flag"
+
+testKeyboards(Cfg)
+
+% ---------- FIX LATER ---------- %
+
+
+
+
 % Don't echo keypresses to Matlab window
-ListenChar(2);
+ListenChar(-1);
+
 
 %% Mouse
 % Hide the mouse cursor:
@@ -66,16 +81,13 @@ end
 
 
 
-
-
+% ---------- FIX LATER ---------- %
 % I don't think we want to hard code the 2/3 here. We might just add it to
 % the Cfg structure
 if strcmp(Cfg.stimPosition,'Scanner')
     Cfg.winRect(1,4) = Cfg.winRect(1,4)*2/3;
 end
-
-
-
+% ---------- FIX LATER ---------- %
 
 
 
@@ -85,6 +97,8 @@ Cfg.center = [Cfg.winRect(3), Cfg.winRect(4)]/2;
 
 % Computes the number of pixels per degree given the distance to screen and
 % monitor width
+
+% This assumes that the window fills the whole screen
 V = 2*(180*(atan(Cfg.monitorWidth/(2*Cfg.screenDistance))/pi));
 Cfg.ppd = Cfg.winRect(3)/V;
 
