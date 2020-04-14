@@ -1,23 +1,38 @@
 function expParameters = createFilename(expParameters, cfg)
-
-zeroPadding = 3;
-
-pattern = ['%0' num2str(zeroPadding) '.0f'];
-
-% sub-<label>[_ses-<label>]_task-<task_label>[_run-<index>]_ieeg.json
-% sub-<label>[_ses-<label>]_task-<label>[_run-<index>]_eeg.<manufacturer_specific_extension>
-
+% create the BIDS compliant directories and filenames for the behavioral output for this subject /
+% session / run. 
+% Will also create the right filename for the eyetracking data file.
+%
+% For the moment the date of acquisition is appreneded to the filename
+%
+% can work for behavioral experiment if cfg.device is set to 'PC'
+% can work for fMRI experiment if cfg.device is set to 'scanner'
+% can work for simple eyetracking data if cfg.eyeTracker is set to 1
+%
+% BOLD
 % sub-<label>[_ses-<label>]_task-<label>[_acq-<label>][_ce-<label>][_dir-<label>][_rec-<label>][_run-<index>][_echo-<index>]_<contrast_label>.nii[.gz]
-
+%
+% iEEG
+% sub-<label>[_ses-<label>]_task-<task_label>[_run-<index>]_ieeg.json
+%
+% EEG
+% sub-<label>[_ses-<label>]_task-<label>[_run-<index>]_eeg.<manufacturer_specific_extension>
+%
+% EYETRACKER
 % sub-<participant_label>[_ses-<label>][_acq-<label>]_task-<task_label>_eyetrack.<manufacturer_specific_extension>
 
-% MATCHES_events.tsv
+zeroPadding = 3;
+pattern = ['%0' num2str(zeroPadding) '.0f'];
 
+dateFormat = 'yyyymmdd_HHMM';
+
+
+
+% extract input
 subjectNb = expParameters.subjectNb;
 sessionNb = expParameters.sessionNb;
 runNb = expParameters.runNb;
 
-dateFormat = 'yyyymmdd_HHMM';
 expParameters.date = datestr(now, dateFormat);
 
 % output dir
@@ -48,8 +63,7 @@ end
 expParameters.modality = modality;
 
 
-% set values for the suffixes for the different fields in the BIDS
-% name
+% set values for the suffixes for the different fields in the BIDS name
 fields2Check = { ...
     'ce', ...
     'dir', ...  % For BIDS file naming: phase encoding direction of acquisition for fMRI
@@ -78,7 +92,6 @@ if cfg.eyeTracker
 end
 
 
-
 %% create filenames
 
 switch modality
@@ -105,8 +118,6 @@ if cfg.eyeTracker
         [expParameters.fileName.base, expParameters.acqSuffix, runSuffix, '_eyetrack_date-' expParameters.date '.edf'];
     
 end
-
-
 
 
 end
