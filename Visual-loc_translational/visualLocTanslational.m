@@ -34,7 +34,7 @@ try
     ExpParameters = deg2Pix('dotSize', ExpParameters, Cfg);
     
     
-    [el] = eyeTracker(Cfg, ExpParameters, 'Calibration');
+    [el] = eyeTracker('Calibration', Cfg, ExpParameters);
     
     
     % % % REFACTOR THIS FUNCTION
@@ -109,7 +109,7 @@ try
         logFile.blockOnsets(iBlock,1)= GetSecs-Cfg.experimentStart;
         
         
-        [el] = eyeTracker(Cfg, ExpParameters, 'StartRecording');
+        [el] = eyeTracker('StartRecording', Cfg, ExpParameters);
         
         
         % For each event in the block
@@ -177,7 +177,7 @@ try
         end
         
         
-        [el] = eyeTracker(Cfg, ExpParameters, 'StopRecordings');
+        [el] = eyeTracker('StopRecordings', Cfg, ExpParameters);
         
         
         logFile.blockEnds(iBlock,1)= GetSecs-Cfg.experimentStart;          % End of the block Time
@@ -224,7 +224,7 @@ try
     % % %     % % %
     
     
-    [el] = eyeTracker(Cfg, ExpParameters, 'Shutdown');
+    [el] = eyeTracker('Shutdown', Cfg, ExpParameters);
     
     
     getResponse('stop', Cfg, ExpParameters, 1);

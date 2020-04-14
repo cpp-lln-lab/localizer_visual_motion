@@ -1,4 +1,4 @@
-function [ el ] = eyeTracker(cfg, expParameters, input)
+function [ el ] = eyeTracker(input, cfg, expParameters)
 
 if cfg.eyeTracker
        
