@@ -1,12 +1,7 @@
 function [ el ] = eyeTracker(cfg, expParameters, input)
 
 if cfg.eyeTracker
-    
-    subjectNb = expParameters.subjectNb;
-    sessionNb = expParameters.sessionNb;
-    runNb = expParameters.runNb;
-    
-    
+       
     switch input
         
         case 'Calibration'
