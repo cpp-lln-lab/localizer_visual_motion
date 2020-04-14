@@ -4,13 +4,6 @@
 % by Mohamed Rezk 2018
 % adapted by MarcoB and RemiG 2020
 
-
-% % % Different duratons for different number of repetitions (may add a few TRs to this number just for safety)
-% % % Cfg.numRepetitions=7, Duration: 345.77 secs (5.76 mins), collect 139 + 4 Triggers = 143 TRs at least per run
-% % % Cfg.numRepetitions=6, Duration: 297.86 secs (4.96 mins), collect 120 + 4 Triggers = 124 TRs at least per run
-% % % Cfg.numRepetitions=5, Duration: 249.91 secs (4.17 mins), collect 100 + 4 Triggers = 104 TRs at least per run
-% % % Cfg.numRepetitions=4, Duration: 201.91 secs (3.37 mins), collect 81 + 4 Triggers  = 85  TRs at least per run
-
 %%
 
 % Clear all the previous stuff
