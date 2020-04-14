@@ -135,7 +135,7 @@ expParameters.dotColor          = cfg.white;
 % Instruction
 expParameters.TaskInstruction = '1-Detect the RED fixation cross\n \n\n';
 
-ExpParameters.responseKey = {'space'};
+expParameters.responseKey = {'space'};
 
 
 %% Task 1 - Fixation cross
@@ -143,15 +143,15 @@ expParameters.Task1 = true; % true / false
 
 if expParameters.Task1
     % Used Pixels here since it really small and can be adjusted during the experiment
-    ExpParameters.fixCrossDimPix               = 10;   % Set the length of the lines (in Pixels) of the fixation cross
-    ExpParameters.lineWidthPix                 = 4;    % Set the line width (in Pixels) for our fixation cross
-    ExpParameters.maxNumFixationTargetPerBlock = 2;
-    ExpParameters.fixationChangeDuration       = 0.15; % In secs
-    ExpParameters.xDisplacementFixCross        = 0;    % Manual displacement of the fixation cross
-    ExpParameters.yDisplacementFixCross        = 0;    % Manual displacement of the fixation cross
-    ExpParameters.fixationCrossColor           = Cfg.white;
-    ExpParameters.fixationCrossColorTarget     = Cfg.red;
-    ExpParameters.responseKey                  = {'space'};
+    expParameters.fixCrossDimPix               = 10;   % Set the length of the lines (in Pixels) of the fixation cross
+    expParameters.lineWidthPix                 = 4;    % Set the line width (in Pixels) for our fixation cross
+    expParameters.maxNumFixationTargetPerBlock = 2;
+    expParameters.fixationChangeDuration       = 0.15; % In secs
+    expParameters.xDisplacementFixCross        = 0;    % Manual displacement of the fixation cross
+    expParameters.yDisplacementFixCross        = 0;    % Manual displacement of the fixation cross
+    expParameters.fixationCrossColor           = Cfg.white;
+    expParameters.fixationCrossColorTarget     = Cfg.red;
+    expParameters.responseKey                  = {'space'};
 end
 
 
