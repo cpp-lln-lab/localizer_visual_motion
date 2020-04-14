@@ -18,7 +18,18 @@ AssertOpenGL;
 % Apple MacOS/X, MS-Windows and GNU/Linux:
 KbName('UnifyKeyNames');
 
+
+
+
+% ---------- FIX LATER ---------- %
+% might be over agressive to test this at every PTB init maybe make it
+% dependent on a debug "flag"
+
 testKeyboards(Cfg)
+
+% ---------- FIX LATER ---------- %
+
+
 
 
 % Don't echo keypresses to Matlab window
@@ -70,16 +81,13 @@ end
 
 
 
-
-
+% ---------- FIX LATER ---------- %
 % I don't think we want to hard code the 2/3 here. We might just add it to
 % the Cfg structure
 if strcmp(Cfg.stimPosition,'Scanner')
     Cfg.winRect(1,4) = Cfg.winRect(1,4)*2/3;
 end
-
-
-
+% ---------- FIX LATER ---------- %
 
 
 
