@@ -6,14 +6,19 @@ function [expParameters] = expDesign(expParameters, displayFigs)
 % EVENTS
 %  The numEventsPerBlock should be a multiple of the number of "base"
 %  listed in the motionDirections and staticDirections (4 at the moment).
+%  Pseudorandomization rules:
+%  (1) Directions are all present in random orders in `numEventsPerBlock/nDirections`
+%      consecutive chunks. This evenly distribute the directions across the
+%      block.
+%  (2) No same consecutive direction (TO IMPLEMENT)
 %
-%
-% TARGETS, pseudorandomization rules:
+% TARGETS
+%  Pseudorandomization rules:
 %  (1) If there are 2 targets per block we make sure that they are at least 2
 %      events apart.
-%  (2) Targets cannot be on the first or last event of a block
+%  (2) Targets cannot be on the first or last event of a block.
 %  (3) Targets can not be present more than 2 times in the same event
-%      position across blocks
+%      position across blocks.
 %
 % Input:
 %   - ExpParameters: parameters returned by SetParameters
@@ -76,17 +81,32 @@ end
 
 %% Adapt some variables according to input
 
-% Set directions for static and motion condition
-motionDirections = repmat(motionDirections, 1, numEventsPerBlock/length(motionDirections));
-staticDirections = repmat(staticDirections, 1, numEventsPerBlock/length(staticDirections));
-
 % Assign the conditions
 condition = repmat(names, 1, numRepetitions);
 nrBlocks = length(condition);
+
+% Assigne deisgn parameters to be exported
+expParameters.designBlockNames      = cell(nrBlocks, 1);
+expParameters.designDirections      = zeros(nrBlocks, numEventsPerBlock);
+expParameters.designSpeeds          = ones(nrBlocks, numEventsPerBlock) * speedEvent;
+expParameters.designFixationTargets = zeros(nrBlocks, numEventsPerBlock);
+
+% Create a vector for the static condition
+staticDirections = repmat(staticDirections, 1, numEventsPerBlock/length(staticDirections));
+
 % Get the index of each condition
 staticIndex = find( strcmp(condition, 'static') );
 motionIndex = find( strcmp(condition, 'motion') );
 
+for iMotionBlock = 1:numRepetitions
+    
+    % Shuffle and set motion direction order
+    expParameters.designDirections(motionIndex(iMotionBlock),:) = [ Shuffle(motionDirections), Shuffle(motionDirections), Shuffle(motionDirections)];
+    
+    % Set static condition
+    expParameters.designDirections(staticIndex(iMotionBlock),:) = staticDirections;
+    
+end
 
 % Assign the targets for each condition
 rangeTargets = [1 maxNumFixTargPerBlock];
@@ -106,32 +126,10 @@ numTargets(motionIndex) = Shuffle(targetPerCondition);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% Give the blocks the names with condition
+%% Give the blocks the names with condition and design the task in each event
 
-expParameters.designBlockNames      = cell(nrBlocks, 1);
-expParameters.designDirections      = zeros(nrBlocks, numEventsPerBlock);
-expParameters.designSpeeds          = ones(nrBlocks, numEventsPerBlock) * speedEvent;
-expParameters.designFixationTargets = zeros(nrBlocks, numEventsPerBlock);
-
-for iMotionBlock = 1:numRepetitions
-    
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    % Shuffle and set motion direction order
-    expParameters.designDirections( motionIndex(iMotionBlock), :) = Shuffle(motionDirections);
-    
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    
-    expParameters.designDirections( staticIndex(iMotionBlock), :) = staticDirections;
-    
-end
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-
-d=1;
 while 1
-    disp(d)
+    
     for iBlock = 1:nrBlocks
         
         
@@ -143,15 +141,13 @@ while 1
                 thisBlockName = {'motion'};
         end
         
-        
-        
         expParameters.designBlockNames(iBlock) = thisBlockName;
         
-        
-        % set target
-        % if there are 2 targets per block we make sure that they are at least
-        % 2 events apart
-        % targets cannot be on the first or last event of a block
+        % Set target
+        %  - if there are 2 targets per block we make sure that they are at least
+        %  2 events apart
+        %  - targets cannot be on the first or last event of a block
+        %  - no more than 2 target in the same event order
         
         chosenTarget = [];
         
@@ -167,6 +163,7 @@ while 1
                 
                 targetDifference = 0;
                 
+                
                 while targetDifference <= 2
                     chosenTarget = randsample(2:numEventsPerBlock-1, tmpTarget, false);
                     targetDifference = (max(chosenTarget) - min(chosenTarget));
@@ -178,15 +175,13 @@ while 1
         
     end
     
+    % Chekc rule 3
     if max(sum(expParameters.designFixationTargets)) < 3
         break
     else
         expParameters.designBlockNames      = cell(nrBlocks, 1);
         expParameters.designFixationTargets = zeros(nrBlocks, numEventsPerBlock);
     end
-    
-    d=d+1;
-    
     
 end
 
@@ -197,40 +192,93 @@ if displayFigs
     
     figure(1);
     
+    % Shows blocks (static and motion) and events (motion direction) order
+    
+    subplot(3,3,1)
+    
     designDirection = expParameters.designDirections;
     designDirection(designDirection==-1) = -90;
     
-    subplot(2,2,1)
     imagesc(designDirection)
     ylabel('Blocks', 'Fontsize', 8);
     xlabel('Events', 'Fontsize', 8);
     caxis([-90-37, 270+37])
     myColorMap = lines(5);
     colormap(myColorMap);
-    colorbar
-    c = colorbar
-    c.Ticks = ([-90, 0, 90, 180, 270])
-    c.TickLabels = {'static','0','90','180', '270'}
+    c = colorbar;
+    c.Ticks = ([-90, 0, 90, 180, 270]);
+    c.TickLabels = {'static','0','90','180', '270'};
     title('Block (static and motion) & Events (motion direction)')
     
+    % Shows the direction position distribution in the motion blocks
+    %  across the experiment
     
-%     subplot(2,2,2)
-%     itargetPosition = [];
-%     for i=1:nrBlocks
-%         itargetPosition = [ itargetPosition find(expParameters.designFixationTargets(i,:)==1) ];
-%     end
-%     hist(itargetPosition)
-%     ylabel('freq.', 'Fontsize', 8);
-%     xlabel('Events', 'Fontsize', 8);
-%     title('Motion Direction position distribution')
+    subplot(3,3,2)
     
-    subplot(2,2,3)
+    leftPosition = [];
+    for i=1:nrBlocks
+        leftPosition = [ leftPosition find(expParameters.designDirections(i,:)==0) ];
+    end
+    hist(leftPosition)
+    xlim([1 12])
+    ylim([0 5])
+    ylabel('freq.', 'Fontsize', 8);
+    xlabel('Events', 'Fontsize', 8);
+    title('0')
+    
+    subplot(3,3,3)
+    
+    rightPosition = [];
+    for i=1:nrBlocks
+        rightPosition = [ rightPosition find(expParameters.designDirections(i,:)==90) ];
+    end
+    hist(rightPosition)
+    xlim([1 12])
+    ylim([0 5])
+    ylabel('freq.', 'Fontsize', 8);
+    xlabel('Events', 'Fontsize', 8);
+    title('90')
+    
+    subplot(3,3,5)
+    
+    upPosition = [];
+    for i=1:nrBlocks
+        upPosition = [ upPosition find(expParameters.designDirections(i,:)==180) ];
+    end
+    hist(upPosition)
+    xlim([1 12])
+    ylim([0 5])
+    ylabel('freq.', 'Fontsize', 8);
+    xlabel('Events', 'Fontsize', 8);
+    title('180')
+    
+    subplot(3,3,6)
+    
+    downPosition = [];
+    for i=1:nrBlocks
+        downPosition = [ downPosition find(expParameters.designDirections(i,:)==270) ];
+    end
+    hist(downPosition)
+    xlim([1 12])
+    ylim([0 5])
+    ylabel('freq.', 'Fontsize', 8);
+    xlabel('Events', 'Fontsize', 8);
+    title('270')
+    
+    % Shows the fixation targets design in each event (1 or 0)
+    
+    subplot(3,3,7)
+    
     imagesc(expParameters.designFixationTargets)
     ylabel('Blocks', 'Fontsize', 8);
     xlabel('Events', 'Fontsize', 8);
     title('Fixation Targets design')
     
-    subplot(2,2,4)
+    % Shows the fixation targets position distribution in the block across
+    %  the experimet
+    
+    subplot(3,3,8)
+    
     itargetPosition = [];
     for i=1:nrBlocks
         itargetPosition = [ itargetPosition find(expParameters.designFixationTargets(i,:)==1) ];
@@ -239,12 +287,5 @@ if displayFigs
     ylabel('freq.', 'Fontsize', 8);
     xlabel('Events', 'Fontsize', 8);
     title('Fixation Targets position distribution')
-    
-    sum(expParameters.designFixationTargets)
-    
-    max(sum(expParameters.designFixationTargets))
-    
-    expParameters.designFixationTargets
-    
     
 end
