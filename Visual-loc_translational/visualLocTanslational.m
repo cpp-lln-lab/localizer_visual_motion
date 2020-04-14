@@ -2,7 +2,7 @@
 %  (up- down- left and right-ward)
 
 % by Mohamed Rezk 2018
-% adapted by MarcoB 2020
+% adapted by MarcoB and RemiG 2020
 
 
 % % % Different duratons for different number of repetitions (may add a few TRs to this number just for safety)
@@ -21,33 +21,35 @@ if ~ismac
 end
 
 % make sure we got access to all the required functions and inputs
-addpath(fullfile(pwd, 'subfun'))
+addpath(genpath(fullfile(pwd, 'subfun')))
+
+[ExpParameters, Cfg] = setParameters;
 
 % set and load all the parameters to run the experiment
-[subjectName, runNumber, sessionNumber] = UserInputs;
-[ExpParameters, Cfg] = SetParameters;
+[subjectName, runNumber, sessionNumber] = userInputs(Cfg);
+
 
 %%  Experiment
 
 % Safety loop: close the screen if code crashes
 try
     %% Init the experiment
-    [Cfg] = InitPTB(Cfg);
+    [Cfg] = initPTB(Cfg);
     
-    [ExpParameters, Cfg]  = VisualDegree2Pixels(ExpParameters, Cfg);
+    % Convert some values from degrees to pixels
+    Cfg = deg2Pix('diameterAperture', Cfg, Cfg);
+    ExpParameters = deg2Pix('dotSize', ExpParameters, Cfg);
     
     if Cfg.eyeTracker
-        [el] = EyeTracker(Cfg, ExpParameters, subjectName, sessionNumber, runNumber, 'Calibration');
+        [el] = eyeTracker(Cfg, ExpParameters, subjectName, sessionNumber, runNumber, 'Calibration');
     end
     
     % % % REFACTOR THIS FUNCTION
     [ExpParameters] = expDesign(ExpParameters);
     % % %
-    
-    % Visual degree to pixels converter
-    [ExpParameters, Cfg] = VisualDegree2Pixels(ExpParameters, Cfg);
-    
+
     % Empty vectors and matrices for speed
+    
     % % %     blockNames     = cell(ExpParameters.numBlocks,1);
     logFile.blockOnsets    = zeros(ExpParameters.numBlocks, 1);
     logFile.blockEnds      = zeros(ExpParameters.numBlocks, 1);
@@ -60,7 +62,10 @@ try
     logFile.allResponses = [] ;
     
     % Prepare for the output logfiles
-    logFile = SaveOutput(subjectName, logFile, ExpParameters, 'open');
+    logFile = saveOutput(subjectName, logFile, ExpParameters, 'open');
+    
+    
+    
     
     % % % PUT IT RIGHT BEFORE STARTING THE EXPERIMENT
     % Show instructions
@@ -70,6 +75,9 @@ try
         Screen('Flip', Cfg.win);
     end
     % % %
+    
+    
+    
     
     % Prepare for fixation Cross
     if ExpParameters.Task1
@@ -81,96 +89,113 @@ try
     % Wait for space key to be pressed
     pressSpace4me
     
+    getResponse('init', Cfg, ExpParameters, 1);
+
+    getResponse('start', Cfg, ExpParameters, 1);
+    
+    
     % Wait for Trigger from Scanner
-    Wait4Trigger(Cfg)
+    wait4Trigger(Cfg)
     
     % Show the fixation cross
     if ExpParameters.Task1
-        Screen('DrawLines', Cfg.win, Cfg.allCoords,ExpParameters.lineWidthPix, ...
-            Cfg.white , [Cfg.center(1) Cfg.center(2)], 1);
+        drawFixationCross(Cfg, ExpParameters, ExpParameters.fixationCrossColor)
         Screen('Flip',Cfg.win);
     end
     
     %% Experiment Start
-    Cfg.Experiment_start = GetSecs;
+    Cfg.experimentStart = GetSecs;
     
     WaitSecs(ExpParameters.onsetDelay);
     
     %% For Each Block
     for iBlock = 1:ExpParameters.numBlocks
         
-        fprintf('Running Block %.0f \n',iBlock)
+        fprintf('\n - Running Block %.0f \n',iBlock)
         
-        logFile.blockOnsets(iBlock,1)= GetSecs-Cfg.Experiment_start;
+        logFile.blockOnsets(iBlock,1)= GetSecs-Cfg.experimentStart;
         
         if Cfg.eyeTracker
-            [el] = EyeTracker(Cfg, ExpParameters, subjectName, sessionNumber, runNumber, 'StartRecording');
+            [el] = eyeTracker(Cfg, ExpParameters, subjectName, sessionNumber, runNumber, 'StartRecording');
         end
         
         % For each event in the block
         for iEventsPerBlock = 1:ExpParameters.numEventsPerBlock
+              
+            
+            % Check for experiment abortion from operator
+            [keyIsDown, ~, keyCode] = KbCheck(Cfg.keyboard);
+            if (keyIsDown==1 && keyCode(Cfg.escapeKey))
+                break;
+            end
             
             
-            logFile.iEventDirection = ExpParameters.designDirections(iBlock,iEventsPerBlock);       % Direction of that event
-            logFile.iEventSpeed = ExpParameters.designSpeeds(iBlock,iEventsPerBlock);               % Speed of that event
-            % % % CAN IT BE PUT ON A STRUCT? IT IS ONLY A NUMBER NEEDED IN
+            
+            
+            % Direction of that event
+            logFile.iEventDirection = ExpParameters.designDirections(iBlock,iEventsPerBlock); 
+            % Speed of that event
+            logFile.iEventSpeed = ExpParameters.designSpeeds(iBlock,iEventsPerBlock);               
+            
+            
+            % % % initially an input for DoDotMo func, now from
+            % ExpParameters.eventDuration, to be tested
             % DODOTMO
             iEventDuration = ExpParameters.eventDuration ;                        % Duration of normal events
             % % %
             logFile.iEventIsFixationTarget = ExpParameters.designFixationTargets(iBlock,iEventsPerBlock);
             
             % Event Onset
-            logFile.eventOnsets(iBlock,iEventsPerBlock) = GetSecs-Cfg.Experiment_start;
+            logFile.eventOnsets(iBlock,iEventsPerBlock) = GetSecs-Cfg.experimentStart;
+
             
             % % % REFACTORE
             % play the dots
-            responseTimeWithinEvent = DoDotMo( Cfg, ExpParameters, logFile, iEventDuration);
-            % % %
+            doDotMo(Cfg, ExpParameters, logFile);
             
+
             %% logfile for responses
-            if ~isempty(responseTimeWithinEvent)
-                fprintf(ResponsesTxtLogFile,'%8.6f \n',responseTimeWithinEvent);
-            end
             
+            responseEvents = getResponse('check', Cfg, ExpParameters);
+
+            % concatenate the new event responses with the old responses vector
+%             logFile.allResponses = [logFile.allResponses responseTimeWithinEvent];
+                
+
+                
             %% Event End and Duration
-            logFile.eventEnds(iBlock,iEventsPerBlock) = GetSecs-Cfg.Experiment_start;
+            logFile.eventEnds(iBlock,iEventsPerBlock) = GetSecs-Cfg.experimentStart;
             logFile.eventDurations(iBlock,iEventsPerBlock) = logFile.eventEnds(iBlock,iEventsPerBlock) - logFile.eventOnsets(iBlock,iEventsPerBlock);
             
-            % concatenate the new event responses with the old responses vector
-            logFile.allResponses = [logFile.allResponses responseTimeWithinEvent];
-            
-            Screen('DrawLines', Cfg.win, Cfg.allCoords,ExpParameters.lineWidthPix, ...
-                Cfg.white , [Cfg.center(1) Cfg.center(2)], 1);
-            Screen('Flip',Cfg.win);
-            
-            
-            
+
+
             
             % Save the events txt logfile
-            logFile = SaveOutput(subjectName, logFile, ExpParameters, 'save Events', iBlock, iEventsPerBlock);
+            logFile = saveOutput(subjectName, logFile, ExpParameters, 'save Events', iBlock, iEventsPerBlock);
             
             
             % wait for the inter-stimulus interval
             WaitSecs(ExpParameters.ISI);
+            
+            
+            getResponse('flush', Cfg, ExpParameters);
+            
+            
         end
         
         if Cfg.eyeTracker
-            [el] = EyeTracker(Cfg, ExpParameters, subjectName, sessionNumber, runNumber, 'StopRecordings');
+            [el] = eyeTracker(Cfg, ExpParameters, subjectName, sessionNumber, runNumber, 'StopRecordings');
         end
         
-        logFile.blockEnds(iBlock,1)= GetSecs-Cfg.Experiment_start;          % End of the block Time
+        logFile.blockEnds(iBlock,1)= GetSecs-Cfg.experimentStart;          % End of the block Time
         logFile.blockDurations(iBlock,1)= logFile.blockEnds(iBlock,1) - logFile.blockOnsets(iBlock,1); % Block Duration
         
-        %Screen('DrawTexture',Cfg.win,imagesTex.Event(1));
-        Screen('DrawLines', Cfg.win, Cfg.allCoords,ExpParameters.lineWidthPix, ...
-            Cfg.white , [Cfg.center(1) Cfg.center(2)], 1);
-        Screen('Flip',Cfg.win);
         
         WaitSecs(ExpParameters.IBI);
         
         % % % NEED TO ASSIGN THE TXT VARIABLE IN A STRUCTURE
         % Save the block txt Logfile
-        logFile = SaveOutput(subjectName, logFile, ExpParameters, ...
+        logFile = saveOutput(subjectName, logFile, ExpParameters, ...
             'save Blocks', iBlock, iEventsPerBlock);
         % % %
         
@@ -187,10 +212,10 @@ try
     WaitSecs(ExpParameters.endDelay);
     
     % Close the logfiles
-    logFile = SaveOutput(subjectName, logFile, ExpParameters, 'close');
+    logFile = saveOutput(subjectName, logFile, ExpParameters, 'close');
     
     
-    TotalExperimentTime = GetSecs-Cfg.Experiment_start;
+    TotalExperimentTime = GetSecs-Cfg.experimentStart;
     
     %% Save mat log files
     % % % ADD SESSION AND RUN NUMBER
@@ -206,21 +231,18 @@ try
     % % %     % % %
     
     if Cfg.eyeTracker
-        [el] = EyeTracker(Cfg, ExpParameters, subjectName, sessionNumber, runNumber, 'Shutdown');
+        [el] = eyeTracker(Cfg, ExpParameters, subjectName, sessionNumber, runNumber, 'Shutdown');
     end
     
-    % Close the screen
-    sca
-    %     clear Screen;
-    % Restore keyboard output to Matlab:
-    ListenChar(0);
+    getResponse('stop', Cfg, ExpParameters, 1);
+    
+    
+    cleanUp()
     
 catch
-    % if code crashes, closes serial port and screen
-    sca
-    % Restore keyboard output to Matlab:
-    ListenChar(0);
-    %     clear Screen;
-    error(lasterror) %#ok<LERR> % show default error
+    
+    cleanUp()
+    psychrethrow(psychlasterror);
+    
 end
 
