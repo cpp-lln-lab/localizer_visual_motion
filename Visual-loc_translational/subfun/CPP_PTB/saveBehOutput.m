@@ -11,7 +11,8 @@ switch input
     case 'open'
         
         
-        % Initialize txt logfiles
+        % Initialize txt logfiles and empty fields for the standard BIDS
+        % event file
         logFile.eventLogFile = fopen(...
             fullfile(expParameters.outputDir, expParameters.fileName.events), ...
             'w');
@@ -34,30 +35,33 @@ switch input
         % next line so we start printing at the right place
         fprintf(logFile.eventLogFile, '\n');
         
-            'Direction', ...
-            'IsFixationTarget', ...
-            'Speed', ...
-            'Onset', ...
-            'End', ...
-            'Duration');
-
         
-    case 'save Events'
+    case 'save'
         
-        % Event txt_Logfile
-        fprintf(logFile.EventTxtLogFile,'%12.0f %12.0f %12.0f %18.0f %12.2f %12.5f %12.5f %12.5f \n',...
-            iBlock, ...
-            iEventsPerBlock, ...
-            logFile.iEventDirection, ...
-            logFile.iEventIsFixationTarget, ...
-            logFile.iEventSpeed, ...
-            logFile.eventOnsets(iBlock, iEventsPerBlock), ...
-            logFile.eventEnds(iBlock, iEventsPerBlock), ...
-            logFile.eventDurations(iBlock, iEventsPerBlock));
+        % appends to the logfile all the data stored in the structure 
+        % first with the standard BIDS data and then any extra things
+        for iEvent = 1:size(onset,1)
+            
+            fprintf(logFile.eventLogFile,'%f\%s\t%f\t',...
+                logFile.onset(iEvent,:), ...
+                logFile.trial_type(iEvent,:), ...
+                logFile.duration(iEvent,:));
+            
+            for iExtraColumn = 1:numel(varargin)
+                data = getfield(logFile, lower(varargin{iExtraColumn}));
+                if class(data) == 'char'
+                    fprintf(logFile.eventLogFile, '%s\t', data);
+                else
+                    fprintf(logFile.eventLogFile, '%f\t', data);
+                end
+            end
+            
+            fprintf(logFile.eventLogFile, '\n');
+        end
         
     case 'close'
         
-        % close txt log files
+        % close txt log file
         fclose(logFile.eventLogFile);
         
 end
