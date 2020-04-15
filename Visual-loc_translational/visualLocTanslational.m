@@ -36,23 +36,24 @@ try
     
     [el] = eyeTracker('Calibration', Cfg, ExpParameters);
     
+
+    
+    
     
     % % % REFACTOR THIS FUNCTION
     [ExpParameters] = expDesign(ExpParameters);
     % % %
     
-    % Empty vectors and matrices for speed
     
-    % % %     blockNames     = cell(ExpParameters.numBlocks,1);
-    logFile.blockOnsets    = zeros(ExpParameters.numBlocks, 1);
-    logFile.blockEnds      = zeros(ExpParameters.numBlocks, 1);
-    logFile.blockDurations = zeros(ExpParameters.numBlocks, 1);
     
+    
+    % Empty vectors and matrices for speed    
     logFile.eventOnsets    = zeros(ExpParameters.numBlocks, ExpParameters.numEventsPerBlock);
     logFile.eventEnds      = zeros(ExpParameters.numBlocks, ExpParameters.numEventsPerBlock);
     logFile.eventDurations = zeros(ExpParameters.numBlocks, ExpParameters.numEventsPerBlock);
     
-    logFile.allResponses = [] ;
+    
+    
     
     % Prepare for the output logfiles
     logFile = saveOutput(logFile, ExpParameters, 'open');
@@ -105,25 +106,17 @@ try
     for iBlock = 1:ExpParameters.numBlocks
         
         fprintf('\n - Running Block %.0f \n',iBlock)
-        
-        logFile.blockOnsets(iBlock,1)= GetSecs-Cfg.experimentStart;
-        
-        
+
         [el] = eyeTracker('StartRecording', Cfg, ExpParameters);
-        
         
         % For each event in the block
         for iEventsPerBlock = 1:ExpParameters.numEventsPerBlock
-            
             
             % Check for experiment abortion from operator
             [keyIsDown, ~, keyCode] = KbCheck(Cfg.keyboard);
             if (keyIsDown==1 && keyCode(Cfg.escapeKey))
                 break;
             end
-            
-            
-            
             
             % Direction of that event
             logFile.iEventDirection = ExpParameters.designDirections(iBlock,iEventsPerBlock);
@@ -159,77 +152,40 @@ try
             %% Event End and Duration
             logFile.eventEnds(iBlock,iEventsPerBlock) = GetSecs-Cfg.experimentStart;
             logFile.eventDurations(iBlock,iEventsPerBlock) = logFile.eventEnds(iBlock,iEventsPerBlock) - logFile.eventOnsets(iBlock,iEventsPerBlock);
-            
-            
-            
-            
+
             % Save the events txt logfile
-            logFile = saveOutput(logFile, ExpParameters, 'save Events', iBlock, iEventsPerBlock);
-            
+            logFile = saveOutput(logFile, ExpParameters, 'save', iBlock, iEventsPerBlock);
             
             % wait for the inter-stimulus interval
             WaitSecs(ExpParameters.ISI);
-            
             
             getResponse('flush', Cfg, ExpParameters);
             
             
         end
         
-        
         [el] = eyeTracker('StopRecordings', Cfg, ExpParameters);
-        
-        
-        logFile.blockEnds(iBlock,1)= GetSecs-Cfg.experimentStart;          % End of the block Time
-        logFile.blockDurations(iBlock,1)= logFile.blockEnds(iBlock,1) - logFile.blockOnsets(iBlock,1); % Block Duration
-        
         
         WaitSecs(ExpParameters.IBI);
         
-        % % % NEED TO ASSIGN THE TXT VARIABLE IN A STRUCTURE
-        % Save the block txt Logfile
-        logFile = saveOutput(logFile, ExpParameters, ...
-            'save Blocks', iBlock, iEventsPerBlock);
-        % % %
-        
     end
-    
-    % % % HERE needed for saving single vars, is it needed?
-    blockNames = ExpParameters.designBlockNames ;
-    blockDurations = logFile.blockDurations;
-    blockOnsets = logFile.blockOnsets;
-    
-    % % %
     
     % End of the run for the BOLD to go down
     WaitSecs(ExpParameters.endDelay);
     
     % Close the logfiles
     logFile = saveOutput(logFile, ExpParameters, 'close');
-    
-    
+
     TotalExperimentTime = GetSecs-Cfg.experimentStart;
     
     %% Save mat log files
     % % % ADD SESSION AND RUN NUMBER
     save(fullfile('logfiles',[ExpParameters.subjectNb,'_all.mat']))
-    
-    % % %     % % % CANNOT FIND THE VAR BLOCKDURATION
-    % % %     save(fullfile('logfiles',[subjectName,'.mat']),...
-    % % %         'Cfg', ...
-    % % %         'allResponses', ...
-    % % %         'blockDurations', ...
-    % % %         'blockNames', ...
-    % % %         'blockOnsets')
-    % % %     % % %
-    
-    
+
     [el] = eyeTracker('Shutdown', Cfg, ExpParameters);
-    
-    
+
     getResponse('stop', Cfg, ExpParameters, 1);
-    
-    
+
     cleanUp()
     
 catch
