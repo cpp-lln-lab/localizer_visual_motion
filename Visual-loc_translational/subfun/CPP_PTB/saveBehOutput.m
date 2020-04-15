@@ -1,4 +1,4 @@
-function [ logFile ] = saveOutput(logFile, expParameters, input, varargin)
+function [ logFile ] = saveBehOutput(logFile, expParameters, input, varargin)
 
 subjectNb = expParameters.subjectNb;
 
@@ -18,6 +18,7 @@ switch input
         % Initialize txt logfiles
         % % % ADD SESSION AND RUN NUMBER
         logFile.EventTxtLogFile = fopen(fullfile('logfiles',[subjectNb,'_Events.txt']),'w');
+        
         fprintf(logFile.EventTxtLogFile,'%12s %12s %12s %18s %12s %12s %12s %12s \n', ...
             'BlockNumber', ...
             'EventNumber', ...
