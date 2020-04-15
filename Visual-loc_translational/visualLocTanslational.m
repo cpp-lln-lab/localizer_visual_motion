@@ -35,26 +35,12 @@ try
     
     
     [el] = eyeTracker('Calibration', Cfg, ExpParameters);
-    
 
-    
-    
     
     % % % REFACTOR THIS FUNCTION
     [ExpParameters] = expDesign(ExpParameters);
     % % %
-    
-    
-    
-    
-    % Empty vectors and matrices for speed    
-    logFile.eventOnsets    = zeros(ExpParameters.numBlocks, ExpParameters.numEventsPerBlock);
-    logFile.eventEnds      = zeros(ExpParameters.numBlocks, ExpParameters.numEventsPerBlock);
-    logFile.eventDurations = zeros(ExpParameters.numBlocks, ExpParameters.numEventsPerBlock);
-    
-    
-    
-    
+
     % Prepare for the output logfiles
     logFile = saveOutput(logFile, ExpParameters, 'open');
 
