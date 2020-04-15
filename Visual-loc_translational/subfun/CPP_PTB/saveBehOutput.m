@@ -58,8 +58,6 @@ switch input
     case 'close'
         
         % close txt log files
-        fclose(logFile.BlockTxtLogFile);
-        fclose(logFile.EventTxtLogFile);
-        fclose(logFile.ResponsesTxtLogFile);
+        fclose(logFile.eventLogFile);
         
 end
