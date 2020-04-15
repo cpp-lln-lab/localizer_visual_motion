@@ -52,8 +52,8 @@ expParameters.fileName.base = ...
 runSuffix = ['_run-' sprintf(pattern, runNb)];
 
 
-switch cfg.device
-    case 'PC'
+switch lower(cfg.device)
+    case 'pc'
         modality = 'beh';
     case 'scanner'
         modality = 'func';

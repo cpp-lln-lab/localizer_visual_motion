@@ -87,7 +87,7 @@ end
 % ---------- FIX LATER ---------- %
 % I don't think we want to hard code the 2/3 here. We might just add it to
 % the Cfg structure
-if strcmp(cfg.stimPosition,'Scanner')
+if strcmpi(cfg.stimPosition,'scanner')
     cfg.winRect(1,4) = cfg.winRect(1,4)*2/3;
 end
 % ---------- FIX LATER ---------- %

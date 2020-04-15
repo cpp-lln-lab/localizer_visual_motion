@@ -78,13 +78,13 @@ Cfg.keyboardNumbers
 Cfg.keyboardNames
 
 
-switch Cfg.device
+switch lower(Cfg.device)
     
     
     % this part might need to be adapted because the "default" device
     % number might be different for different OS or set up
 
-    case 'PC'
+    case 'pc'
         
         Cfg.keyboard = [];
         Cfg.responseBox = [];
