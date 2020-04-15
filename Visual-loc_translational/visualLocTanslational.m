@@ -112,8 +112,6 @@ try
             % Event Onset
             logFile.eventOnsets(iBlock,iEventsPerBlock) = GetSecs-Cfg.experimentStart;
             
-            
-            % % % REFACTORE
             % play the dots
             doDotMo(Cfg, ExpParameters, logFile);
             
@@ -121,6 +119,8 @@ try
             %% logfile for responses
             
             responseEvents = getResponse('check', Cfg, ExpParameters);
+            
+            
             
             % concatenate the new event responses with the old responses vector
             %             logFile.allResponses = [logFile.allResponses responseTimeWithinEvent];
@@ -157,8 +157,18 @@ try
     TotalExperimentTime = GetSecs-Cfg.experimentStart;
     
     %% Save mat log files
+    
+    
+    
+    
+    
     % % % ADD SESSION AND RUN NUMBER
     save(fullfile('logfiles',[ExpParameters.subjectNb,'_all.mat']))
+    
+    
+    
+    
+    
 
     [el] = eyeTracker('Shutdown', Cfg, ExpParameters);
 
