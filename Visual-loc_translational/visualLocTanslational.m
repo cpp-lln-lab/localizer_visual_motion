@@ -57,29 +57,15 @@ try
     
     % Prepare for the output logfiles
     logFile = saveOutput(logFile, ExpParameters, 'open');
-    
-    
-    
-    
-    % % % PUT IT RIGHT BEFORE STARTING THE EXPERIMENT
-    % Show instructions
-    if ExpParameters.Task1
-        DrawFormattedText(Cfg.win,ExpParameters.TaskInstruction,...
-            'center', 'center', Cfg.textColor);
-        Screen('Flip', Cfg.win);
-    end
-    % % %
-    
-    
-    
-    
+
+
     % Prepare for fixation Cross
     if ExpParameters.Task1
         Cfg.xCoords = [-ExpParameters.fixCrossDimPix ExpParameters.fixCrossDimPix 0 0] + ExpParameters.xDisplacementFixCross;
         Cfg.yCoords = [0 0 -ExpParameters.fixCrossDimPix ExpParameters.fixCrossDimPix] + ExpParameters.yDisplacementFixCross;
         Cfg.allCoords = [Cfg.xCoords; Cfg.yCoords];
-    end
-    
+    end    
+
     % Wait for space key to be pressed
     pressSpace4me
     
@@ -87,7 +73,13 @@ try
     
     getResponse('start', Cfg, ExpParameters, 1);
     
-    
+    % Show instructions
+    if ExpParameters.Task1
+        DrawFormattedText(Cfg.win,ExpParameters.TaskInstruction,...
+            'center', 'center', Cfg.textColor);
+        Screen('Flip', Cfg.win);
+    end
+
     % Wait for Trigger from Scanner
     wait4Trigger(Cfg)
     
