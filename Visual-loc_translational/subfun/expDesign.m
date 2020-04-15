@@ -210,7 +210,7 @@ if displayFigs
     
     imagesc(designDirection)
     
-    labelAxes()
+    labelAxesBlock()
     
     caxis([-90-37, 270+37])
     myColorMap = lines(5);
@@ -229,7 +229,7 @@ if displayFigs
     end
     hist(leftPosition)
     scaleAxes()
-    labelAxes()
+    labelAxesFreq()
     title('0')
     
     subplot(3,3,3)
@@ -240,7 +240,7 @@ if displayFigs
     end
     hist(rightPosition)
     scaleAxes()
-    labelAxes()
+    labelAxesFreq()
     title('90')
     
     subplot(3,3,5)
@@ -251,7 +251,7 @@ if displayFigs
     end
     hist(upPosition)
     scaleAxes()
-    labelAxes()
+    labelAxesFreq()
     title('180')
     
     subplot(3,3,6)
@@ -262,7 +262,7 @@ if displayFigs
     end
     hist(downPosition)
     scaleAxes()
-    labelAxes()
+    labelAxesFreq()
     title('270')
     
     
@@ -270,7 +270,7 @@ if displayFigs
     subplot(3,3,7)
     
     imagesc(expParameters.designFixationTargets)
-    labelAxes()
+    labelAxesBlock()
     title('Fixation Targets design')
     
     
@@ -283,14 +283,20 @@ if displayFigs
         itargetPosition = [ itargetPosition find(expParameters.designFixationTargets(i,:)==1) ];
     end
     hist(itargetPosition)
-    labelAxes()
+    labelAxesFreq()
     title('Fixation Targets position distribution')
     
 end
 
 end
 
-function labelAxes()
+function labelAxesBlock()
+% an old viking saying because they really cared about their axes
+ylabel('Block seq.', 'Fontsize', 8);
+xlabel('Events', 'Fontsize', 8);
+end
+
+function labelAxesFreq()
 % an old viking saying because they really cared about their axes
 ylabel('freq.', 'Fontsize', 8);
 xlabel('Events', 'Fontsize', 8);
