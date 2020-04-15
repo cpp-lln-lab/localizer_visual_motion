@@ -12,12 +12,28 @@ switch input
         
         
         % Initialize txt logfiles
-        % % % ADD SESSION AND RUN NUMBER
-        logFile.EventTxtLogFile = fopen(fullfile('logfiles',[subjectNb,'_Events.txt']),'w');
+        logFile.eventLogFile = fopen(...
+            fullfile(expParameters.outputDir, expParameters.fileName.events), ...
+            'w');
         
-        fprintf(logFile.EventTxtLogFile,'%12s %12s %12s %18s %12s %12s %12s %12s \n', ...
-            'BlockNumber', ...
-            'EventNumber', ...
+        logFile.onset = [];
+        logFile.trial_type = [];
+        logFile.duration = [];
+        
+        % print the basic BIDS columns
+        fprintf(eventLogFile, '%s\t%s\t%s\t', 'onset', 'trial_type', 'duration');
+        
+        % print any extra column specified by the user
+        % also prepare an empty field in the structure to collect data
+        % for those
+        for iExtraColumn = 1:numel(varargin)
+            fprintf(logFile.eventLogFile,'%s\t', lower(varargin{iExtraColumn}));
+            logFile = setfield(logFile, lower(varargin{iExtraColumn}));
+        end
+        
+        % next line so we start printing at the right place
+        fprintf(logFile.eventLogFile, '\n');
+        
             'Direction', ...
             'IsFixationTarget', ...
             'Speed', ...
