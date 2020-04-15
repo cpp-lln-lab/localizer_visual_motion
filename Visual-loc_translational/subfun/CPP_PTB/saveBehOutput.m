@@ -1,11 +1,10 @@
 function [ logFile ] = saveBehOutput(logFile, expParameters, input, varargin)
 
-subjectNb = expParameters.subjectNb;
 
-if nargin > 5
-    iBlock = varargin{1};
-    iEventsPerBlock = varargin{2};
-end
+'BlockNumber', ...
+    'EventNumber', ...
+    'Direction', ...
+    'IsFixationTarget', ...
 
 switch input
     
