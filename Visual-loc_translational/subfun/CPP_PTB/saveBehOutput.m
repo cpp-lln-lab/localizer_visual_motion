@@ -11,9 +11,6 @@ switch input
     
     case 'open'
         
-        if ~exist('logfiles','dir')
-            mkdir('logfiles')
-        end
         
         % Initialize txt logfiles
         % % % ADD SESSION AND RUN NUMBER
