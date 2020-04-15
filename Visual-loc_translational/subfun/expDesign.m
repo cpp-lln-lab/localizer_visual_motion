@@ -176,7 +176,7 @@ while 1
         
     end
     
-    % Chekc rule 3
+    % Check rule 3
     if max(sum(expParameters.designFixationTargets)) < 3
         break
     else
@@ -185,6 +185,14 @@ while 1
     end
     
 end
+
+
+designSpeeds = expParameters.designSpeeds';
+designDirections = expParameters.designDirections';
+designFixationTargets = expParameters.designFixationTargets';
+
+expParameters.trialList = [designDirections(:) designSpeeds(:) designFixationTargets(:)];
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
