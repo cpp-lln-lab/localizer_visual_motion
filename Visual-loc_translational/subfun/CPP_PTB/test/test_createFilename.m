@@ -8,6 +8,7 @@ addpath(genpath(fullfile(fileparts(mfilename), '..')))
 
 clear
 
+expParameters.subjectGrp = '';
 expParameters.subjectNb = 1;
 expParameters.sessionNb = 1;
 expParameters.runNb = 1;
@@ -42,6 +43,7 @@ assert(strcmp(...
 
 clear
 
+expParameters.subjectGrp = 'ctrl';
 expParameters.subjectNb = 2;
 expParameters.sessionNb = 2;
 expParameters.runNb = 2;
@@ -55,16 +57,16 @@ expParameters = createFilename(expParameters, cfg);
 
 outputDir = fullfile(pwd, ...
     '..', '..', ...
-    'output', 'source', 'sub-002', 'ses-002', 'func');
+    'output', 'source', 'sub-ctrl002', 'ses-002', 'func');
 
 eyetrackerDir = fullfile(pwd, ...
     '..', '..', ...
-    'output', 'source', 'sub-002', 'ses-002', 'eyetracker');
+    'output', 'source', 'sub-ctrl002', 'ses-002', 'eyetracker');
 
 
 assert(exist(outputDir, 'dir')==7)
-assert(strcmp(expParameters.fileName.base, 'sub-002_ses-002_task-testtask'))
+assert(strcmp(expParameters.fileName.base, 'sub-ctrl002_ses-002_task-testtask'))
 assert(strcmp(...
               expParameters.fileName.events, ...
-              ['sub-002_ses-002_task-testtask_run-002_events_date-' expParameters.date '.tsv']));
+              ['sub-ctrl002_ses-002_task-testtask_run-002_events_date-' expParameters.date '.tsv']));
 
