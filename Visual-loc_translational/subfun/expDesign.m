@@ -85,7 +85,7 @@ end
 condition = repmat(names, 1, numRepetitions);
 nrBlocks = length(condition);
 
-% Assigne deisgn parameters to be exported
+% Assigne design parameters to be exported
 expParameters.designBlockNames      = cell(nrBlocks, 1);
 expParameters.designDirections      = zeros(nrBlocks, numEventsPerBlock);
 expParameters.designSpeeds          = ones(nrBlocks, numEventsPerBlock) * speedEvent;
@@ -101,7 +101,8 @@ motionIndex = find( strcmp(condition, 'motion') );
 for iMotionBlock = 1:numRepetitions
     
     % Shuffle and set motion direction order
-    expParameters.designDirections(motionIndex(iMotionBlock),:) = [ Shuffle(motionDirections), Shuffle(motionDirections), Shuffle(motionDirections)];
+    expParameters.designDirections(motionIndex(iMotionBlock),:) = ...
+        [ Shuffle(motionDirections), Shuffle(motionDirections), Shuffle(motionDirections)];
     
     % Set static condition
     expParameters.designDirections(staticIndex(iMotionBlock),:) = staticDirections;
@@ -192,27 +193,26 @@ if displayFigs
     
     figure(1);
     
-    % Shows blocks (static and motion) and events (motion direction) order
     
+    % Shows blocks (static and motion) and events (motion direction) order
     subplot(3,3,1)
     
     designDirection = expParameters.designDirections;
     designDirection(designDirection==-1) = -90;
     
     imagesc(designDirection)
-    ylabel('Blocks', 'Fontsize', 8);
-    xlabel('Events', 'Fontsize', 8);
+    
+    labelAxes()
+    
     caxis([-90-37, 270+37])
     myColorMap = lines(5);
     colormap(myColorMap);
-    c = colorbar;
-    c.Ticks = ([-90, 0, 90, 180, 270]);
-    c.TickLabels = {'static','0','90','180', '270'};
+    
     title('Block (static and motion) & Events (motion direction)')
+    
     
     % Shows the direction position distribution in the motion blocks
     %  across the experiment
-    
     subplot(3,3,2)
     
     leftPosition = [];
@@ -220,10 +220,8 @@ if displayFigs
         leftPosition = [ leftPosition find(expParameters.designDirections(i,:)==0) ];
     end
     hist(leftPosition)
-    xlim([1 12])
-    ylim([0 5])
-    ylabel('freq.', 'Fontsize', 8);
-    xlabel('Events', 'Fontsize', 8);
+    scaleAxes()
+    labelAxes()
     title('0')
     
     subplot(3,3,3)
@@ -233,10 +231,8 @@ if displayFigs
         rightPosition = [ rightPosition find(expParameters.designDirections(i,:)==90) ];
     end
     hist(rightPosition)
-    xlim([1 12])
-    ylim([0 5])
-    ylabel('freq.', 'Fontsize', 8);
-    xlabel('Events', 'Fontsize', 8);
+    scaleAxes()
+    labelAxes()
     title('90')
     
     subplot(3,3,5)
@@ -246,10 +242,8 @@ if displayFigs
         upPosition = [ upPosition find(expParameters.designDirections(i,:)==180) ];
     end
     hist(upPosition)
-    xlim([1 12])
-    ylim([0 5])
-    ylabel('freq.', 'Fontsize', 8);
-    xlabel('Events', 'Fontsize', 8);
+    scaleAxes()
+    labelAxes()
     title('180')
     
     subplot(3,3,6)
@@ -259,24 +253,21 @@ if displayFigs
         downPosition = [ downPosition find(expParameters.designDirections(i,:)==270) ];
     end
     hist(downPosition)
-    xlim([1 12])
-    ylim([0 5])
-    ylabel('freq.', 'Fontsize', 8);
-    xlabel('Events', 'Fontsize', 8);
+    scaleAxes()
+    labelAxes()
     title('270')
     
-    % Shows the fixation targets design in each event (1 or 0)
     
+    % Shows the fixation targets design in each event (1 or 0)
     subplot(3,3,7)
     
     imagesc(expParameters.designFixationTargets)
-    ylabel('Blocks', 'Fontsize', 8);
-    xlabel('Events', 'Fontsize', 8);
+    labelAxes()
     title('Fixation Targets design')
+    
     
     % Shows the fixation targets position distribution in the block across
     %  the experimet
-    
     subplot(3,3,8)
     
     itargetPosition = [];
@@ -284,8 +275,20 @@ if displayFigs
         itargetPosition = [ itargetPosition find(expParameters.designFixationTargets(i,:)==1) ];
     end
     hist(itargetPosition)
-    ylabel('freq.', 'Fontsize', 8);
-    xlabel('Events', 'Fontsize', 8);
+    labelAxes()
     title('Fixation Targets position distribution')
     
+end
+
+end
+
+function labelAxes()
+% an old viking saying because they really cared about their axes
+ylabel('freq.', 'Fontsize', 8);
+xlabel('Events', 'Fontsize', 8);
+end
+
+function scaleAxes()
+xlim([1 12])
+ylim([0 5])
 end
