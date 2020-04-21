@@ -16,163 +16,184 @@ end
 % make sure we got access to all the required functions and inputs
 addpath(genpath(fullfile(pwd, 'subfun')))
 
-[ExpParameters, Cfg] = setParameters;
+[expParameters, cfg] = setParameters;
 
 % set and load all the parameters to run the experiment
-expParameters = userInputs(Cfg, ExpParameters);
+expParameters = userInputs(cfg, expParameters);
+expParameters = createFilename(expParameters, cfg);
 
+expParameters
 
 %%  Experiment
 
 % Safety loop: close the screen if code crashes
 try
+    
+    
     %% Init the experiment
-    [Cfg] = initPTB(Cfg);
+    [cfg] = initPTB(cfg);
     
     % Convert some values from degrees to pixels
-    Cfg = deg2Pix('diameterAperture', Cfg, Cfg);
-    ExpParameters = deg2Pix('dotSize', ExpParameters, Cfg);
+    cfg = deg2Pix('diameterAperture', cfg, cfg);
+    expParameters = deg2Pix('dotSize', expParameters, cfg);
     
     
-    [el] = eyeTracker('Calibration', Cfg, ExpParameters);
+    [el] = eyeTracker('Calibration', cfg, expParameters);
 
     
     % % % REFACTOR THIS FUNCTION
-    [ExpParameters] = expDesign(ExpParameters);
+    [expParameters] = expDesign(expParameters);
     % % %
 
-    % Prepare for the output logfiles
-    logFile = saveOutput(logFile, ExpParameters, 'open');
-
+    % Prepare for the output logfiles with all
+    logFile = saveEventsFile('open', expParameters, ...
+        'direction', 'speed', 'isTarget', 'eventNb', 'blockNb');
+    
 
     % Prepare for fixation Cross
-    if ExpParameters.Task1
-        Cfg.xCoords = [-ExpParameters.fixCrossDimPix ExpParameters.fixCrossDimPix 0 0] + ExpParameters.xDisplacementFixCross;
-        Cfg.yCoords = [0 0 -ExpParameters.fixCrossDimPix ExpParameters.fixCrossDimPix] + ExpParameters.yDisplacementFixCross;
-        Cfg.allCoords = [Cfg.xCoords; Cfg.yCoords];
+    if expParameters.Task1
+        
+        cfg.xCoords = [-expParameters.fixCrossDimPix expParameters.fixCrossDimPix 0 0] ...
+            + expParameters.xDisplacementFixCross;
+        
+        cfg.yCoords = [0 0 -expParameters.fixCrossDimPix expParameters.fixCrossDimPix] ...
+            + expParameters.yDisplacementFixCross;
+        
+        cfg.allCoords = [cfg.xCoords; cfg.yCoords];
+        
     end    
 
     % Wait for space key to be pressed
     pressSpace4me
     
-    getResponse('init', Cfg, ExpParameters, 1);
-    
-    getResponse('start', Cfg, ExpParameters, 1);
+    % prepare the KbQueue to collect responses
+    getResponse('init', cfg, expParameters, 1);
+    getResponse('start', cfg, expParameters, 1);
     
     % Show instructions
-    if ExpParameters.Task1
-        DrawFormattedText(Cfg.win,ExpParameters.TaskInstruction,...
-            'center', 'center', Cfg.textColor);
-        Screen('Flip', Cfg.win);
+    if expParameters.Task1
+        DrawFormattedText(cfg.win,expParameters.TaskInstruction,...
+            'center', 'center', cfg.textColor);
+        Screen('Flip', cfg.win);
     end
 
     % Wait for Trigger from Scanner
-    wait4Trigger(Cfg)
+    wait4Trigger(cfg)
     
     % Show the fixation cross
-    if ExpParameters.Task1
-        drawFixationCross(Cfg, ExpParameters, ExpParameters.fixationCrossColor)
-        Screen('Flip',Cfg.win);
+    if expParameters.Task1
+        drawFixationCross(cfg, expParameters, expParameters.fixationCrossColor)
+        Screen('Flip',cfg.win);
     end
     
-    %% Experiment Start
-    Cfg.experimentStart = GetSecs;
     
-    WaitSecs(ExpParameters.onsetDelay);
+    %% Experiment Start
+    cfg.experimentStart = GetSecs;
+    
+    WaitSecs(expParameters.onsetDelay);
+    
     
     %% For Each Block
-    for iBlock = 1:ExpParameters.numBlocks
+    
+    stopEverything = 0;
+    
+    for iBlock = 1:expParameters.numBlocks
+        
+        if stopEverything
+             break;
+        end
         
         fprintf('\n - Running Block %.0f \n',iBlock)
 
-        [el] = eyeTracker('StartRecording', Cfg, ExpParameters);
+        eyeTracker('StartRecording', cfg, expParameters);
         
         % For each event in the block
-        for iEventsPerBlock = 1:ExpParameters.numEventsPerBlock
+        for iEvent = 1:expParameters.numEventsPerBlock
+            
             
             % Check for experiment abortion from operator
-            [keyIsDown, ~, keyCode] = KbCheck(Cfg.keyboard);
-            if (keyIsDown==1 && keyCode(Cfg.escapeKey))
+            [keyIsDown, ~, keyCode] = KbCheck(cfg.keyboard);
+            if keyIsDown && keyCode(KbName(cfg.escapeKey))
+                stopEverything = 1;
+                warning('OK let us get out of here')
                 break;
             end
             
-            % Direction of that event
-            logFile.iEventDirection = ExpParameters.designDirections(iBlock,iEventsPerBlock);
-            % Speed of that event
-            logFile.iEventSpeed = ExpParameters.designSpeeds(iBlock,iEventsPerBlock);
             
-            
-            % % % initially an input for DoDotMo func, now from
-            % ExpParameters.eventDuration, to be tested
-            % DODOTMO
-            iEventDuration = ExpParameters.eventDuration ;                        % Duration of normal events
-            % % %
-            logFile.iEventIsFixationTarget = ExpParameters.designFixationTargets(iBlock,iEventsPerBlock);
-            
-            % Event Onset
-            logFile.eventOnsets(iBlock,iEventsPerBlock) = GetSecs-Cfg.experimentStart;
-            
-            % play the dots
-            doDotMo(Cfg, ExpParameters, logFile);
-            
-            
-            %% logfile for responses
-            
-            responseEvents = getResponse('check', Cfg, ExpParameters);
-            
-            
-            
-            % concatenate the new event responses with the old responses vector
-            %             logFile.allResponses = [logFile.allResponses responseTimeWithinEvent];
-            
-            
-            
-            %% Event End and Duration
-            logFile.eventEnds(iBlock,iEventsPerBlock) = GetSecs-Cfg.experimentStart;
-            logFile.eventDurations(iBlock,iEventsPerBlock) = logFile.eventEnds(iBlock,iEventsPerBlock) - logFile.eventOnsets(iBlock,iEventsPerBlock);
+            % direction speed of that event and if it is a target
+            thisEvent.trial_type{1,1} = 'dummy';
+            thisEvent.direction{1,1} = expParameters.designDirections(iBlock,iEvent);
+            thisEvent.speed{1,1} = expParameters.designSpeeds(iBlock,iEvent);
+            thisEvent.isTarget{1,1} = expParameters.designFixationTargets(iBlock,iEvent);
 
+            % play the dots and collect onset and duraton of the event
+            [onset, duration] = doDotMo(cfg, expParameters, thisEvent);
+
+            thisEvent.eventNb{1,1} = iEvent;
+            thisEvent.blockNb{1,1} = iBlock;
+            thisEvent.duration{1,1} = duration;
+            thisEvent.onset{1,1} = onset - cfg.experimentStart;
+            
+            
+            % collect the responses and appends to the event structure for
+            % saving in the tsv file
+            responseEvents = getResponse('check', cfg, expParameters);
+            
+            if ~isempty(responseEvents)
+                for iResp = 1:size(responseEvents, 1)
+                    thisEvent.trial_type{end+1,1} = 'response';
+                    thisEvent.duration{end+1,1} = 0;
+                    thisEvent.direction{end+1,1} = [];
+                    thisEvent.speed{end+1,1} = [];
+                    thisEvent.isTarget{end+1,1} = expParameters.designFixationTargets(iBlock,iEvent);
+                    thisEvent.eventNb{end+1,1} = iEvent;
+                    thisEvent.blockNb{end+1,1} = iBlock;
+                end
+            end
+            
             % Save the events txt logfile
-            logFile = saveOutput(logFile, ExpParameters, 'save', iBlock, iEventsPerBlock);
+            thisEvent.eventLogFile = logFile.eventLogFile;
+            
+            saveEventsFile('save', expParameters, thisEvent, ...
+                'direction', 'speed', 'isTarget', 'eventNb', 'blockNb');
+
+            % we save event by event so we clear this variable every loop
+            clear thisEvent
             
             % wait for the inter-stimulus interval
-            WaitSecs(ExpParameters.ISI);
+            WaitSecs(expParameters.ISI);
             
-            getResponse('flush', Cfg, ExpParameters);
+            
+            getResponse('flush', cfg, expParameters);
             
             
         end
         
-        [el] = eyeTracker('StopRecordings', Cfg, ExpParameters);
+        eyeTracker('StopRecordings', cfg, expParameters);
         
-        WaitSecs(ExpParameters.IBI);
+        WaitSecs(expParameters.IBI);
         
     end
     
     % End of the run for the BOLD to go down
-    WaitSecs(ExpParameters.endDelay);
+    WaitSecs(expParameters.endDelay);
     
     % Close the logfiles
-    logFile = saveOutput(logFile, ExpParameters, 'close');
+    saveEventsFile('close', expParameters, logFile);
+    
+    getResponse('stop', cfg, expParameters, 1);
 
-    TotalExperimentTime = GetSecs-Cfg.experimentStart;
+    totalExperimentTime = GetSecs-cfg.experimentStart;
     
-    %% Save mat log files
-    
-    
-    
-    
-    
-    % % % ADD SESSION AND RUN NUMBER
-    save(fullfile('logfiles',[ExpParameters.subjectNb,'_all.mat']))
-    
-    
-    
-    
-    
+    eyeTracker('Shutdown', cfg, expParameters);
 
-    [el] = eyeTracker('Shutdown', Cfg, ExpParameters);
-
-    getResponse('stop', Cfg, ExpParameters, 1);
+    % save the whole workspace
+    matFile = fullfile(expParameters.outputDir, strrep(expParameters.fileName.events,'tsv', 'mat'));
+    if IsOctave
+        save(matFile, '-mat7-binary');
+    else
+        save(matFile, '-v7.3');
+    end
 
     cleanUp()
     
@@ -182,4 +203,3 @@ catch
     psychrethrow(psychlasterror);
     
 end
-
