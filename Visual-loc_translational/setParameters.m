@@ -17,11 +17,11 @@ expParameters.outputDir = fullfile(...
 cfg.debug               = true;  % To test the script out of the scanner, skip PTB sync
 cfg.testingSmallScreen  = false; % To test on a part of the screen, change to 1
 cfg.testingTranspScreen = true;  % To test with trasparent full size screen
-cfg.stimPosition        = 'PC';  % 'Scanner': means that it removes the lower 1/3 of the screen (the coil hides the lower part of the screen)
+cfg.stimPosition        = 'pc';  % 'Scanner': means that it removes the lower 1/3 of the screen (the coil hides the lower part of the screen)
 
 
 %% MRI settings
-cfg.device        = 'PC';  % 'PC': does not care about trigger - otherwise use 'Scanner'
+cfg.device        = 'scanner';  % 'PC': does not care about trigger - otherwise use 'Scanner'
 cfg.triggerKey    = 't';   % Set the letter sent by the trigger to sync stimulation and volume acquisition
 cfg.numTriggers   = 4;
 cfg.eyeTracker    = false; % Set to 'true' if you are testing in MRI and want to record ET data
@@ -38,16 +38,16 @@ cfg.eyeTracker    = false; % Set to 'true' if you are testing in MRI and want to
 
 % Using empty vectors should work for linux when to select the "main"
 %   keyboard. You might have to try some other values for MacOS or Windows
-Cfg.keyboard = []; 
-Cfg.responseBox = []; 
+cfg.keyboard = []; 
+cfg.responseBox = []; 
 
 
 %% Engine parameters
 
 % Monitor parameters
-Cfg.monitorWidth  	  = 42;  % Monitor Width in cm
-Cfg.screenDistance    = 134; % Distance from the screen in cm
-Cfg.diameterAperture  = 8;   % Diameter/length of side of aperture in Visual angles
+cfg.monitorWidth  	  = 42;  % Monitor Width in cm
+cfg.screenDistance    = 134; % Distance from the screen in cm
+cfg.diameterAperture  = 8;   % Diameter/length of side of aperture in Visual angles
 
 % Monitor parameters for PTB
 cfg.white            = [255 255 255];
@@ -61,7 +61,7 @@ cfg.textSize         = 18;
 cfg.textStyle        = 1;
 
 % Keyboard
-Cfg.escapeKey        = 'Escape';
+cfg.escapeKey        = 'Escape';
 
 
 
@@ -73,12 +73,12 @@ Cfg.escapeKey        = 'Escape';
 % For key presses for the subject
 % Cfg.responseBox
 
-[Cfg.keyboardNumbers, Cfg.keyboardNames] = GetKeyboardIndices;
-Cfg.keyboardNumbers
-Cfg.keyboardNames
+[cfg.keyboardNumbers, cfg.keyboardNames] = GetKeyboardIndices;
+cfg.keyboardNumbers
+cfg.keyboardNames
 
 
-switch lower(Cfg.device)
+switch lower(cfg.device)
     
     
     % this part might need to be adapted because the "default" device
@@ -86,12 +86,12 @@ switch lower(Cfg.device)
 
     case 'pc'
         
-        Cfg.keyboard = [];
-        Cfg.responseBox = [];
+        cfg.keyboard = [];
+        cfg.responseBox = [];
         
         if ismac
-            Cfg.keyboard = [];
-            Cfg.responseBox = [];
+            cfg.keyboard = [];
+            cfg.responseBox = [];
         end
 
     case 'scanner'
@@ -101,8 +101,8 @@ switch lower(Cfg.device)
         % Cfg.keyboard = max(Cfg.keyboardNumbers);
         % Cfg.responseBox = min(Cfg.keyboardNumbers);
         
-        Cfg.keyboard = [];
-        Cfg.responseBox = [];
+        cfg.keyboard = [];
+        cfg.responseBox = [];
         
 end
 
@@ -121,7 +121,7 @@ expParameters.endDelay           = 1;      % Number of seconds after the end all
 expParameters.experimentType    = 'Dots';  % Visual modality is in RDKs %NOT USED IN THE MAIN SCIPT
 expParameters.speedEvent        = 8;       % speed in visual angles
 expParameters.numEventsPerBlock = 12;      % Number of events per block (should not be changed)
-expParameters.eventDuration     = 5;
+expParameters.eventDuration     = 1;
 expParameters.coh               = 1;       % Coherence Level (0-1)
 expParameters.maxDotsPerFrame   = 300;     % Maximum number dots per frame (Number must be divisible by 3)
 expParameters.dotLifeTime       = 1;     % Dot life time in seconds
@@ -146,12 +146,11 @@ if expParameters.Task1
     expParameters.fixCrossDimPix               = 10;   % Set the length of the lines (in Pixels) of the fixation cross
     expParameters.lineWidthPix                 = 4;    % Set the line width (in Pixels) for our fixation cross
     expParameters.maxNumFixationTargetPerBlock = 2;
-    expParameters.fixationChangeDuration       = 0.15; % In secs
+    expParameters.targetDuration               = 0.15; % In secs
     expParameters.xDisplacementFixCross        = 0;    % Manual displacement of the fixation cross
     expParameters.yDisplacementFixCross        = 0;    % Manual displacement of the fixation cross
-    expParameters.fixationCrossColor           = Cfg.white;
-    expParameters.fixationCrossColorTarget     = Cfg.red;
-    expParameters.responseKey                  = {'space'};
+    expParameters.fixationCrossColor           = cfg.white;
+    expParameters.fixationCrossColorTarget     = cfg.red;
 end
 
 
