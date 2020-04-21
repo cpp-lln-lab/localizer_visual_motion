@@ -5,12 +5,13 @@ WaitSecs(0.5);
 Priority(0);
 
 ListenChar(0);
-KbQueueRelease()
+KbQueueRelease();
 
 ShowCursor
 
 % Screen Close All
-sca
+sca;
+
 if ~ismac
     % remove PsychDebugWindowConfiguration
     clear Screen
