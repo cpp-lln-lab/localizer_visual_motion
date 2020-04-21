@@ -1,12 +1,13 @@
-function responseEvents = getResponse(action, cfg, expParameters, verbose)
+function responseEvents = getResponse(action, cfg, expParameters, getOnlyPress, verbose)
 % wrapper function to use KbQueue
 % The queue will be listening to key presses on the response box as defined
 % in the cfg structure : see setParameters for more details
 %
 % INPUT
 %
-% - action 
-% Defines what we want the function to do
+% getOnlyPress: will only return the key press and not the releases and not just the key presses. (default=1) 
+%
+% - action: Defines what we want the function to do
 %  - init: to initialise the queue
 %  - start: to start listening to keypresses
 % 
@@ -20,6 +21,10 @@ function responseEvents = getResponse(action, cfg, expParameters, verbose)
 % KbName(responseEvents(:,2)) will give all the keys pressed
 
 if nargin < 4
+    getOnlyPress = 1;
+end
+
+if nargin < 5
     verbose = 0;
 end
 
@@ -82,8 +87,12 @@ switch action
         while KbEventAvail(responseBox)
             
             event = KbEventGet(responseBox);
-
-            responseEvents(end+1, :) = [event.Time event.Keycode event.Pressed];  %#ok<*AGROW>
+            
+            % we only return the pressed keys by default
+            if getOnlyPress && event.Pressed==0
+            else
+                responseEvents(end+1, :) = [event.Time event.Keycode event.Pressed];  %#ok<*AGROW>
+            end
         end
 
         

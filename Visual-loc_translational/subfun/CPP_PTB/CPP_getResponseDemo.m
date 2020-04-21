@@ -91,7 +91,7 @@ WaitSecs(5);
 
 
 % Check what keys were pressed (all of them)
-responseEvents = getResponse('check', cfg, expParameters, 1);
+responseEvents = getResponse('check', cfg, expParameters, 0, 1);
 
 % This can be used to flush the queue: empty all events that are still present in the queue
 getResponse('flush', cfg, expParameters, 1);
