@@ -21,9 +21,9 @@ function [onset, duration] = doDotMo(cfg, expParameters, thisEvent)
 %% Get parameters
 dontClear  = expParameters.dontClear;
 
-direction = thisEvent.direction;
-isTarget = thisEvent.isTarget;
-speed = thisEvent.speed;
+direction = thisEvent.direction{1};
+isTarget = thisEvent.isTarget{1};
+speed = thisEvent.speed{1};
 
 coh = expParameters.coh;
 ndots = expParameters.maxDotsPerFrame;
@@ -31,9 +31,9 @@ dotSizePix = expParameters.dotSizePix;
 dotLifeTime = expParameters.dotLifeTime;
 dotColor = expParameters.dotColor;
 
-fixationChangeDuration = expParameters.fixationChangeDuration;
+targetDuration = expParameters.targetDuration;
 
-thisEvent = deg2Pix('iEventSpeed', thisEvent, cfg);
+% thisEvent = deg2Pix('speed', thisEvent, cfg);
 % dotSpeedPix = logFile.iEventSpeedPix;
 
 diamAperturePix = cfg.diameterAperturePix;
@@ -129,7 +129,7 @@ while continueShow
     % Draw the fixation cross
     color = expParameters.fixationCrossColor;
     % If this frame shows a target we change the color
-    if GetSecs < (movieStartTime+fixationChangeDuration) && isTarget==1
+    if GetSecs < (onset+targetDuration) && isTarget==1
         color = expParameters.fixationCrossColorTarget;
     end
     drawFixationCross(cfg, expParameters, color)
