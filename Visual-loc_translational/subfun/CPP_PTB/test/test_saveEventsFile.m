@@ -56,7 +56,7 @@ saveEventsFile('close', expParameters, logFile);
 
 % ---- test section
 
-fileName = fullfile(expParameters.outputDir, expParameters.fileName.events);
+fileName = fullfile(expParameters.outputDir, expParameters.modality, expParameters.fileName.events);
 
 % check that the file has the right path and name
 assert(exist(fileName, 'file')==2)
