@@ -6,3 +6,5 @@
 # exclude content of logfiles folders
 */logfiles/*
 */*/*/logfiles/*
+*.tsv
+*.mat
