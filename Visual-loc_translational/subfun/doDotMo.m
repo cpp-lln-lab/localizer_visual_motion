@@ -1,4 +1,4 @@
-function doDotMo(Cfg, ExpParameters, logFile)
+function [onset, duration] = doDotMo(cfg, expParameters, thisEvent)
 % Draws the stimulation of static/moving in 4 directions dots or static
 %
 % DIRECTIONS
@@ -10,8 +10,7 @@ function doDotMo(Cfg, ExpParameters, logFile)
 %   - logFile: structur that stores the experiment logfile to be saved
 %
 % Output:
-%     % % % could we put this directly in the logFile struct?
-%   - responseTimeWithinEvent = subject response for the task
+%     - 
 %
 % The dots are drawn on a square that contains the round aperture, then any
 % dots outside of the aperture is turned into a NaN so effectively the
@@ -20,35 +19,34 @@ function doDotMo(Cfg, ExpParameters, logFile)
 
 
 %% Get parameters
-dontClear  = ExpParameters.dontClear;
+dontClear  = expParameters.dontClear;
 
-coh = ExpParameters.coh;
-ndots = ExpParameters.maxDotsPerFrame;
-direction = logFile.iEventDirection;
+direction = thisEvent.direction;
+isTarget = thisEvent.isTarget;
+speed = thisEvent.speed;
 
-dotSizePix = ExpParameters.dotSizePix;
-dotLifeTime = ExpParameters.dotLifeTime;
-dotColor = ExpParameters.dotColor;
+coh = expParameters.coh;
+ndots = expParameters.maxDotsPerFrame;
+dotSizePix = expParameters.dotSizePix;
+dotLifeTime = expParameters.dotLifeTime;
+dotColor = expParameters.dotColor;
 
-logFile = deg2Pix('iEventSpeed', logFile, Cfg);
+fixationChangeDuration = expParameters.fixationChangeDuration;
+
+thisEvent = deg2Pix('iEventSpeed', thisEvent, cfg);
 % dotSpeedPix = logFile.iEventSpeedPix;
 
-dotSpeed = logFile.iEventSpeed;
-
-eventIsFixationTarget = logFile.iEventIsFixationTarget;
-fixationChangeDuration = ExpParameters.fixationChangeDuration;
-
-diamAperturePix = Cfg.diameterAperturePix;
-diamAperture = Cfg.diameterAperture;
+diamAperturePix = cfg.diameterAperturePix;
+diamAperture = cfg.diameterAperture;
 
 % Check if it is a static or motion block
 if direction == -1
 
     %dotSpeedPix = 0;
 
-    dotSpeed = 0;
+    speed = 0;
 
-    dotLifeTime = ExpParameters.eventDuration;
+    dotLifeTime = expParameters.eventDuration;
 end
 
 
@@ -63,7 +61,7 @@ xy = rand(ndots, 2);
 % Set a N x 2 matrix that gives jump size in pixels 
 %  pix/sec * sec/frame = pix / frame
 dxdy = repmat(...
-    dotSpeed * 10/(diamAperture*10) * (3/Cfg.monRefresh) ...
+    speed * 10/(diamAperture*10) * (3/cfg.monRefresh) ...
     * [cos(pi*direction/180.0) -sin(pi*direction/180.0)], ndots,1);
 
 % dxdy = repmat(...
@@ -75,14 +73,15 @@ dxdy = repmat(...
 dotTime = ones(size(xy, 1), 1);
 
 % Set for how many frames to show the dots
-continueShow = floor(ExpParameters.eventDuration/Cfg.ifi);
+continueShow = floor(expParameters.eventDuration/cfg.ifi);
 
 % Covert the dotLifeTime from seconds to frames
-dotLifeTime = ceil(dotLifeTime/Cfg.ifi);
+dotLifeTime = ceil(dotLifeTime/cfg.ifi);
 
 
 %% Start the dots presentation
-movieStartTime = GetSecs();
+vbl = Screen('Flip', cfg.win, 0, dontClear );
+onset = vbl;
 
 while continueShow
     
@@ -128,19 +127,19 @@ while continueShow
     %% PTB draws the dots stimulation
     
     % Draw the fixation cross
-    color = ExpParameters.fixationCrossColor;
+    color = expParameters.fixationCrossColor;
     % If this frame shows a target we change the color
-    if GetSecs < (movieStartTime+fixationChangeDuration) && eventIsFixationTarget==1
-        color = ExpParameters.fixationCrossColorTarget;
+    if GetSecs < (movieStartTime+fixationChangeDuration) && isTarget==1
+        color = expParameters.fixationCrossColorTarget;
     end
-    drawFixationCross(Cfg, ExpParameters, color)
+    drawFixationCross(cfg, expParameters, color)
     
     % Draw the dots
-    Screen('DrawDots', Cfg.win, xy_pix, dotSizePix, dotColor, Cfg.center, 2);
+    Screen('DrawDots', cfg.win, xy_pix, dotSizePix, dotColor, cfg.center, 2);
     
-    Screen('DrawingFinished', Cfg.win, dontClear );
+    Screen('DrawingFinished', cfg.win, dontClear );
     
-    Screen('Flip', Cfg.win, 0, dontClear );
+    vbl = Screen('Flip', cfg.win, vbl+cfg.ifi, dontClear );
     
     
     %% Update counters
@@ -156,11 +155,13 @@ end
 
 %% Erase last dots
 
-drawFixationCross(Cfg, ExpParameters, ExpParameters.fixationCrossColor)
+drawFixationCross(cfg, expParameters, expParameters.fixationCrossColor)
 
-Screen('DrawingFinished', Cfg.win, dontClear);
+Screen('DrawingFinished', cfg.win, dontClear);
 
-Screen('Flip', Cfg.win, 0, dontClear);
+vbl = Screen('Flip', cfg.win, vbl+cfg.ifi, dontClear);
+
+duration = vbl - onset;
 
 
 end
