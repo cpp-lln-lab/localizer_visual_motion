@@ -46,8 +46,8 @@ try
     % % %
 
     % Prepare for the output logfiles with all
-    logFile = saveEventsFile('open', expParameters, ...
-        'direction', 'speed', 'isTarget', 'eventNb', 'blockNb');
+    logFile = saveEventsFile('open', expParameters, [], ...
+        'direction', 'speed', 'target', 'event', 'block');
     
 
     % Prepare for fixation Cross
@@ -120,17 +120,18 @@ try
             end
             
             
-            % direction speed of that event and if it is a target
+            % set direction, speed of that event and if it is a target
             thisEvent.trial_type{1,1} = 'dummy';
             thisEvent.direction{1,1} = expParameters.designDirections(iBlock,iEvent);
             thisEvent.speed{1,1} = expParameters.designSpeeds(iBlock,iEvent);
-            thisEvent.isTarget{1,1} = expParameters.designFixationTargets(iBlock,iEvent);
+            thisEvent.target{1,1} = expParameters.designFixationTargets(iBlock,iEvent);
 
+            
             % play the dots and collect onset and duraton of the event
             [onset, duration] = doDotMo(cfg, expParameters, thisEvent);
 
-            thisEvent.eventNb{1,1} = iEvent;
-            thisEvent.blockNb{1,1} = iBlock;
+            thisEvent.event{1,1} = iEvent;
+            thisEvent.block{1,1} = iBlock;
             thisEvent.duration{1,1} = duration;
             thisEvent.onset{1,1} = onset - cfg.experimentStart;
             
@@ -138,31 +139,32 @@ try
             % collect the responses and appends to the event structure for
             % saving in the tsv file
             responseEvents = getResponse('check', cfg, expParameters);
-            
+
             if ~isempty(responseEvents)
                 for iResp = 1:size(responseEvents, 1)
+                    thisEvent.onset{end+1,1} = ...
+                        responseEvents(iResp,1) - cfg.experimentStart;
                     thisEvent.trial_type{end+1,1} = 'response';
                     thisEvent.duration{end+1,1} = 0;
                     thisEvent.direction{end+1,1} = [];
                     thisEvent.speed{end+1,1} = [];
-                    thisEvent.isTarget{end+1,1} = expParameters.designFixationTargets(iBlock,iEvent);
-                    thisEvent.eventNb{end+1,1} = iEvent;
-                    thisEvent.blockNb{end+1,1} = iBlock;
+                    thisEvent.target{end+1,1} = expParameters.designFixationTargets(iBlock,iEvent);
+                    thisEvent.event{end+1,1} = iEvent;
+                    thisEvent.block{end+1,1} = iBlock;
                 end
             end
             
             % Save the events txt logfile
             thisEvent.eventLogFile = logFile.eventLogFile;
-            
+
             saveEventsFile('save', expParameters, thisEvent, ...
-                'direction', 'speed', 'isTarget', 'eventNb', 'blockNb');
+                'direction', 'speed', 'target', 'event', 'block');
 
             % we save event by event so we clear this variable every loop
             clear thisEvent
             
             % wait for the inter-stimulus interval
             WaitSecs(expParameters.ISI);
-            
             
             getResponse('flush', cfg, expParameters);
             

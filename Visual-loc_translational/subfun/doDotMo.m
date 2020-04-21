@@ -22,7 +22,7 @@ function [onset, duration] = doDotMo(cfg, expParameters, thisEvent)
 dontClear  = expParameters.dontClear;
 
 direction = thisEvent.direction{1};
-isTarget = thisEvent.isTarget{1};
+isTarget = thisEvent.target{1};
 speed = thisEvent.speed{1};
 
 coh = expParameters.coh;

@@ -42,7 +42,7 @@ logFile.onset = {2; 3};
 logFile.trial_type = {'motion_up'; 'static'};
 logFile.duration = {1; 4};
 logFile.speed = {2; 4};
-logFile.is_fixation = {'true'; 3};
+logFile.is_fixation = {true; 3};
 
 logFile = saveEventsFile('save', expParameters, logFile, 'speed', 'is_fixation');
 
