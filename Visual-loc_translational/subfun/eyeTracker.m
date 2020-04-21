@@ -1,7 +1,11 @@
 function [ el ] = eyeTracker(input, cfg, expParameters)
 
-if cfg.eyeTracker
-       
+if ~cfg.eyeTracker
+    
+     el = [];
+    
+else
+ 
     switch input
         
         case 'Calibration'
