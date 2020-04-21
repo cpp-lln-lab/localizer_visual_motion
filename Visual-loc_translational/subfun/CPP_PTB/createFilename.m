@@ -38,7 +38,7 @@ expParameters.date = datestr(now, dateFormat);
 
 % output dir
 expParameters.outputDir = fullfile (...
-    expParameters.dataDir, ...
+    expParameters.outputDir, ...
     'source', ...
     ['sub-' subjectGrp, sprintf(pattern, subjectNb)], ...
     ['ses-', sprintf(pattern, sessionNb)]);
@@ -85,7 +85,7 @@ end
 
 
 %% create directories
-[~, ~, ~] = mkdir(expParameters.dataDir);
+[~, ~, ~] = mkdir(expParameters.outputDir);
 [~, ~, ~] = mkdir(fullfile(expParameters.outputDir, modality));
 
 if cfg.eyeTracker
