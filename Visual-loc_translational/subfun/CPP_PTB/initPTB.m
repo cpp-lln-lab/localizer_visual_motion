@@ -25,7 +25,7 @@ KbName('UnifyKeyNames');
 % might be over agressive to test this at every PTB init maybe make it
 % dependent on a debug "flag"
 
-testKeyboards(Cfg)
+testKeyboards(cfg)
 
 % ---------- FIX LATER ---------- %
 
