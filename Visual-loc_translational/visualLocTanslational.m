@@ -121,19 +121,19 @@ try
             
             
             % set direction, speed of that event and if it is a target
-            thisEvent.trial_type{1,1} = 'dummy';
-            thisEvent.direction{1,1} = expParameters.designDirections(iBlock,iEvent);
-            thisEvent.speed{1,1} = expParameters.designSpeeds(iBlock,iEvent);
-            thisEvent.target{1,1} = expParameters.designFixationTargets(iBlock,iEvent);
+            thisEvent.trial_type = 'dummy';
+            thisEvent.direction = expParameters.designDirections(iBlock,iEvent);
+            thisEvent.speed = expParameters.designSpeeds(iBlock,iEvent);
+            thisEvent.target = expParameters.designFixationTargets(iBlock,iEvent);
 
             
             % play the dots and collect onset and duraton of the event
             [onset, duration] = doDotMo(cfg, expParameters, thisEvent);
 
-            thisEvent.event{1,1} = iEvent;
-            thisEvent.block{1,1} = iBlock;
-            thisEvent.duration{1,1} = duration;
-            thisEvent.onset{1,1} = onset - cfg.experimentStart;
+            thisEvent.event = iEvent;
+            thisEvent.block = iBlock;
+            thisEvent.duration = duration;
+            thisEvent.onset = onset - cfg.experimentStart;
             
             
             % Save the events txt logfile
@@ -151,12 +151,12 @@ try
             responseEvents = getResponse('check', cfg, expParameters);
                 
             responseEvents.eventLogFile = logFile.eventLogFile;
-            for iResp = 1:size(responseEvents.onset, 1)
-                responseEvents.onset{iResp,1} = ...
-                    responseEvents.onset{iResp,1} - cfg.experimentStart;
-                responseEvents.target{iResp,1} = expParameters.designFixationTargets(iBlock,iEvent);
-                responseEvents.event{iResp,1} = iEvent;
-                responseEvents.block{iResp,1} = iBlock;
+            for iResp = 1:size(responseEvents, 1)
+                responseEvents(iResp).onset = ...
+                    responseEvents(iResp).onset - cfg.experimentStart;
+                responseEvents(iResp).target = expParameters.designFixationTargets(iBlock,iEvent);
+                responseEvents(iResp).event = iEvent;
+                responseEvents(iResp).block = iBlock;
             end
             
             saveEventsFile('save', expParameters, responseEvents, ...
