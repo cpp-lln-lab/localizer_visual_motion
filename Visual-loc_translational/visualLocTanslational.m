@@ -136,32 +136,36 @@ try
             thisEvent.onset{1,1} = onset - cfg.experimentStart;
             
             
+            % Save the events txt logfile
+            % we save event by event so we clear this variable every loop
+            thisEvent.eventLogFile = logFile.eventLogFile;
+          
+            saveEventsFile('save', expParameters, thisEvent, ...
+                'direction', 'speed', 'target', 'event', 'block');
+                   
+            clear thisEvent
+            
+            
             % collect the responses and appends to the event structure for
             % saving in the tsv file
             responseEvents = getResponse('check', cfg, expParameters);
 
-            if ~isempty(responseEvents)
-                for iResp = 1:size(responseEvents, 1)
-                    thisEvent.onset{end+1,1} = ...
-                        responseEvents(iResp,1) - cfg.experimentStart;
-                    thisEvent.trial_type{end+1,1} = 'response';
-                    thisEvent.duration{end+1,1} = 0;
-                    thisEvent.direction{end+1,1} = [];
-                    thisEvent.speed{end+1,1} = [];
-                    thisEvent.target{end+1,1} = expParameters.designFixationTargets(iBlock,iEvent);
-                    thisEvent.event{end+1,1} = iEvent;
-                    thisEvent.block{end+1,1} = iBlock;
+            if ~isempty(responseEvents.onset)
+                
+                responseEvents.eventLogFile = logFile.eventLogFile;
+                for iResp = 1:size(responseEvents.onset, 1)
+                    responseEvents.onset{iResp,1} = ...
+                        responseEvents.onset{iResp,1} - cfg.experimentStart;
+                    responseEvents.target{iResp,1} = expParameters.designFixationTargets(iBlock,iEvent);
+                    responseEvents.event{iResp,1} = iEvent;
+                    responseEvents.block{iResp,1} = iBlock;
                 end
-            end
-            
-            % Save the events txt logfile
-            thisEvent.eventLogFile = logFile.eventLogFile;
-
-            saveEventsFile('save', expParameters, thisEvent, ...
+                
+                saveEventsFile('save', expParameters, responseEvents, ...
                 'direction', 'speed', 'target', 'event', 'block');
+                
+            end
 
-            % we save event by event so we clear this variable every loop
-            clear thisEvent
             
             % wait for the inter-stimulus interval
             WaitSecs(expParameters.ISI);
