@@ -34,12 +34,12 @@ switch input
         
         % appends to the logfile all the data stored in the structure 
         % first with the standard BIDS data and then any extra things
-        for iEvent = 1:size(logFile.onset,1)
+        for iEvent = 1:size(logFile,1)
 
-            fprintf(logFile.eventLogFile,'%f\t%s\t%f\t',...
-                logFile.onset{iEvent,1}, ...
-                logFile.trial_type{iEvent,1}, ...
-                logFile.duration{iEvent,1});
+            fprintf(logFile(1).eventLogFile,'%f\t%s\t%f\t',...
+                logFile(iEvent).onset, ...
+                logFile(iEvent).trial_type, ...
+                logFile(iEvent).duration);
             
             for iExtraColumn = 1:numel(varargin)
 
@@ -47,11 +47,10 @@ switch input
                 % input logFile structure we will write a NaN otherwise we
                 % write its content
                 
-                if ~isfield(logFile, lower(varargin{iExtraColumn}))
+                if ~isfield(logFile, varargin{iExtraColumn})
                     data = [];
                 else
-                    data = getfield(logFile, lower(varargin{iExtraColumn}));
-                    data = data{iEvent};
+                    data = getfield(logFile(iEvent), varargin{iExtraColumn});
                 end
                 
                 if isempty(data)
@@ -59,19 +58,19 @@ switch input
                 end
                      
                 if ischar(data)
-                    fprintf(logFile.eventLogFile, '%s\t', data);
+                    fprintf(logFile(1).eventLogFile, '%s\t', data);
                 else
-                    fprintf(logFile.eventLogFile, '%f\t', data);
+                    fprintf(logFile(1).eventLogFile, '%f\t', data);
                 end
                 
             end
             
-            fprintf(logFile.eventLogFile, '\n');
+            fprintf(logFile(1).eventLogFile, '\n');
         end
         
     case 'close'
         
         % close txt log file
-        fclose(logFile.eventLogFile);
+        fclose(logFile(1).eventLogFile);
         
 end

@@ -4,9 +4,7 @@
 addpath(genpath(fullfile(fileparts(mfilename), '..')))
 
 
-%% check file creation and its content
-
-% ---- set up section
+%% set up
 
 clear
 
@@ -24,34 +22,9 @@ expParameters = createFilename(expParameters, cfg);
 
 
 
-% create the file
+%% create the file
+
 logFile = saveEventsFile('open', expParameters, [], 'Speed', 'is_Fixation');
-
-
-% write things in it
-logFile.onset = {1};
-logFile.trial_type = {'motion_up'};
-logFile.duration = {1};
-logFile.speed = {[]};
-logFile.is_fixation = {'true'};
-
-logFile = saveEventsFile('save', expParameters, logFile, 'speed', 'is_fixation');
-
-
-logFile.onset = {2; 3};
-logFile.trial_type = {'motion_up'; 'static'};
-logFile.duration = {1; 4};
-logFile.speed = {2; 4};
-logFile.is_fixation = {true; 3};
-
-logFile = saveEventsFile('save', expParameters, logFile, 'speed', 'is_fixation');
-
-
-% close the file
-saveEventsFile('close', expParameters, logFile);
-
-
-
 
 
 % ---- test section
@@ -61,13 +34,47 @@ fileName = fullfile(expParameters.outputDir, expParameters.modality, expParamete
 % check that the file has the right path and name
 assert(exist(fileName, 'file')==2)
 
-% check that the right fields are created
-assert(isfield(logFile, 'speed'));
-assert(isfield(logFile, 'is_fixation'));
+
+
+%%  write things in it
+
+logFile(1).onset = 1;
+logFile(1).trial_type = 'motion_up';
+logFile(1).duration = 1;
+logFile(1).speed = [];
+logFile(1).is_fixation = 'true';
+
+saveEventsFile('save', expParameters, logFile, 'speed', 'is_fixation');
+
+
+logFile(1,1).onset = 2;
+logFile(1,1).trial_type = 'motion_up';
+logFile(1,1).duration = 1;
+logFile(1,1).speed = 2;
+logFile(1,1).is_fixation = true;
+
+logFile(2,1).onset = 3;
+logFile(2,1).trial_type = 'static';
+logFile(2,1).duration = 4;
+logFile(2,1).is_fixation = 3;
+
+saveEventsFile('save', expParameters, logFile, 'speed', 'is_fixation');
+
+
+% close the file
+saveEventsFile('close', expParameters, logFile);
+
+
+% ---- test section
 
 % check the extra columns of the header and some of the content
+
 FID = fopen(fileName, 'r');
 C = textscan(FID,'%s%s%s%s%s','Delimiter', '\t', 'EndOfLine', '\n');
-assert(isequal(C{4}{1}, 'speed'));
-assert(isequal(C{4}{2}, 'NaN'));
-assert(isequal(str2num(C{5}{4}), 3));
+
+assert(isequal(C{4}{1}, 'speed')); % check header
+
+assert(isequal(C{4}{2}, 'NaN')); % check that empty values are entered as NaN
+assert(isequal(C{4}{4}, 'NaN')); % check that missing fields are entered as NaN
+
+assert(isequal(str2num(C{5}{4}), 3)); % check values entered properly
