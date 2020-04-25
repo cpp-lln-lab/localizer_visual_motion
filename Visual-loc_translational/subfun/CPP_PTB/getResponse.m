@@ -92,6 +92,8 @@ switch action
         if verbose
             fprintf('\n checking recent keypresses\n')
         end
+        
+        iEvent = 1;
          
         while KbEventAvail(responseBox)
             
@@ -101,13 +103,16 @@ switch action
             if getOnlyPress && event.Pressed==0
             else
                 
-                responseEvents.onset{end+1,1} = event.Time;
-                responseEvents.trial_type{end+1,1} = 'response';
-                responseEvents.duration{end+1,1} = 0;
-                responseEvents.key_name{end+1,1} = KbName(event.Keycode);
-                responseEvents.pressed{end+1,1} =  event.Pressed;
-                
+                responseEvents(iEvent,1).onset = event.Time;
+                responseEvents(iEvent,1).trial_type = 'response';
+                responseEvents(iEvent,1).duration = 0;
+                responseEvents(iEvent,1).key_name = KbName(event.Keycode);
+                responseEvents(iEvent,1).pressed =  event.Pressed;
+
             end
+            
+            iEvent = iEvent + 1;
+            
         end
 
         
