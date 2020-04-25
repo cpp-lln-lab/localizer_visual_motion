@@ -41,6 +41,10 @@ switch action
     
     case 'init'
         
+        % Prevent spilling of keystrokes into console. If you use ListenChar(2)
+        % this will prevent you from using KbQueue.
+        ListenChar(-1);
+        
         % Clean and realease any queue that might be opened
         KbQueueRelease(responseBox);
         
@@ -122,6 +126,9 @@ switch action
         fprintf('\n stopping to listen to keypresses\n\n')
         
         KbQueueRelease(responseBox);
+        
+        % Give me my keyboard back... Pretty please.
+        ListenChar(0);
         
 end
 

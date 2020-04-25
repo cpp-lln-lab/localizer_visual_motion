@@ -48,10 +48,6 @@ cfg.keyboardNumbers
 cfg.keyboardNames
 
 
-
-% Prevent spilling of keystrokes into console
-ListenChar(-1);
-
 % Test that the keyboards are correctly configured
 testKeyboards(cfg);
 
@@ -102,10 +98,6 @@ getResponse('flush', cfg, expParameters, 1);
 % If you wan to stop listening to key presses.
 getResponse('stop', cfg, expParameters, 1);
 
-
-
-% Give me my keyboard back... Pretty please.
-ListenChar(0);
 
 
 
