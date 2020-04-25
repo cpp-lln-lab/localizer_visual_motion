@@ -28,7 +28,12 @@ if nargin < 5
     verbose = 0;
 end
 
-responseEvents = [];
+responseEvents = struct;
+responseEvents.onset = {};
+responseEvents.trial_type = {};
+responseEvents.duration = {};
+responseEvents.key_name = {};
+responseEvents.pressed = {};
 
 responseBox = cfg.responseBox;
 
@@ -91,7 +96,13 @@ switch action
             % we only return the pressed keys by default
             if getOnlyPress && event.Pressed==0
             else
-                responseEvents(end+1, :) = [event.Time event.Keycode event.Pressed];  %#ok<*AGROW>
+                
+                responseEvents.onset{end+1,1} = event.Time;
+                responseEvents.trial_type{end+1,1} = 'response';
+                responseEvents.duration{end+1,1} = 0;
+                responseEvents.key_name{end+1,1} = KbName(event.Keycode);
+                responseEvents.pressed{end+1,1} =  event.Pressed;
+                
             end
         end
 

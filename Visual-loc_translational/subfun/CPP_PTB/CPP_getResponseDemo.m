@@ -108,18 +108,19 @@ getResponse('stop', cfg, expParameters, 1);
 ListenChar(0);
 
 
-%% Now we look what keys were pressed and when
-for iEvent = 1:size(responseEvents, 1)
 
-    if responseEvents(iEvent,3)
+%% Now we look what keys were pressed and when
+for iEvent = 1:size(responseEvents.onset, 1)
+
+    if responseEvents.pressed{iEvent,1}
         eventType = 'pressed';
     else
         eventType = 'released';
     end
 
     fprintf('%s was %s at time %.3f seconds\n', ...
-        KbName(responseEvents(iEvent,2)), ...
+        responseEvents.key_name{iEvent,1}, ...
         eventType, ...
-        responseEvents(iEvent, 1) - startSecs);
+        responseEvents.onset{iEvent,1} - startSecs);
 
 end
