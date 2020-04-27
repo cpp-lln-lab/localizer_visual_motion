@@ -1,24 +1,47 @@
 function responseEvents = getResponse(action, cfg, expParameters, getOnlyPress, verbose)
 % wrapper function to use KbQueue
 % The queue will be listening to key presses on the response box as defined
-% in the cfg structure : see setParameters for more details
+%  in the cfg structure : see setParameters for more details.
+%
+% Check the CPP_getResponseDemo for a quick script on how to use it.
+%
+%
 %
 % INPUT
-%
-% getOnlyPress: will only return the key press and not the releases and not just the key presses. (default=1) 
 %
 % - action: Defines what we want the function to do
 %  - init: to initialise the queue
 %  - start: to start listening to keypresses
-% 
-% Get all the keypresses and return them as an array responseEvents
+%  - check:
+%  - flush:
+%  - stop:
 %
-% Time   Keycode   Pressed
-% 
-% Pressed == 1  --> the key was pressed
-% Pressed == 0  --> the key was released
+% - getOnlyPress: if set to 1 the function will only return the key presses and 
+%    will not return when the keys were released (default=1) 
+%    See the section on OUTPUT below for more info
 %
-% KbName(responseEvents(:,2)) will give all the keys pressed
+%
+% 
+% OUTPUT
+% 
+% responseEvents: returns all the keypresses and return them as a structure
+% with field names that make it easier to save the output of in a BIDS
+% format
+% 
+% responseEvents.onset : this is an absolute value and you should
+%   substract the "experiment start time" to get a value relative to when the
+%   experiment was started.
+% 
+% responseEvents.trial_type = 'response';
+% 
+% responseEvents.duration = 0;
+% 
+% responseEvents.key_name : the name of the key pressed
+% 
+% responseEvents(iEvent,1).pressed : if 
+%   pressed == 1  --> the key was pressed
+%   pressed == 0  --> the key was released
+
 
 if nargin < 4
     getOnlyPress = 1;
