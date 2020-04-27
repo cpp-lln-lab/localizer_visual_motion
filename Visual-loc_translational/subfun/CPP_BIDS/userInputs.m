@@ -21,13 +21,13 @@ if cfg.debug
 else
     
     subjectGrp = lower(input('Enter subject group (leave empty if none): ', 's'));
-        
+    
     subjectNb = str2double(input('Enter subject number (1-999): ', 's') );
     subjectNb = checkInput(subjectNb);
     
     sessionNb = str2double(input('Enter the session (i.e day - 1-999)) number: ', 's'));
     sessionNb = checkInput(sessionNb);
-
+    
     runNb = str2double(input('Enter the run number (1-999): ', 's'));
     runNb = checkInput(runNb);
     
@@ -47,7 +47,7 @@ function input2check = checkInput(input2check)
 
 
 while isnan(input2check) || fix(input2check) ~= input2check || input2check<0
-  input2check = str2double(input('Please enter a positive integer: ', 's'));
+    input2check = str2double(input('Please enter a positive integer: ', 's'));
 end
 
 

@@ -1,6 +1,6 @@
 function expParameters = createFilename(expParameters, cfg)
 % create the BIDS compliant directories and filenames for the behavioral output for this subject /
-% session / run. 
+% session / run.
 % Will also create the right filename for the eyetracking data file.
 %
 % For the moment the date of acquisition is appreneded to the filename
@@ -116,7 +116,8 @@ end
 if cfg.eyeTracker
     
     expParameters.fileName.eyetracker = ...
-        [expParameters.fileName.base, expParameters.acqSuffix, runSuffix, '_eyetrack_date-' expParameters.date '.edf'];
+        [expParameters.fileName.base, expParameters.acqSuffix, ...
+        runSuffix, '_eyetrack_date-' expParameters.date '.edf'];
     
 end
 

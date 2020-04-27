@@ -3,15 +3,15 @@ function [ logFile ] = saveEventsFile(input, expParameters, logFile, varargin)
 if nargin<3 || isempty(logFile)
     logFile = struct();
 end
-    
+
 switch input
     
     case 'open'
-
+        
         logFile = struct();
-
+        
         % Initialize txt logfiles and empty fields for the standard BIDS
-        % event file
+        %  event file
         logFile.eventLogFile = fopen(...
             fullfile(expParameters.outputDir, expParameters.modality, expParameters.fileName.events), ...
             'w');
@@ -20,8 +20,8 @@ switch input
         fprintf(logFile.eventLogFile, '%s\t%s\t%s\t', 'onset', 'trial_type', 'duration');
         
         % print any extra column specified by the user
-        % also prepare an empty field in the structure to collect data
-        % for those
+        %  also prepare an empty field in the structure to collect data
+        %  for those
         for iExtraColumn = 1:numel(varargin)
             fprintf(logFile.eventLogFile,'%s\t', lower(varargin{iExtraColumn}));
         end
@@ -32,17 +32,17 @@ switch input
         
     case 'save'
         
-        % appends to the logfile all the data stored in the structure 
+        % appends to the logfile all the data stored in the structure
         % first with the standard BIDS data and then any extra things
         for iEvent = 1:size(logFile,1)
-
+            
             fprintf(logFile(1).eventLogFile,'%f\t%s\t%f\t',...
                 logFile(iEvent).onset, ...
                 logFile(iEvent).trial_type, ...
                 logFile(iEvent).duration);
             
             for iExtraColumn = 1:numel(varargin)
-
+                
                 % if the field we are looking for does not exist or is empty in the
                 % input logFile structure we will write a NaN otherwise we
                 % write its content
@@ -56,7 +56,7 @@ switch input
                 if isempty(data)
                     data = NaN;
                 end
-                     
+                
                 if ischar(data)
                     fprintf(logFile(1).eventLogFile, '%s\t', data);
                 else

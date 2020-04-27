@@ -22,7 +22,7 @@ addpath(genpath(fullfile(pwd, 'subfun')))
 expParameters = userInputs(cfg, expParameters);
 expParameters = createFilename(expParameters, cfg);
 
-expParameters
+expParameters %#ok<NOPTS>
 
 %%  Experiment
 
@@ -39,17 +39,17 @@ try
     
     
     [el] = eyeTracker('Calibration', cfg, expParameters);
-
+    
     
     % % % REFACTOR THIS FUNCTION
     [expParameters] = expDesign(expParameters);
     % % %
-
+    
     % Prepare for the output logfiles with all
     logFile = saveEventsFile('open', expParameters, [], ...
         'direction', 'speed', 'target', 'event', 'block');
     
-
+    
     % Prepare for fixation Cross
     if expParameters.Task1
         
@@ -61,8 +61,8 @@ try
         
         cfg.allCoords = [cfg.xCoords; cfg.yCoords];
         
-    end    
-
+    end
+    
     % Wait for space key to be pressed
     pressSpace4me
     
@@ -76,7 +76,7 @@ try
             'center', 'center', cfg.textColor);
         Screen('Flip', cfg.win);
     end
-
+    
     % Wait for Trigger from Scanner
     wait4Trigger(cfg)
     
@@ -100,11 +100,11 @@ try
     for iBlock = 1:expParameters.numBlocks
         
         if stopEverything
-             break;
+            break;
         end
         
         fprintf('\n - Running Block %.0f \n',iBlock)
-
+        
         eyeTracker('StartRecording', cfg, expParameters);
         
         % For each event in the block
@@ -125,11 +125,11 @@ try
             thisEvent.direction = expParameters.designDirections(iBlock,iEvent);
             thisEvent.speed = expParameters.designSpeeds(iBlock,iEvent);
             thisEvent.target = expParameters.designFixationTargets(iBlock,iEvent);
-
+            
             
             % play the dots and collect onset and duraton of the event
             [onset, duration] = doDotMo(cfg, expParameters, thisEvent);
-
+            
             thisEvent.event = iEvent;
             thisEvent.block = iBlock;
             thisEvent.duration = duration;
@@ -139,17 +139,17 @@ try
             % Save the events txt logfile
             % we save event by event so we clear this variable every loop
             thisEvent.eventLogFile = logFile.eventLogFile;
-          
+            
             saveEventsFile('save', expParameters, thisEvent, ...
                 'direction', 'speed', 'target', 'event', 'block');
-                   
+            
             clear thisEvent
             
             
             % collect the responses and appends to the event structure for
             % saving in the tsv file
             responseEvents = getResponse('check', cfg, expParameters);
-                
+            
             responseEvents.eventLogFile = logFile.eventLogFile;
             for iResp = 1:size(responseEvents, 1)
                 responseEvents(iResp).onset = ...
@@ -161,7 +161,7 @@ try
             
             saveEventsFile('save', expParameters, responseEvents, ...
                 'direction', 'speed', 'target', 'event', 'block');
-
+            
             
             % wait for the inter-stimulus interval
             WaitSecs(expParameters.ISI);
@@ -184,11 +184,11 @@ try
     saveEventsFile('close', expParameters, logFile);
     
     getResponse('stop', cfg, expParameters, 1);
-
+    
     totalExperimentTime = GetSecs-cfg.experimentStart;
     
     eyeTracker('Shutdown', cfg, expParameters);
-
+    
     % save the whole workspace
     matFile = fullfile(expParameters.outputDir, strrep(expParameters.fileName.events,'tsv', 'mat'));
     if IsOctave
@@ -196,7 +196,7 @@ try
     else
         save(matFile, '-v7.3');
     end
-
+    
     cleanUp()
     
 catch

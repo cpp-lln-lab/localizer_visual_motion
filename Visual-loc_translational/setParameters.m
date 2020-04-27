@@ -6,7 +6,7 @@ cfg           = struct;
 
 expParameters.task = 'VisualLoc';
 
-% by default the data will be stored an output folder created where the
+% by default the data will be stored in an output folder created where the
 % setParamters.m file is
 % change that if you want the data to be saved somewhere else
 expParameters.outputDir = fullfile(...
@@ -22,24 +22,24 @@ cfg.stimPosition        = 'pc';  % 'Scanner': means that it removes the lower 1/
 
 %% MRI settings
 cfg.device        = 'scanner';  % 'PC': does not care about trigger - otherwise use 'Scanner'
-cfg.triggerKey    = 't';   % Set the letter sent by the trigger to sync stimulation and volume acquisition
+cfg.triggerKey    = 't';        % Set the letter sent by the trigger to sync stimulation and volume acquisition
 cfg.numTriggers   = 4;
-cfg.eyeTracker    = false; % Set to 'true' if you are testing in MRI and want to record ET data
+cfg.eyeTracker    = false;      % Set to 'true' if you are testing in MRI and want to record ET data
 
 
 %% Keyboards
 
-% cfg.responseBox would be the device used by the participant to give his/her response: 
+% cfg.responseBox would be the device used by the participant to give his/her response:
 %   like the button box in the scanner or a separate keyboard for a behavioral experiment
 %
-% cfg.keyboard is the keyboard on which the experimenter will type or press the keys necessary 
+% cfg.keyboard is the keyboard on which the experimenter will type or press the keys necessary
 %   to start or abort the experiment.
 %   The two can be different or the same.
 
-% Using empty vectors should work for linux when to select the "main"
-%   keyboard. You might have to try some other values for MacOS or Windows
-cfg.keyboard = []; 
-cfg.responseBox = []; 
+% Using empty vectors should work for linux and MacOS when to select the
+%   "main" keyboard. You might have to try some other values for Windows
+cfg.keyboard = [];
+cfg.responseBox = [];
 
 
 %% Engine parameters
@@ -65,11 +65,11 @@ cfg.escapeKey        = 'Escape';
 
 
 
-% The code below will help you decide which keyboard device to use for the partipant and the experimenter 
+% The code below will help you decide which keyboard device to use for the partipant and the experimenter
 
 % Computer keyboard to quit if it is necessary
 % Cfg.keyboard
-% 
+%
 % For key presses for the subject
 % Cfg.responseBox
 
@@ -83,7 +83,7 @@ switch lower(cfg.device)
     
     % this part might need to be adapted because the "default" device
     % number might be different for different OS or set up
-
+    
     case 'pc'
         
         cfg.keyboard = [];
@@ -93,7 +93,7 @@ switch lower(cfg.device)
             cfg.keyboard = [];
             cfg.responseBox = [];
         end
-
+        
     case 'scanner'
         
     otherwise
@@ -124,7 +124,7 @@ expParameters.numEventsPerBlock = 12;      % Number of events per block (should 
 expParameters.eventDuration     = 1;
 expParameters.coh               = 1;       % Coherence Level (0-1)
 expParameters.maxDotsPerFrame   = 300;     % Maximum number dots per frame (Number must be divisible by 3)
-expParameters.dotLifeTime       = 1;     % Dot life time in seconds
+expParameters.dotLifeTime       = 1;       % Dot life time in seconds
 expParameters.dontClear         = 0;
 expParameters.dotSize           = 0.1;     % Dot Size (dot width) in visual angles.
 expParameters.dotColor          = cfg.white;
