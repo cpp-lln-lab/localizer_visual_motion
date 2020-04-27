@@ -21,9 +21,9 @@ function [onset, duration] = doDotMo(cfg, expParameters, thisEvent)
 %% Get parameters
 dontClear  = expParameters.dontClear;
 
-direction = thisEvent.direction{1};
-isTarget = thisEvent.target{1};
-speed = thisEvent.speed{1};
+direction = thisEvent.direction(1);
+isTarget = thisEvent.target(1);
+speed = thisEvent.speed(1);
 
 coh = expParameters.coh;
 ndots = expParameters.maxDotsPerFrame;

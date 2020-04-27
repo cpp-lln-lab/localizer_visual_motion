@@ -1,4 +1,4 @@
-%% Visual hMT localizer using translational motion in four directions
+      %% Visual hMT localizer using translational motion in four directions
 %  (up- down- left and right-ward)
 
 % by Mohamed Rezk 2018
