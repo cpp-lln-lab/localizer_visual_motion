@@ -52,11 +52,11 @@ if nargin < 5
 end
 
 responseEvents = struct;
-responseEvents.onset = {};
-responseEvents.trial_type = {};
-responseEvents.duration = {};
-responseEvents.key_name = {};
-responseEvents.pressed = {};
+responseEvents.onset = [];
+responseEvents.trial_type = [];
+responseEvents.duration = [];
+responseEvents.key_name = [];
+responseEvents.pressed = [];
 
 responseBox = cfg.responseBox;
 
@@ -137,8 +137,6 @@ switch action
             iEvent = iEvent + 1;
             
         end
-
-        
         
     case 'flush'
         

@@ -150,18 +150,22 @@ try
             % saving in the tsv file
             responseEvents = getResponse('check', cfg, expParameters);
             
-            responseEvents.eventLogFile = logFile.eventLogFile;
-            for iResp = 1:size(responseEvents, 1)
-                responseEvents(iResp).onset = ...
-                    responseEvents(iResp).onset - cfg.experimentStart;
-                responseEvents(iResp).target = expParameters.designFixationTargets(iBlock,iEvent);
-                responseEvents(iResp).event = iEvent;
-                responseEvents(iResp).block = iBlock;
-            end
-            
-            saveEventsFile('save', expParameters, responseEvents, ...
+            if ~isempty(responseEvents(1).onset)
+                
+                responseEvents.eventLogFile = logFile.eventLogFile;
+                
+                for iResp = 1:size(responseEvents, 1)
+                    responseEvents(iResp).onset = ...
+                        responseEvents(iResp).onset - cfg.experimentStart;
+                    responseEvents(iResp).target = expParameters.designFixationTargets(iBlock,iEvent);
+                    responseEvents(iResp).event = iEvent;
+                    responseEvents(iResp).block = iBlock;
+                end
+                
+                saveEventsFile('save', expParameters, responseEvents, ...
                 'direction', 'speed', 'target', 'event', 'block');
-            
+            end
+
             
             % wait for the inter-stimulus interval
             WaitSecs(expParameters.ISI);
