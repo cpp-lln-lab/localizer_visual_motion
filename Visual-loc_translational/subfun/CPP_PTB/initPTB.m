@@ -1,4 +1,4 @@
-function [Cfg] = initPTB(Cfg)
+function [cfg] = initPTB(cfg)
 % This seems a good candidate function to have as a common function across
 % experiments
 % We might want to add a couple of IF in case the experiment does not use
@@ -25,7 +25,7 @@ KbName('UnifyKeyNames');
 % might be over agressive to test this at every PTB init maybe make it
 % dependent on a debug "flag"
 
-testKeyboards(Cfg)
+testKeyboards(cfg)
 
 % ---------- FIX LATER ---------- %
 
@@ -47,36 +47,39 @@ InitializePsychSound(1);
 
 
 %% Visual
+
+cfg.screen = max(Screen('Screens')); % Main screen
+
 % Open a fullscreen, onscreen window with gray background. Enable 32bpc
 % floating point framebuffer via imaging pipeline on it.
 PsychImaging('PrepareConfiguration');
 
 % init PTB with different options in concordance to the Debug Parameters
-if Cfg.debug
+if cfg.debug
     
     % set to one because we don not care about time
     Screen('Preference', 'SkipSyncTests', 2);
     Screen('Preference', 'Verbosity', 0);
     Screen('Preferences', 'SuppressAllWarnings', 2);
     
-    if Cfg.testingSmallScreen
-        [Cfg.win, Cfg.winRect] = PsychImaging('OpenWindow', Cfg.screen, Cfg.backgroundColor,  [0,0, 480, 270]);
+    if cfg.testingSmallScreen
+        [cfg.win, cfg.winRect] = PsychImaging('OpenWindow', cfg.screen, cfg.backgroundColor,  [0,0, 480, 270]);
     else
-        if Cfg.testingTranspScreen
+        if cfg.testingTranspScreen
         PsychDebugWindowConfiguration
         end
-        [Cfg.win, Cfg.winRect] = PsychImaging('OpenWindow', Cfg.screen, Cfg.backgroundColor);
+        [cfg.win, cfg.winRect] = PsychImaging('OpenWindow', cfg.screen, cfg.backgroundColor);
     end
     
 else
     Screen('Preference','SkipSyncTests', 0);
-    [Cfg.win, Cfg.winRect] = PsychImaging('OpenWindow', Cfg.screen, Cfg.backgroundColor);
+    [cfg.win, cfg.winRect] = PsychImaging('OpenWindow', cfg.screen, cfg.backgroundColor);
     
 end
 
 
 % window size info
-[Cfg.winWidth, Cfg.winHeight] = WindowSize(Cfg.win);
+[cfg.winWidth, cfg.winHeight] = WindowSize(cfg.win);
 
 
 
@@ -84,8 +87,8 @@ end
 % ---------- FIX LATER ---------- %
 % I don't think we want to hard code the 2/3 here. We might just add it to
 % the Cfg structure
-if strcmp(Cfg.stimPosition,'Scanner')
-    Cfg.winRect(1,4) = Cfg.winRect(1,4)*2/3;
+if strcmpi(cfg.stimPosition,'scanner')
+    cfg.winRect(1,4) = cfg.winRect(1,4)*2/3;
 end
 % ---------- FIX LATER ---------- %
 
@@ -93,35 +96,35 @@ end
 
 
 % Get the Center of the Screen
-Cfg.center = [Cfg.winRect(3), Cfg.winRect(4)]/2;
+cfg.center = [cfg.winRect(3), cfg.winRect(4)]/2;
 
 % Computes the number of pixels per degree given the distance to screen and
 % monitor width
 
 % This assumes that the window fills the whole screen
-V = 2*(180*(atan(Cfg.monitorWidth/(2*Cfg.screenDistance))/pi));
-Cfg.ppd = Cfg.winRect(3)/V;
+V = 2*(180*(atan(cfg.monitorWidth/(2*cfg.screenDistance))/pi));
+cfg.ppd = cfg.winRect(3)/V;
 
 
 % Enable alpha-blending, set it to a blend equation useable for linear
 % superposition with alpha-weighted source.
-Screen('BlendFunction', Cfg.win, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+Screen('BlendFunction', cfg.win, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 
 %% Text and Font
 % Select specific text font, style and size:
-Screen('TextFont',Cfg.win, Cfg.textFont );
-Screen('TextSize',Cfg.win, Cfg.textSize);
-Screen('TextStyle', Cfg.win, Cfg.textStyle);
+Screen('TextFont',cfg.win, cfg.textFont );
+Screen('TextSize',cfg.win, cfg.textSize);
+Screen('TextStyle', cfg.win, cfg.textStyle);
 
 
 %% Timing
 % Query frame duration
-Cfg.ifi = Screen('GetFlipInterval', Cfg.win);
-Cfg.monRefresh = 1/Cfg.ifi;
+cfg.ifi = Screen('GetFlipInterval', cfg.win);
+cfg.monRefresh = 1/cfg.ifi;
 
 % Set priority for script execution to realtime priority:
-Priority(MaxPriority(Cfg.win));
+Priority(MaxPriority(cfg.win));
 
 
 %% Warm up some functions
@@ -135,7 +138,7 @@ GetSecs;
 
 %% Initial flip to get a first time stamp
 % Initially sync us to VBL at start of animation loop.
-Cfg.vbl = Screen('Flip', Cfg.win);
+cfg.vbl = Screen('Flip', cfg.win);
 
 
 end

@@ -1,4 +1,4 @@
-%% Demo showing how to use the getResponse function
+  jk%% Demo showing how to use the getResponse function
 
 % This small script shows how to use the getReponse function 
 %  (a wrapper around the KbQueue function from PTB)
@@ -48,10 +48,6 @@ cfg.keyboardNumbers
 cfg.keyboardNames
 
 
-
-% Prevent spilling of keystrokes into console
-ListenChar(-1);
-
 % Test that the keyboards are correctly configured
 testKeyboards(cfg);
 
@@ -91,7 +87,10 @@ WaitSecs(5);
 
 
 % Check what keys were pressed (all of them)
-responseEvents = getResponse('check', cfg, expParameters, 1);
+responseEvents = getResponse('check', cfg, expParameters, 0, 1);
+
+% The following line would only return key presses and not releases
+% responseEvents = getResponse('check', cfg, expParameters, 1 , 1);
 
 % This can be used to flush the queue: empty all events that are still present in the queue
 getResponse('flush', cfg, expParameters, 1);
@@ -101,22 +100,19 @@ getResponse('stop', cfg, expParameters, 1);
 
 
 
-% Give me my keyboard back... Pretty please.
-ListenChar(0);
-
 
 %% Now we look what keys were pressed and when
 for iEvent = 1:size(responseEvents, 1)
 
-    if responseEvents(iEvent,3)
+    if responseEvents(iEvent).pressed
         eventType = 'pressed';
     else
         eventType = 'released';
     end
 
     fprintf('%s was %s at time %.3f seconds\n', ...
-        KbName(responseEvents(iEvent,2)), ...
+        responseEvents(iEvent).key_name, ...
         eventType, ...
-        responseEvents(iEvent, 1) - startSecs);
+        responseEvents(iEvent).onset - startSecs);
 
 end

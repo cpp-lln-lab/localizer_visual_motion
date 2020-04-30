@@ -3,12 +3,15 @@ function cleanUp
 WaitSecs(0.5);
 
 Priority(0);
-KbQueueRelease;
-ListenChar();
+
+ListenChar(0);
+KbQueueRelease();
+
 ShowCursor
 
 % Screen Close All
-sca
+sca;
+
 if ~ismac
     % remove PsychDebugWindowConfiguration
     clear Screen
