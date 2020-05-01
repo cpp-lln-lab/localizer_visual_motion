@@ -153,11 +153,6 @@ if expParameters.Task1
     expParameters.fixationCrossColorTarget     = cfg.red;
 end
 
-
-% Setting some defaults: no need to change things here
-expParameters = checkCFG(expParameters);
-
-
 if cfg.debug
     fprintf('\n\n\n\n')
     fprintf('######################################## \n')
