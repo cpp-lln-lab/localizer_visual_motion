@@ -19,6 +19,7 @@ cfg.testingSmallScreen  = false; % To test on a part of the screen, change to 1
 cfg.testingTranspScreen = true;  % To test with trasparent full size screen
 cfg.stimPosition        = 'pc';  % 'Scanner': means that it removes the lower 1/3 of the screen (the coil hides the lower part of the screen)
 
+expParameters.verbose = true;
 
 %% MRI settings
 cfg.device        = 'scanner';  % 'PC': does not care about trigger - otherwise use 'Scanner'
@@ -152,11 +153,6 @@ if expParameters.Task1
     expParameters.fixationCrossColor           = cfg.white;
     expParameters.fixationCrossColorTarget     = cfg.red;
 end
-
-
-% Setting some defaults: no need to change things here
-expParameters = checkCFG(expParameters);
-
 
 if cfg.debug
     fprintf('\n\n\n\n')
