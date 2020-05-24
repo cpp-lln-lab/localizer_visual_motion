@@ -1,6 +1,23 @@
-# motion_Visual-Localizer
+# Motion Visual-Localizer
+
 This repo collects the most common localizers in use to define hMT/V5
 
+1. Radial Motion
+2. Translational motion (4 directions: up-, dowm-, left-, right-ward)
+
+## Requirements
+
+Make sure that the following toolboxes are installed and added to the matlab / octave path.
+
+For instructions see the following links:
+
+| Requirements                                             | Used version |
+|----------------------------------------------------------|--------------|
+| [CPP_BIDS](https://github.com/cpp-lln-lab/CPP_BIDS)      | ?            |
+| [CPP_PTB](https://github.com/cpp-lln-lab/CPP_PTB)        | ?            |
+| [PsychToolBox](http://psychtoolbox.org/)                 | >=3.0.14     |
+| [Matlab](https://www.mathworks.com/products/matlab.html) | >=20117      |
+| or [octave](https://www.gnu.org/software/octave/)        | >=4.?        |
 
 ## Installing dependencies
 
