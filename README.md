@@ -3,7 +3,7 @@
 This repo collects the most common localizers in use to define hMT/V5
 
 1. Radial Motion
-2. Translational motion (4 directions: up-, dowm-, left-, right-ward)
+2. [Translational motion](Visual-loc_translationals/README.md) (4 directions: up-, dowm-, left-, right-ward)
 
 ## Requirements
 
