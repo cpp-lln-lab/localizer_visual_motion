@@ -3,6 +3,8 @@ function [expParameters] = expDesign(expParameters, displayFigs)
 %
 % The conditions are consecutive static and motion blocks (Gives better results than randomised).
 %
+% It can be run as a stand alone without inputs to display a visual example of possible design.
+%
 % EVENTS
 %  The numEventsPerBlock should be a multiple of the number of "base"
 %  listed in the motionDirections and staticDirections (4 at the moment).
@@ -22,12 +24,12 @@ function [expParameters] = expDesign(expParameters, displayFigs)
 %   - ExpParameters.designBlockNames      = cell array (nr_blocks, 1) with the
 %    name for each block
 %
-%   - ExpParameters.designDirections      = array (nr_blocks, numEventsPerBlock) 
+%   - ExpParameters.designDirections      = array (nr_blocks, numEventsPerBlock)
 %    with the direction to present in a given block
 %       - 0 90 180 270 indicate the angle
 %       - -1 indicates static
 %
-%   - ExpParameters.designSpeeds          = array (nr_blocks, numEventsPerBlock) * speedEvent;
+%   - ExpParameters.designSpeeds          = array (nr_blocks, numEventsPerBlock) * speedEvent
 %
 %   - ExpParameters.designFixationTargets = array (nr_blocks, numEventsPerBlock)
 %   showing for each event if it should be accompanied by a target
@@ -103,14 +105,14 @@ expParameters.designSpeeds          = ones(nrBlocks, numEventsPerBlock) * speedE
 expParameters.designFixationTargets = zeros(nrBlocks, numEventsPerBlock);
 
 for iMotionBlock = 1:numRepetitions
-    
+
     expParameters.designDirections( motionIndex(iMotionBlock), :) = Shuffle(motionDirections);
     expParameters.designDirections( staticIndex(iMotionBlock), :) = Shuffle(staticDirections);
-    
+
 end
 
 for iBlock = 1:nrBlocks
-    
+
     % Set block name
     switch condition{iBlock}
         case 'static'
@@ -119,55 +121,55 @@ for iBlock = 1:nrBlocks
             thisBlockName = {'motion'};
     end
     expParameters.designBlockNames(iBlock) = thisBlockName;
-    
-    
+
+
     % set target
     % if there are 2 targets per block we make sure that they are at least
     % 2 events apart
     % targets cannot be on the first or last event of a block
-    
+
     chosenTarget = [];
-    
+
     tmpTarget = numTargets(iBlock);
-    
+
     switch tmpTarget
-        
+
         case 1
-            
+
             chosenTarget = randsample(2:numEventsPerBlock-1, tmpTarget, false);
-            
+
         case 2
-            
+
             targetDifference = 0;
-            
+
             while targetDifference <= 2
                 chosenTarget = randsample(2:numEventsPerBlock-1, tmpTarget, false);
                 targetDifference = (max(chosenTarget) - min(chosenTarget));
-            end  
-            
+            end
+
     end
-    
+
     expParameters.designFixationTargets(iBlock, chosenTarget) = 1;
-    
+
 end
 
 
 %% Visualize the design matrix
 if displayFigs
-    
+
     uniqueNames = unique(expParameters.designBlockNames) ;
-    
+
     Ind = zeros(length(expParameters.designBlockNames), length(uniqueNames)) ;
-    
+
     for i = 1:length(uniqueNames)
         CondInd(:,i) = find(strcmp(expParameters.designBlockNames, uniqueNames{i})) ; %#ok<*AGROW>
         Ind(CondInd(:,i), i) = 1 ;
     end
-    
+
     imagesc(Ind)
-    
+
     set(gca, ...
         'XTick',1:length(uniqueNames),...
         'XTickLabel', uniqueNames)
-    
+
 end
