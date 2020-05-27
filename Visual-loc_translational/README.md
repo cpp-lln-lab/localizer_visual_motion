@@ -11,7 +11,7 @@ For instructions see the following links:
 | [CPP_BIDS](https://github.com/cpp-lln-lab/CPP_BIDS)      | ?            |
 | [CPP_PTB](https://github.com/cpp-lln-lab/CPP_PTB)        | ?            |
 | [PsychToolBox](http://psychtoolbox.org/)                 | >=3.0.14     |
-| [Matlab](https://www.mathworks.com/products/matlab.html) | >=20117      |
+| [Matlab](https://www.mathworks.com/products/matlab.html) | >=2017      |
 | or [octave](https://www.gnu.org/software/octave/)        | >=4.?        |
 
 ## Installing dependencies
