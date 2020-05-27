@@ -24,7 +24,7 @@ If you are using the [matlab package manager](https://github.com/mobeets/mpm), y
 getDependencies('update')
 ```
 
-If you only already have the appropriate version but just want to add them to the matlab path, then run.
+If you already have the appropriate version but just want to add them to the matlab path, then run.
 
 ```matlab
 getDependencies()
@@ -53,13 +53,13 @@ Any details of the experiment can be changed in `setParameters.m` (e.g., experim
 - Visual Stimulation
 - Task(s)
   - Instructions
-  - Task #1 parameters  
+  - Task #1 parameters
 
 ### subfun/doDotMo
 
 #### Input:
-- `Cfg`: PTB/machine configurations returned by `setParameters` and `initPTB`
-- `ExpParameters`: parameters returned by `setParameters`
+- `cfg`: PTB/machine configurations returned by `setParameters` and `initPTB`
+- `expParameters`: parameters returned by `setParameters`
 - `logFile`: structure that stores the experiment logfile to be saved
 
 #### Output:
@@ -83,15 +83,15 @@ The `numEventsPerBlock` should be a multiple of the number of "base" listed in t
 - `displayFigs`: a boolean to decide whether to show the basic design matrix of the design
 
 #### Output:
-- `ExpParameters.designBlockNames` is a cell array `(nr_blocks, 1)` with the name for each block
-- `ExpParameters.designDirections` is an array `(nr_blocks, numEventsPerBlock)` with the direction to present in a given block
+- `expParameters.designBlockNames` is a cell array `(nr_blocks, 1)` with the name for each block
+- `expParameters.designDirections` is an array `(nr_blocks, numEventsPerBlock)` with the direction to present in a given block
   - `0 90 180 270` indicate the angle
   - `-1` indicates static
-- `ExpParameters.designSpeeds` is an array `(nr_blocks, numEventsPerBlock) * speedEvent`
-- `ExpParameters.designFixationTargets` is an array `(nr_blocks, numEventsPerBlock)` showing for each event if it should be accompanied by a target
+- `expParameters.designSpeeds` is an array `(nr_blocks, numEventsPerBlock) * speedEvent`
+- `expParameters.designFixationTargets` is an array `(nr_blocks, numEventsPerBlock)` showing for each event if it should be accompanied by a target
 
 ### subfun/eyeTracker
-Eyetracker script, still to be debugged. Will it probably moved in the CPP_PTB package. It deals with the calibration (dufault or custom), eye movements recording and saving the files.
+Eyetracker script, still to be debugged. Will probably moved in the CPP_PTB package. It deals with the calibration (dufault or custom), eye movements recording and saving the files.
 
 ### subfun/wait4Trigger
 Simple functions that counts the triggers sent by the MRI computer to the stimulation computer to sync brain volume recordings and stimulation.
