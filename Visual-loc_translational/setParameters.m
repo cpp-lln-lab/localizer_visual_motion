@@ -27,22 +27,6 @@ cfg.triggerKey    = 't';        % Set the letter sent by the trigger to sync sti
 cfg.numTriggers   = 4;
 cfg.eyeTracker    = false;      % Set to 'true' if you are testing in MRI and want to record ET data
 
-
-%% Keyboards
-
-% cfg.responseBox would be the device used by the participant to give his/her response:
-%   like the button box in the scanner or a separate keyboard for a behavioral experiment
-%
-% cfg.keyboard is the keyboard on which the experimenter will type or press the keys necessary
-%   to start or abort the experiment.
-%   The two can be different or the same.
-
-% Using empty vectors should work for linux and MacOS when to select the
-%   "main" keyboard. You might have to try some other values for Windows
-cfg.keyboard = [];
-cfg.responseBox = [];
-
-
 %% Engine parameters
 
 % Monitor parameters
@@ -61,9 +45,22 @@ cfg.textFont         = 'Courier New';
 cfg.textSize         = 18;
 cfg.textStyle        = 1;
 
+%% Keyboards
+
+% cfg.responseBox would be the device used by the participant to give his/her response:
+%   like the button box in the scanner or a separate keyboard for a behavioral experiment
+%
+% cfg.keyboard is the keyboard on which the experimenter will type or press the keys necessary
+%   to start or abort the experiment.
+%   The two can be different or the same.
+
+% Using empty vectors should work for linux and MacOS when to select the
+%   "main" keyboard. You might have to try some other values for Windows
+cfg.keyboard = [];
+cfg.responseBox = [];
+
 % Keyboard
 cfg.escapeKey        = 'Escape';
-
 
 
 % The code below will help you decide which keyboard device to use for the partipant and the experimenter
@@ -80,31 +77,31 @@ cfg.keyboardNames
 
 
 switch lower(cfg.device)
-    
-    
+
+
     % this part might need to be adapted because the "default" device
     % number might be different for different OS or set up
-    
+
     case 'pc'
-        
+
         cfg.keyboard = [];
         cfg.responseBox = [];
-        
+
         if ismac
             cfg.keyboard = [];
             cfg.responseBox = [];
         end
-        
+
     case 'scanner'
-        
+
     otherwise
-        
+
         % Cfg.keyboard = max(Cfg.keyboardNumbers);
         % Cfg.responseBox = min(Cfg.keyboardNumbers);
-        
+
         cfg.keyboard = [];
         cfg.responseBox = [];
-        
+
 end
 
 %% Experiment Design

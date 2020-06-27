@@ -5,12 +5,12 @@ function [onset, duration] = doDotMo(cfg, expParameters, thisEvent)
 %  0=Right; 90=Up; 180=Left; 270=down
 %
 % Input:
-%   - Cfg: PTB/machine configurations returned by SetParameters and initPTB
-%   - ExpParameters: parameters returned by SetParameters
-%   - logFile: structur that stores the experiment logfile to be saved
+%   - cfg: PTB/machine configurations returned by setParameters and initPTB
+%   - expParameters: parameters returned by setParameters
+%   - logFile: structure that stores the experiment logfile to be saved
 %
 % Output:
-%     - 
+%     -
 %
 % The dots are drawn on a square that contains the round aperture, then any
 % dots outside of the aperture is turned into a NaN so effectively the
@@ -58,7 +58,7 @@ end
 % [1,1] is the bottom / right of the square that contains the square aperture
 xy = rand(ndots, 2);
 
-% Set a N x 2 matrix that gives jump size in pixels 
+% Set a N x 2 matrix that gives jump size in pixels
 %  pix/sec * sec/frame = pix / frame
 dxdy = repmat(...
     speed * 10/(diamAperture*10) * (3/cfg.monRefresh) ...
@@ -84,48 +84,48 @@ vbl = Screen('Flip', cfg.win, 0, dontClear );
 onset = vbl;
 
 while continueShow
-    
+
     % L are the dots that will be moved
     L = rand(ndots,1) < coh;
-    
+
     % Move the selected dots
     xy(L,:) = xy(L,:) + dxdy(L,:);
-    
+
     % If not 100% coherence, we get new random locations for the other dots
     if sum(~L) > 0
         xy(~L,:) = rand(sum(~L),2);
     end
-    
+
     % Create a logical vector to detect any dot that has:
     % - an xy position inferior to 0
     % - an xy position superior to 1
     % - has exceeded its liftime
     N = any([xy > 1, xy < 0, dotTime > dotLifeTime], 2) ;
-    
+
     % If there is any such dot we relocate it to a new random position
     % and change its lifetime to 1
     if any(N)
         xy(N,:) = rand(sum(N), 2);
         dotTime(N, 1) = 1;
     end
-    
+
     % Convert the dot position to pixels
     xy_pix = floor( xy * diamAperturePix );
-    
+
     % This assumes that zero is at the top left, but we want it to be
     %  in the center, so shift the dots up and left, which just means
     %  adding half of the aperture size to both the x and y direction.
     xy_pix = (xy_pix - diamAperturePix/2)';
-    
+
     % NaN out-of-circle dots
     % We use Pythagore's theorem to figure out which dots are out of the
     % circle
     outCircle = sqrt(xy_pix(1,:).^2 + xy_pix(2,:).^2) + dotSizePix/2 > (diamAperturePix / 2);
     xy_pix(:, outCircle) = NaN;
-    
-    
+
+
     %% PTB draws the dots stimulation
-    
+
     % Draw the fixation cross
     color = expParameters.fixationCrossColor;
     % If this frame shows a target we change the color
@@ -133,20 +133,20 @@ while continueShow
         color = expParameters.fixationCrossColorTarget;
     end
     drawFixationCross(cfg, expParameters, color)
-    
+
     % Draw the dots
     Screen('DrawDots', cfg.win, xy_pix, dotSizePix, dotColor, cfg.center, 2);
-    
+
     Screen('DrawingFinished', cfg.win, dontClear );
-    
+
     vbl = Screen('Flip', cfg.win, vbl+cfg.ifi, dontClear );
-    
-    
+
+
     %% Update counters
 
     % Check for end of loop
     continueShow = continueShow - 1;
-    
+
     % Add one frame to the dot lifetime to each dot
     dotTime = dotTime + 1;
 
