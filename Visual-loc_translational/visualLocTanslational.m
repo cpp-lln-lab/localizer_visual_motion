@@ -16,11 +16,13 @@ end
 % make sure we got access to all the required functions and inputs
 addpath(genpath(fullfile(pwd, 'subfun')))
 
+
 [expParameters, cfg] = setParameters;
 
 % set and load all the parameters to run the experiment
 expParameters = userInputs(cfg, expParameters);
-expParameters = createFilename(expParameters, cfg);
+expParameters = createFilename(cfg, expParameters);
+
 
 expParameters %#ok<NOPTS>
 
@@ -138,7 +140,7 @@ try
             
             % Save the events txt logfile
             % we save event by event so we clear this variable every loop
-            thisEvent.eventLogFile = logFile.eventLogFile;
+            thisEvent.fileID = logFile.fileID;
             
             saveEventsFile('save', expParameters, thisEvent, ...
                 'direction', 'speed', 'target', 'event', 'block');
@@ -152,7 +154,7 @@ try
             
             if ~isempty(responseEvents(1).onset)
                 
-                responseEvents.eventLogFile = logFile.eventLogFile;
+                responseEvents.fileID = logFile.fileID;
                 
                 for iResp = 1:size(responseEvents, 1)
                     responseEvents(iResp).onset = ...
