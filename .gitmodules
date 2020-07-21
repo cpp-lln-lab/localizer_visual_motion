@@ -1,3 +1,6 @@
 [submodule "Visual-loc_translational/subfun/CPP_PTB"]
 	path = Visual-loc_translational/subfun/CPP_PTB
 	url = https://github.com/cpp-lln-lab/CPP_PTB.git
+[submodule "Visual-loc_translational/subfun/CPP_BIDS"]
+	path = Visual-loc_translational/subfun/CPP_BIDS
+	url = https://github.com/cpp-lln-lab/CPP_BIDS.git
