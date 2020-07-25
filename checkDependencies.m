@@ -1,4 +1,4 @@
-function checkDependencies
+function checkDependencies()
 
     pth = fileparts(mfilename('fullpath'));
     addpath(fullfile(pth, 'lib', 'CPP_BIDS'));
