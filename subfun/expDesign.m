@@ -35,11 +35,6 @@ function [expParameters] = expDesign(expParameters, displayFigs)
     %   showing for each event if it should be accompanied by a target
     %
 
-    % needed to use the randsample function in octave
-    if IsOctave
-        pkg load statistics;
-    end
-
     % Set directions for static and motion condition
     motionDirections = [0 90 180 270];
     staticDirections = [-1 -1 -1 -1];
