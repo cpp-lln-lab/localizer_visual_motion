@@ -24,6 +24,7 @@ function [cfg, expParameters] = setParameters
 
     cfg.testingDevice = 'pc';
     cfg.eyeTracker = false;
+    cfg.initAudio = false;
 
     [cfg, expParameters] = setMonitor(cfg, expParameters);
 
@@ -86,7 +87,9 @@ end
 
 function [cfg, expParameters] = setKeyboards(cfg, expParameters)
     cfg.keyboard.escapeKey = 'ESCAPE';
-    expParameters.responseKey = {'space'};
+    cfg.keyboard.responseKey = {'space'};
+    cfg.keyboard.keyboard = [];
+    cfg.keyboard.responseBox = [];
 
     if strcmpi(cfg.testingDevice, 'mri')
         cfg.keyboard.keyboard = [];
@@ -100,6 +103,9 @@ function [cfg, expParameters] = setMRI(cfg, expParameters)
     cfg.numTriggers = 4;
 
     expParameters.bids.MRI.RepetitionTime = 2;
+
+    expParameters.bids.MRI.Instructions = 'Detect the RED fixation cross';
+    expParameters.bids.MRI.TaskDescription = [];
 
 end
 

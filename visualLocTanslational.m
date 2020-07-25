@@ -25,6 +25,7 @@ expParameters = userInputs(cfg, expParameters);
 [cfg, expParameters] = createFilename(cfg, expParameters);
 
 disp(expParameters);
+disp(cfg);
 
 % Prepare for fixation Cross
 cfg.xCoords = [-expParameters.fixCrossDimPix expParameters.fixCrossDimPix 0 0] + ...
@@ -58,7 +59,7 @@ try
     logFile = saveEventsFile('open', expParameters, logFile);
 
     % Wait for space key to be pressed
-    pressSpaceForme();
+    pressSpaceForMe();
 
     % prepare the KbQueue to collect responses
     getResponse('init', cfg.keyboard.responseBox, cfg);
@@ -66,7 +67,7 @@ try
 
     % Show instructions
 
-    DrawFormattedText(cfg.win, expParameters.TaskInstruction, ...
+    DrawFormattedText(cfg.win, expParameters.taskInstruction, ...
         'center', 'center', cfg.textColor);
     Screen('Flip', cfg.win);
 
@@ -115,22 +116,25 @@ try
             thisEvent.fileID = logFile.fileID;
             thisEvent.extraColumns = logFile.extraColumns;
 
+            disp(1)
             saveEventsFile('save', expParameters, thisEvent);
-
+            disp(2)
+            
             clear thisEvent;
 
             % collect the responses and appends to the event structure for
             % saving in the tsv file
             responseEvents = getResponse('check', cfg.keyboard.responseBox, cfg, getOnlyPress);
 
-            if ~isempty(responseEvents(1).onset)
+            if isfield(responseEvents(1), 'onset') && ~isempty(responseEvents(1).onset)
 
                 responseEvents.fileID = logFile.fileID;
 
                 for iResp = 1:size(responseEvents, 1)
                     responseEvents(iResp).onset = ...
                         responseEvents(iResp).onset - cfg.experimentStart;
-                    responseEvents(iResp).target = expParameters.designFixationTargets(iBlock, iEvent);
+                    responseEvents(iResp).target = ...
+                        expParameters.designFixationTargets(iBlock, iEvent);
                     responseEvents(iResp).event = iEvent;
                     responseEvents(iResp).block = iBlock;
                 end
@@ -165,7 +169,9 @@ try
     eyeTracker('Shutdown', cfg, expParameters);
 
     % save the whole workspace
-    matFile = fullfile(expParameters.outputDir, strrep(expParameters.fileName.events, 'tsv', 'mat'));
+    matFile = fullfile( ...
+        expParameters.outputDir, ...
+        strrep(expParameters.fileName.events, 'tsv', 'mat'));
     if IsOctave
         save(matFile, '-mat7-binary');
     else

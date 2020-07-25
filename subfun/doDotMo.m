@@ -117,7 +117,8 @@ function [onset, duration] = doDotMo(cfg, expParameters, thisEvent)
         % NaN out-of-circle dots
         % We use Pythagore's theorem to figure out which dots are out of the
         % circle
-        outCircle = sqrt(xy_pix(1, :).^2 + xy_pix(2, :).^2) + dotSizePix / 2 > (diamAperturePix / 2);
+        outCircle = sqrt(xy_pix(1, :).^2 + xy_pix(2, :).^2) + ...
+            dotSizePix / 2 > (diamAperturePix / 2);
         xy_pix(:, outCircle) = NaN;
 
         %% PTB draws the dots stimulation

@@ -1,7 +1,8 @@
 function [expParameters] = expDesign(expParameters, displayFigs)
     % Creates the sequence of blocks and the events in them
     %
-    % The conditions are consecutive static and motion blocks (Gives better results than randomised).
+    % The conditions are consecutive static and motion blocks
+    % Gives better results than randomised.
     %
     % It can be run as a stand alone without inputs to display a visual example of possible design.
     %
@@ -63,7 +64,7 @@ function [expParameters] = expDesign(expParameters, displayFigs)
     maxNumFixTargPerBlock = expParameters.maxNumFixationTargetPerBlock;
 
     if mod(numEventsPerBlock, length(motionDirections)) ~= 0
-        warning('the number of events per block is not a multiple of the number of motion/static diection');
+        warning('Number of events/block not a multiple of number of motion/static direction');
     end
 
     %% Adapt some variables according to input
@@ -151,7 +152,8 @@ function [expParameters] = expDesign(expParameters, displayFigs)
         Ind = zeros(length(expParameters.designBlockNames), length(uniqueNames)) ;
 
         for i = 1:length(uniqueNames)
-            CondInd(:, i) = find(strcmp(expParameters.designBlockNames, uniqueNames{i})) ; %#ok<*AGROW>
+            CondInd(:, i) = find( ...
+                strcmp(expParameters.designBlockNames, uniqueNames{i})) ; %#ok<*AGROW>
             Ind(CondInd(:, i), i) = 1 ;
         end
 
