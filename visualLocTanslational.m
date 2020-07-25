@@ -16,7 +16,7 @@ if ~ismac
 end
 
 % make sure we got access to all the required functions and inputs
-checkDependencies();
+initEnv();
 
 [cfg, expParameters] = setParameters;
 
