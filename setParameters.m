@@ -1,10 +1,10 @@
-function [cfg, expParameters] = setParameters
+function [cfg, expParameters] = setParameters();
 
     % Initialize the parameters and general configuration variables
     expParameters = struct();
     cfg = struct();
 
-    expParameters.task = 'visualLocalizer';
+    
 
     % by default the data will be stored in an output folder created where the
     % setParamters.m file is
@@ -67,6 +67,8 @@ function [cfg, expParameters] = setParameters
     cfg.diameterAperture = 8;
 
     %% Task(s)
+    
+    expParameters.task = 'visualLocalizer';
 
     % Instruction
     expParameters.taskInstruction = '1-Detect the RED fixation cross\n \n\n';
@@ -83,6 +85,8 @@ function [cfg, expParameters] = setParameters
     expParameters.yDisplacementFixCross = 0; % Manual displacement of the fixation cross
     expParameters.fixationCrossColor = cfg.white;
     expParameters.fixationCrossColorTarget = cfg.red;
+    
+    expParameters.extraColumns = {'direction', 'speed', 'target', 'event', 'block'};
 end
 
 function [cfg, expParameters] = setKeyboards(cfg, expParameters)

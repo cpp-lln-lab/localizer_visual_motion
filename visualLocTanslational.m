@@ -30,10 +30,8 @@ disp(cfg);
 % Prepare for fixation Cross
 cfg.xCoords = [-expParameters.fixCrossDimPix expParameters.fixCrossDimPix 0 0] + ...
     expParameters.xDisplacementFixCross;
-
 cfg.yCoords = [0 0 -expParameters.fixCrossDimPix expParameters.fixCrossDimPix] + ...
     expParameters.yDisplacementFixCross;
-
 cfg.allCoords = [cfg.xCoords; cfg.yCoords];
 
 %%  Experiment
@@ -55,7 +53,7 @@ try
     % % %
 
     % Prepare for the output logfiles with all
-    logFile.extraColumns = {'direction', 'speed', 'target', 'event', 'block'};
+    logFile.extraColumns = expParameters.extraColumns;
     logFile = saveEventsFile('open', expParameters, logFile);
 
     % Wait for space key to be pressed
@@ -66,7 +64,6 @@ try
     getResponse('start', cfg.keyboard.responseBox);
 
     % Show instructions
-
     DrawFormattedText(cfg.win, expParameters.taskInstruction, ...
         'center', 'center', cfg.textColor);
     Screen('Flip', cfg.win);
@@ -116,9 +113,7 @@ try
             thisEvent.fileID = logFile.fileID;
             thisEvent.extraColumns = logFile.extraColumns;
 
-            disp(1)
             saveEventsFile('save', expParameters, thisEvent);
-            disp(2)
             
             clear thisEvent;
 
@@ -127,8 +122,6 @@ try
             responseEvents = getResponse('check', cfg.keyboard.responseBox, cfg, getOnlyPress);
 
             if isfield(responseEvents(1), 'onset') && ~isempty(responseEvents(1).onset)
-
-                responseEvents.fileID = logFile.fileID;
 
                 for iResp = 1:size(responseEvents, 1)
                     responseEvents(iResp).onset = ...
@@ -139,7 +132,10 @@ try
                     responseEvents(iResp).block = iBlock;
                 end
 
-                saveEventsFile('save', expParameters, thisEvent);
+                responseEvents.fileID = logFile.fileID;
+                responseEvents.extraColumns = logFile.extraColumns;
+                saveEventsFile('save', expParameters, responseEvents);
+
             end
 
             % wait for the inter-stimulus interval
