@@ -27,11 +27,11 @@ expParameters = userInputs(cfg, expParameters);
 disp(expParameters);
 
 % Prepare for fixation Cross
-cfg.xCoords = [-expParameters.fixCrossDimPix expParameters.fixCrossDimPix 0 0] ...
-    + expParameters.xDisplacementFixCross;
+cfg.xCoords = [-expParameters.fixCrossDimPix expParameters.fixCrossDimPix 0 0] + ...
+    expParameters.xDisplacementFixCross;
 
-cfg.yCoords = [0 0 -expParameters.fixCrossDimPix expParameters.fixCrossDimPix] ...
-    + expParameters.yDisplacementFixCross;
+cfg.yCoords = [0 0 -expParameters.fixCrossDimPix expParameters.fixCrossDimPix] + ...
+    expParameters.yDisplacementFixCross;
 
 cfg.allCoords = [cfg.xCoords; cfg.yCoords];
 

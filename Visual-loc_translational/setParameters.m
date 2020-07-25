@@ -1,38 +1,38 @@
 function [cfg, expParameters] = setParameters
-    
+
     % Initialize the parameters and general configuration variables
     expParameters = struct();
     cfg = struct();
-    
+
     expParameters.task = 'visualLocalizer';
-    
+
     % by default the data will be stored in an output folder created where the
     % setParamters.m file is
     % change that if you want the data to be saved somewhere else
     expParameters.outputDir = fullfile( ...
         fileparts(mfilename('fullpath')), '..', ...
         'output');
-    
+
     %% Debug mode settings
     cfg.debug = true; % To test the script out of the scanner, skip PTB sync
     cfg.testingSmallScreen = false; % To test on a part of the screen, change to 1
     cfg.testingTranspScreen = true; % To test with trasparent full size screen
-    
+
     expParameters.verbose = true;
-    
+
     %% Engine parameters
-    
+
     cfg.testingDevice = 'pc';
     cfg.eyeTracker = false;
 
     [cfg, expParameters] = setMonitor(cfg, expParameters);
-    
+
     % Keyboards
     [cfg, expParameters] = setKeyboards(cfg, expParameters);
-    
+
     % MRI settings
     [cfg, expParameters] = setMRI(cfg, expParameters);
-    
+
     %% Experiment Design
     expParameters.names = {'static', 'motion'};
     expParameters.possibleDirections = [-1 1]; % 1 motion , -1 static
@@ -45,7 +45,7 @@ function [cfg, expParameters] = setParameters
     expParameters.onsetDelay = 5;
     % Number of seconds after the end all the stimuli before ending the run
     expParameters.endDelay = 1;
-    
+
     %% Visual Stimulation
     % speed in visual angles
     expParameters.speedEvent = 8;
@@ -64,12 +64,12 @@ function [cfg, expParameters] = setParameters
     expParameters.dontClear = 0;
     % Diameter/length of side of aperture in Visual angles
     cfg.diameterAperture = 8;
-    
+
     %% Task(s)
-    
+
     % Instruction
     expParameters.taskInstruction = '1-Detect the RED fixation cross\n \n\n';
-    
+
     % Fixation cross (in pixels)
     % Set the length of the lines of the fixation cross
     expParameters.fixCrossDimPix = 10;
@@ -77,18 +77,17 @@ function [cfg, expParameters] = setParameters
     expParameters.lineWidthPix = 4;
     expParameters.maxNumFixationTargetPerBlock = 2;
     expParameters.targetDuration = 0.15; % In secs
-    
+
     expParameters.xDisplacementFixCross = 0; % Manual displacement of the fixation cross
     expParameters.yDisplacementFixCross = 0; % Manual displacement of the fixation cross
     expParameters.fixationCrossColor = cfg.white;
     expParameters.fixationCrossColorTarget = cfg.red;
 end
 
-
 function [cfg, expParameters] = setKeyboards(cfg, expParameters)
     cfg.keyboard.escapeKey = 'ESCAPE';
     expParameters.responseKey = {'space'};
-    
+
     if strcmpi(cfg.testingDevice, 'mri')
         cfg.keyboard.keyboard = [];
         cfg.keyboard.responseBox = [];
@@ -99,13 +98,13 @@ function [cfg, expParameters] = setMRI(cfg, expParameters)
     % letter sent by the trigger to sync stimulation and volume acquisition
     cfg.triggerKey = 't';
     cfg.numTriggers = 4;
-    
+
     expParameters.bids.MRI.RepetitionTime = 2;
-    
+
 end
 
 function [cfg, expParameters] = setMonitor(cfg, expParameters)
-    
+
     % Monitor parameters for PTB
     cfg.white = [255 255 255];
     cfg.black = [0 0 0];
@@ -113,11 +112,11 @@ function [cfg, expParameters] = setMonitor(cfg, expParameters)
     cfg.grey = mean([cfg.black; cfg.white]);
     cfg.backgroundColor = cfg.black;
     cfg.textColor = cfg.white;
-    
+
     % Monitor parameters
     cfg.monitorWidth = 42; % in cm
     cfg.screenDistance = 134; % distance from the screen in cm
-    
+
     if strcmpi(cfg.testingDevice, 'mri')
         cfg.monitorWidth = 42;
         cfg.screenDistance = 134;
