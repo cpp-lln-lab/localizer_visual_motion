@@ -119,21 +119,18 @@ try
 
             % collect the responses and appends to the event structure for
             % saving in the tsv file
+            responseEvents = collectAndSaveResponses(cfg, logFile, experimentStart);
+            
             responseEvents = getResponse('check', cfg.keyboard.responseBox, cfg, getOnlyPress);
 
             if isfield(responseEvents(1), 'onset') && ~isempty(responseEvents(1).onset)
 
                 for iResp = 1:size(responseEvents, 1)
-                    responseEvents(iResp).onset = ...
-                        responseEvents(iResp).onset - cfg.experimentStart;
-                    responseEvents(iResp).target = ...
-                        expParameters.designFixationTargets(iBlock, iEvent);
+                    
                     responseEvents(iResp).event = iEvent;
                     responseEvents(iResp).block = iBlock;
                 end
 
-                responseEvents.fileID = logFile.fileID;
-                responseEvents.extraColumns = logFile.extraColumns;
                 saveEventsFile('save', expParameters, responseEvents);
 
             end

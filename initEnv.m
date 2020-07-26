@@ -59,9 +59,9 @@ function initEnv
     % If external dir is empty throw an exception
     % and ask user to update submodules.
     if numel(dir('lib')) <= 2 % Means that the external is empty
-        error(['Git submodules are not cloned! \n' ...
-              'try this in your terminal: \n ...'
-              'git submodule update --recursive ']);
+        error(['Git submodules are not cloned!', ...
+              'Try this in your terminal:', ...
+              ' git submodule update --recursive ']);
     else
         addDependencies();
     end
