@@ -49,7 +49,7 @@ function [cfg] = setParameters()
     % Number of events per block (should not be changed)
     cfg.numEventsPerBlock = 12;
     cfg.eventDuration = 1; % second
-    
+
     % speed in visual angles
     cfg.dot.speed = 8;
     % Coherence Level (0-1)
@@ -62,7 +62,7 @@ function [cfg] = setParameters()
     cfg.dot.size = 0.1;
     cfg.dot.color = cfg.color.white;
     cfg.dot.dontClear = 0;
-    
+
     % Diameter/length of side of aperture in Visual angles
     cfg.diameterAperture = 8;
 
