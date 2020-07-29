@@ -1,95 +1,95 @@
-function [cfg, expParameters] = setParameters();
+function [cfg] = setParameters()
 
     % Initialize the parameters and general configuration variables
-    expParameters = struct();
     cfg = struct();
-
-    
 
     % by default the data will be stored in an output folder created where the
     % setParamters.m file is
     % change that if you want the data to be saved somewhere else
-    expParameters.outputDir = fullfile( ...
+    cfg.dir.output = fullfile( ...
         fileparts(mfilename('fullpath')), '..', ...
         'output');
 
     %% Debug mode settings
-    cfg.debug = true; % To test the script out of the scanner, skip PTB sync
-    cfg.testingSmallScreen = false; % To test on a part of the screen, change to 1
-    cfg.testingTranspScreen = true; % To test with trasparent full size screen
+    cfg.debug.do = true; % To test the script out of the scanner, skip PTB sync
+    cfg.debug.smallWin = false; % To test on a part of the screen, change to 1
+    cfg.debug.transpWin = true; % To test with trasparent full size screen
 
-    expParameters.verbose = true;
+    cfg.verbose = false;
 
     %% Engine parameters
 
     cfg.testingDevice = 'pc';
-    cfg.eyeTracker = false;
-    cfg.initAudio = false;
+    cfg.eyeTracker.do = false;
+    cfg.audio.do = false;
 
-    [cfg, expParameters] = setMonitor(cfg, expParameters);
+    cfg = setMonitor(cfg, cfg);
 
     % Keyboards
-    [cfg, expParameters] = setKeyboards(cfg, expParameters);
+    cfg = setKeyboards(cfg, cfg);
 
     % MRI settings
-    [cfg, expParameters] = setMRI(cfg, expParameters);
+    cfg = setMRI(cfg, cfg);
 
     %% Experiment Design
-    expParameters.names = {'static', 'motion'};
-    expParameters.possibleDirections = [-1 1]; % 1 motion , -1 static
-    expParameters.numBlocks = size(expParameters.possibleDirections, 2);
-    expParameters.numRepetitions = 1; % AT THE MOMENT IT IS NOT SET IN THE MAIN SCRIPT
-    expParameters.IBI = 0; % 8;
+    cfg.names = {'static', 'motion'};
+    cfg.possibleDirections = [-1 1]; % 1 motion , -1 static
+    cfg.numBlocks = size(cfg.possibleDirections, 2);
+    cfg.numRepetitions = 1; % AT THE MOMENT IT IS NOT SET IN THE MAIN SCRIPT
+    cfg.IBI = 0; % 8;
     % Time between events in secs
-    expParameters.ISI = 0.1;
+    cfg.ISI = 0.1;
     % Number of seconds before the motion stimuli are presented
-    expParameters.onsetDelay = 5;
+    cfg.onsetDelay = 5;
     % Number of seconds after the end all the stimuli before ending the run
-    expParameters.endDelay = 1;
+    cfg.endDelay = 1;
 
     %% Visual Stimulation
-    % speed in visual angles
-    expParameters.speedEvent = 8;
+
     % Number of events per block (should not be changed)
-    expParameters.numEventsPerBlock = 12;
-    expParameters.eventDuration = 1;
+    cfg.numEventsPerBlock = 12;
+    cfg.eventDuration = 1; % second
+
+    % speed in visual angles
+    cfg.dot.speed = 8;
     % Coherence Level (0-1)
-    expParameters.coh = 1;
+    cfg.dot.coh = 1;
     % Maximum number dots per frame
-    expParameters.maxDotsPerFrame = 300;
+    cfg.dot.maxNbPerFrame = 300;
     % Dot life time in seconds
-    expParameters.dotLifeTime = 1;
+    cfg.dot.lifeTime = 1;
     % Dot Size (dot width) in visual angles.
-    expParameters.dotSize = 0.1;
-    expParameters.dotColor = cfg.white;
-    expParameters.dontClear = 0;
+    cfg.dot.size = 0.1;
+    cfg.dot.color = cfg.color.white;
+    cfg.dot.dontClear = 0;
+
     % Diameter/length of side of aperture in Visual angles
     cfg.diameterAperture = 8;
 
     %% Task(s)
-    
-    expParameters.task = 'visualLocalizer';
+
+    cfg.task.name = 'visual localizer';
 
     % Instruction
-    expParameters.taskInstruction = '1-Detect the RED fixation cross\n \n\n';
+    cfg.task.instruction = '1-Detect the RED fixation cross\n \n\n';
 
     % Fixation cross (in pixels)
     % Set the length of the lines of the fixation cross
-    expParameters.fixCrossDimPix = 10;
+    cfg.fixation.dimensionPix = 10;
     % Set the line width for our fixation cross
-    expParameters.lineWidthPix = 4;
-    expParameters.maxNumFixationTargetPerBlock = 2;
-    expParameters.targetDuration = 0.15; % In secs
+    cfg.fixation.lineWidthPix = 4;
+    cfg.fixation.xDisplacement = 0; % Manual displacement of the fixation cross
+    cfg.fixation.yDisplacement = 0; % Manual displacement of the fixation cross
+    cfg.fixation.color = cfg.color.white;
+    cfg.fixation.colorTarget = cfg.color.red;
 
-    expParameters.xDisplacementFixCross = 0; % Manual displacement of the fixation cross
-    expParameters.yDisplacementFixCross = 0; % Manual displacement of the fixation cross
-    expParameters.fixationCrossColor = cfg.white;
-    expParameters.fixationCrossColorTarget = cfg.red;
-    
-    expParameters.extraColumns = {'direction', 'speed', 'target', 'event', 'block'};
+    cfg.target.maxNbPerBlock = 2;
+    cfg.target.duration = 0.15; % In secs
+
+    cfg.extraColumns = {'direction', 'speed', 'target', 'event', 'block'};
 end
 
-function [cfg, expParameters] = setKeyboards(cfg, expParameters)
+function cfg = setKeyboards(cfg)
     cfg.keyboard.escapeKey = 'ESCAPE';
     cfg.keyboard.responseKey = {'space'};
     cfg.keyboard.keyboard = [];
@@ -101,34 +101,34 @@ function [cfg, expParameters] = setKeyboards(cfg, expParameters)
     end
 end
 
-function [cfg, expParameters] = setMRI(cfg, expParameters)
+function cfg = setMRI(cfg)
     % letter sent by the trigger to sync stimulation and volume acquisition
-    cfg.triggerKey = 't';
-    cfg.numTriggers = 4;
+    cfg.mri.triggerKey = 't';
+    cfg.mri.triggerNb = 4;
 
-    expParameters.bids.MRI.RepetitionTime = 2;
+    cfg.mri.repetitionTime = 2;
 
-    expParameters.bids.MRI.Instructions = 'Detect the RED fixation cross';
-    expParameters.bids.MRI.TaskDescription = [];
+    cfg.bids.MRI.Instructions = 'Detect the RED fixation cross';
+    cfg.bids.MRI.TaskDescription = [];
 
 end
 
-function [cfg, expParameters] = setMonitor(cfg, expParameters)
+function cfg = setMonitor(cfg)
 
     % Monitor parameters for PTB
-    cfg.white = [255 255 255];
-    cfg.black = [0 0 0];
-    cfg.red = [255 0 0];
-    cfg.grey = mean([cfg.black; cfg.white]);
-    cfg.backgroundColor = cfg.black;
-    cfg.textColor = cfg.white;
+    cfg.color.white = [255 255 255];
+    cfg.color.black = [0 0 0];
+    cfg.color.red = [255 0 0];
+    cfg.color.grey = mean([cfg.color.black; cfg.color.white]);
+    cfg.color.background = cfg.color.black;
+    cfg.text.color = cfg.color.white;
 
     % Monitor parameters
-    cfg.monitorWidth = 42; % in cm
-    cfg.screenDistance = 134; % distance from the screen in cm
+    cfg.screen.monitorWidth = 42; % in cm
+    cfg.screen.monitorDistance = 134; % distance from the screen in cm
 
     if strcmpi(cfg.testingDevice, 'mri')
-        cfg.monitorWidth = 42;
-        cfg.screenDistance = 134;
+        cfg.screen.monitorWidth = 42;
+        cfg.screen.monitorDistance = 134;
     end
 end

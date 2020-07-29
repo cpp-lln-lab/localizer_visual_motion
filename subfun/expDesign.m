@@ -1,4 +1,4 @@
-function [expParameters] = expDesign(expParameters, displayFigs)
+function [cfg] = expDesign(cfg, displayFigs)
     % Creates the sequence of blocks and the events in them
     %
     % The conditions are consecutive static and motion blocks
@@ -43,12 +43,12 @@ function [expParameters] = expDesign(expParameters, displayFigs)
     %% Check inputs
 
     % Set variables here for a dummy test of this function
-    if nargin < 1 || isempty(expParameters)
-        expParameters.names             = {'static', 'motion'};
-        expParameters.numRepetitions    = 4;
-        expParameters.speedEvent        = 4;
-        expParameters.numEventsPerBlock = 12;
-        expParameters.maxNumFixationTargetPerBlock = 2;
+    if nargin < 1 || isempty(cfg)
+        cfg.names             = {'static', 'motion'};
+        cfg.numRepetitions    = 4;
+        cfg.dot.speed        = 4;
+        cfg.numEventsPerBlock = 12;
+        cfg.target.maxNbPerBlock = 2;
     end
 
     % Set to 1 for a visualtion of the trials design order
@@ -57,11 +57,11 @@ function [expParameters] = expDesign(expParameters, displayFigs)
     end
 
     % Get the parameters
-    names = expParameters.names;
-    numRepetitions = expParameters.numRepetitions;
-    speedEvent = expParameters.speedEvent;
-    numEventsPerBlock = expParameters.numEventsPerBlock;
-    maxNumFixTargPerBlock = expParameters.maxNumFixationTargetPerBlock;
+    names = cfg.names;
+    numRepetitions = cfg.numRepetitions;
+    speedEvent = cfg.dot.speed;
+    numEventsPerBlock = cfg.numEventsPerBlock;
+    maxNumFixTargPerBlock = cfg.target.maxNbPerBlock;
 
     if mod(numEventsPerBlock, length(motionDirections)) ~= 0
         warning('Number of events/block not a multiple of number of motion/static direction');
@@ -91,15 +91,15 @@ function [expParameters] = expDesign(expParameters, displayFigs)
 
     %% Give the blocks the names with condition
 
-    expParameters.designBlockNames      = cell(nrBlocks, 1);
-    expParameters.designDirections      = zeros(nrBlocks, numEventsPerBlock);
-    expParameters.designSpeeds          = ones(nrBlocks, numEventsPerBlock) * speedEvent;
-    expParameters.designFixationTargets = zeros(nrBlocks, numEventsPerBlock);
+    cfg.design.blockNames      = cell(nrBlocks, 1);
+    cfg.design.directions      = zeros(nrBlocks, numEventsPerBlock);
+    cfg.design.speeds          = ones(nrBlocks, numEventsPerBlock) * speedEvent;
+    cfg.design.fixationTargets = zeros(nrBlocks, numEventsPerBlock);
 
     for iMotionBlock = 1:numRepetitions
 
-        expParameters.designDirections(motionIndex(iMotionBlock), :) = Shuffle(motionDirections);
-        expParameters.designDirections(staticIndex(iMotionBlock), :) = Shuffle(staticDirections);
+        cfg.design.directions(motionIndex(iMotionBlock), :) = Shuffle(motionDirections);
+        cfg.design.directions(staticIndex(iMotionBlock), :) = Shuffle(staticDirections);
 
     end
 
@@ -112,7 +112,7 @@ function [expParameters] = expDesign(expParameters, displayFigs)
             case 'motion'
                 thisBlockName = {'motion'};
         end
-        expParameters.designBlockNames(iBlock) = thisBlockName;
+        cfg.design.blockNames(iBlock) = thisBlockName;
 
         % set target
         % if there are 2 targets per block we make sure that they are at least
@@ -140,20 +140,20 @@ function [expParameters] = expDesign(expParameters, displayFigs)
 
         end
 
-        expParameters.designFixationTargets(iBlock, chosenTarget) = 1;
+        cfg.design.fixationTargets(iBlock, chosenTarget) = 1;
 
     end
 
     %% Visualize the design matrix
     if displayFigs
 
-        uniqueNames = unique(expParameters.designBlockNames) ;
+        uniqueNames = unique(cfg.design.blockNames) ;
 
-        Ind = zeros(length(expParameters.designBlockNames), length(uniqueNames)) ;
+        Ind = zeros(length(cfg.design.blockNames), length(uniqueNames)) ;
 
         for i = 1:length(uniqueNames)
             CondInd(:, i) = find( ...
-                strcmp(expParameters.designBlockNames, uniqueNames{i})) ; %#ok<*AGROW>
+                strcmp(cfg.design.blockNames, uniqueNames{i})) ; %#ok<*AGROW>
             Ind(CondInd(:, i), i) = 1 ;
         end
 
