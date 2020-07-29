@@ -1,4 +1,4 @@
-function [onset, duration] = doDotMo(cfg, expParameters, thisEvent)
+function [onset, duration] = doDotMo(cfg, thisEvent)
     % Draws the stimulation of static/moving in 4 directions dots or static
     %
     % DIRECTIONS
@@ -18,19 +18,19 @@ function [onset, duration] = doDotMo(cfg, expParameters, thisEvent)
     % smaller number (nDots / Area of aperture) on average.
 
     %% Get parameters
-    dontClear  = expParameters.dontClear;
+    dontClear  = cfg.dot.dontClear;
 
     direction = thisEvent.direction(1);
     isTarget = thisEvent.target(1);
     speed = thisEvent.speed(1);
 
-    coh = expParameters.coh;
-    ndots = expParameters.maxDotsPerFrame;
-    dotSizePix = expParameters.dotSizePix;
-    dotLifeTime = expParameters.dotLifeTime;
-    dotColor = expParameters.dotColor;
+    coh = cfg.dot.coh;
+    ndots = cfg.dot.maxNbPerFrame;
+    dotSizePix = cfg.dot.sizePix;
+    dotLifeTime = cfg.dot.lifeTime;
+    dotColor = cfg.dot.color;
 
-    targetDuration = expParameters.targetDuration;
+    targetDuration = cfg.target.duration;
 
     % thisEvent = deg2Pix('speed', thisEvent, cfg);
     % dotSpeedPix = logFile.iEventSpeedPix;
@@ -45,7 +45,7 @@ function [onset, duration] = doDotMo(cfg, expParameters, thisEvent)
 
         speed = 0;
 
-        dotLifeTime = expParameters.eventDuration;
+        dotLifeTime = cfg.eventDuration;
     end
 
     %% initialize variables
@@ -59,7 +59,7 @@ function [onset, duration] = doDotMo(cfg, expParameters, thisEvent)
     % Set a N x 2 matrix that gives jump size in pixels
     %  pix/sec * sec/frame = pix / frame
     dxdy = repmat( ...
-        speed * 10 / (diamAperture * 10) * (3 / cfg.monRefresh) * ...
+        speed * 10 / (diamAperture * 10) * (3 / cfg.screen.monitorRefresh) * ...
         [cos(pi * direction / 180.0) -sin(pi * direction / 180.0)], ndots, 1);
 
     % dxdy = repmat(...
@@ -71,13 +71,13 @@ function [onset, duration] = doDotMo(cfg, expParameters, thisEvent)
     dotTime = ones(size(xy, 1), 1);
 
     % Set for how many frames to show the dots
-    continueShow = floor(expParameters.eventDuration / cfg.ifi);
+    continueShow = floor(cfg.eventDuration / cfg.screen.ifi);
 
     % Covert the dotLifeTime from seconds to frames
-    dotLifeTime = ceil(dotLifeTime / cfg.ifi);
+    dotLifeTime = ceil(dotLifeTime / cfg.screen.ifi);
 
     %% Start the dots presentation
-    vbl = Screen('Flip', cfg.win, 0, dontClear);
+    vbl = Screen('Flip', cfg.screen.win, 0, dontClear);
     onset = vbl;
 
     while continueShow
@@ -124,19 +124,19 @@ function [onset, duration] = doDotMo(cfg, expParameters, thisEvent)
         %% PTB draws the dots stimulation
 
         % Draw the fixation cross
-        color = expParameters.fixationCrossColor;
+        color = cfg.fixation.color;
         % If this frame shows a target we change the color
         if GetSecs < (onset + targetDuration) && isTarget == 1
-            color = expParameters.fixationCrossColorTarget;
+            color = cfg.fixation.colorTarget;
         end
-        drawFixationCross(cfg, expParameters, color);
+        drawFixationCross(cfg, color);
 
         % Draw the dots
-        Screen('DrawDots', cfg.win, xy_pix, dotSizePix, dotColor, cfg.center, 2);
+        Screen('DrawDots', cfg.screen.win, xy_pix, dotSizePix, dotColor, cfg.screen.center, 2);
 
-        Screen('DrawingFinished', cfg.win, dontClear);
+        Screen('DrawingFinished', cfg.screen.win, dontClear);
 
-        vbl = Screen('Flip', cfg.win, vbl + cfg.ifi, dontClear);
+        vbl = Screen('Flip', cfg.screen.win, vbl + cfg.screen.ifi, dontClear);
 
         %% Update counters
 
@@ -150,11 +150,11 @@ function [onset, duration] = doDotMo(cfg, expParameters, thisEvent)
 
     %% Erase last dots
 
-    drawFixationCross(cfg, expParameters, expParameters.fixationCrossColor);
+    drawFixationCross(cfg, cfg.fixation.color);
 
-    Screen('DrawingFinished', cfg.win, dontClear);
+    Screen('DrawingFinished', cfg.screen.win, dontClear);
 
-    vbl = Screen('Flip', cfg.win, vbl + cfg.ifi, dontClear);
+    vbl = Screen('Flip', cfg.screen.win, vbl + cfg.screen.ifi, dontClear);
 
     duration = vbl - onset;
 
