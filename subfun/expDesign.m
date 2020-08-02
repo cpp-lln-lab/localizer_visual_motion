@@ -39,7 +39,7 @@ function [cfg] = expDesign(cfg, displayFigs)
     % Set directions for static and motion condition
     motionDirections = [0 90 180 270];
     staticDirections = [0 90 180 270];
-%     staticDirections = [-1 -1 -1 -1];
+    %     staticDirections = [-1 -1 -1 -1];
 
     %% Check inputs
 
