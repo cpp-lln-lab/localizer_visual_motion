@@ -55,8 +55,8 @@ function [cfg] = setParameters()
     % Coherence Level (0-1)
     cfg.dot.coherence = 1;
     % nb dots per visual angle square.
-    cfg.dot.density = .25; 
-    
+    cfg.dot.density = .25;
+
     % Dot life time in seconds
     cfg.dot.lifeTime = 10;
 
