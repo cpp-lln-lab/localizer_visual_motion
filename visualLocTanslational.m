@@ -25,16 +25,6 @@ cfg = setParameters;
 cfg = userInputs(cfg);
 cfg = createFilename(cfg);
 
-disp(cfg);
-
-% REFACTOR
-% Prepare for fixation Cross
-cfg.xCoords = [-cfg.fixation.dimensionPix cfg.fixation.dimensionPix 0 0] + ...
-    cfg.fixation.xDisplacement;
-cfg.yCoords = [0 0 -cfg.fixation.dimensionPix cfg.fixation.dimensionPix] + ...
-    cfg.fixation.yDisplacement;
-cfg.allCoords = [cfg.xCoords; cfg.yCoords];
-
 %%  Experiment
 
 % Safety loop: close the screen if code crashes
@@ -44,8 +34,17 @@ try
     [cfg] = initPTB(cfg);
 
     % Convert some values from degrees to pixels
-    cfg = degToPix('diameterAperture', cfg, cfg);
     cfg.dot = degToPix('size', cfg.dot, cfg);
+    cfg.dot = degToPix('speed', cfg.dot, cfg);
+    
+    % Get dot speeds in pixels per frame
+    cfg.dot.speedPixPerFrame = cfg.dot.speedPix / cfg.screen.monitorRefresh;
+    
+    cfg.aperture = degToPix('xPos', cfg.aperture, cfg);
+    
+    % dots are displayed on a square with a length in visual angle equal to the
+    % field of view
+    cfg.dot.number = round(cfg.dot.density * (cfg.screen.winWidth / cfg.screen.ppd)^2);
 
     [el] = eyeTracker('Calibration', cfg);
 
@@ -56,28 +55,24 @@ try
     % Prepare for the output logfiles with all
     logFile.extraColumns = cfg.extraColumns;
     logFile = saveEventsFile('open', cfg, logFile);
-
-    % Wait for space key to be pressed
-    pressSpaceForMe();
-
+    
+    % prepare textures
+    cfg = apertureTexture('init', cfg);
+    cfg = dotTexture('init', cfg);
+    
+    disp(cfg);
+    
+    standByScreen(cfg);
+    
     % prepare the KbQueue to collect responses
     getResponse('init', cfg.keyboard.responseBox, cfg);
     getResponse('start', cfg.keyboard.responseBox);
 
-    % Show instructions
-    DrawFormattedText(cfg.screen.win, cfg.task.instruction, ...
-        'center', 'center', cfg.text.color);
-    Screen('Flip', cfg.screen.win);
-
     % Wait for Trigger from Scanner
     waitForTrigger(cfg);
 
-    % Show the fixation cross
-    drawFixationCross(cfg, cfg.fixation.color);
-    Screen('Flip', cfg.screen.win);
-
     %% Experiment Start
-    cfg.experimentStart = GetSecs;
+    cfg = getExperimentStart(cfg);
 
     WaitSecs(cfg.onsetDelay);
 
@@ -152,13 +147,13 @@ try
     % End of the run for the BOLD to go down
     WaitSecs(cfg.endDelay);
 
+    cfg = getExperimentEnd(cfg);
+    
     % Close the logfiles
     saveEventsFile('close', cfg, logFile);
 
     getResponse('stop', cfg.keyboard.responseBox);
     getResponse('release', cfg.keyboard.responseBox);
-
-    totalExperimentTime = GetSecs - cfg.experimentStart;
 
     eyeTracker('Shutdown', cfg);
 
@@ -171,6 +166,8 @@ try
     else
         save(matFile, '-v7.3');
     end
+    
+    farewellScreen(cfg);
 
     cleanUp();
 

@@ -38,7 +38,8 @@ function [cfg] = expDesign(cfg, displayFigs)
 
     % Set directions for static and motion condition
     motionDirections = [0 90 180 270];
-    staticDirections = [-1 -1 -1 -1];
+    staticDirections = [0 90 180 270];
+%     staticDirections = [-1 -1 -1 -1];
 
     %% Check inputs
 
@@ -59,7 +60,7 @@ function [cfg] = expDesign(cfg, displayFigs)
     % Get the parameters
     names = cfg.names;
     numRepetitions = cfg.numRepetitions;
-    speedEvent = cfg.dot.speed;
+    dotsSpeed = cfg.dot.speedPixPerFrame;
     numEventsPerBlock = cfg.numEventsPerBlock;
     maxNumFixTargPerBlock = cfg.target.maxNbPerBlock;
 
@@ -93,7 +94,7 @@ function [cfg] = expDesign(cfg, displayFigs)
 
     cfg.design.blockNames      = cell(nrBlocks, 1);
     cfg.design.directions      = zeros(nrBlocks, numEventsPerBlock);
-    cfg.design.speeds          = ones(nrBlocks, numEventsPerBlock) * speedEvent;
+    cfg.design.speeds          = ones(nrBlocks, numEventsPerBlock) * dotsSpeed;
     cfg.design.fixationTargets = zeros(nrBlocks, numEventsPerBlock);
 
     for iMotionBlock = 1:numRepetitions
