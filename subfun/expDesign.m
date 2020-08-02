@@ -4,282 +4,274 @@ function [cfg] = expDesign(cfg, displayFigs)
     % The conditions are consecutive static and motion blocks (Gives better results than randomised).
     %
     % EVENTS
-    %  The numEventsPerBlock should be a multiple of the number of "base"
-    %  listed in the motionDirections and staticDirections (4 at the moment).
-    %  Pseudorandomization rules:
-    %  (1) Directions are all present in random orders in `numEventsPerBlock/nDirections`
-    %      consecutive chunks. This evenly distribute the directions across the
-    %      block.
-    %  (2) No same consecutive direction (TO IMPLEMENT)
+    % The numEventsPerBlock should be a multiple of the number of "base"
+    % listed in the motionDirections and staticDirections (4 at the moment).
+    %
+    % Pseudorandomization rules:
+    % (1) Directions are all present in random orders in `numEventsPerBlock/nDirections`
+    % consecutive chunks. This evenly distribute the directions across the
+    % block.
+    % (2) No same consecutive direction
+    %
     %
     % TARGETS
-    %  Pseudorandomization rules:
-    %  (1) If there are 2 targets per block we make sure that they are at least 2
-    %      events apart.
-    %  (2) Targets cannot be on the first or last event of a block.
-    %  (3) Targets can not be present more than 2 times in the same event
-    %      position across blocks.
+    %
+    % Pseudorandomization rules:
+    % (1) If there are 2 targets per block we make sure that they are at least 2
+    % events apart.
+    % (2) Targets cannot be on the first or last event of a block.
+    % (3) Targets can not be present more than 2 times in the same event
+    % position across blocks.
     %
     % Input:
-    %   - ExpParameters: parameters returned by SetParameters
-    %   - displayFigs: a boolean to decide whether to show the basic design
-    %   matrix of the design
+    % - cfg: parameters returned by setParameters
+    % - displayFigs: a boolean to decide whether to show the basic design
+    % matrix of the design
     %
     % Output:
-    %   - ExpParameters.designBlockNames      = cell array (nr_blocks, 1) with the
-    %    name for each block
+    % - ExpParameters.designBlockNames = cell array (nr_blocks, 1) with the
+    % name for each block
     %
-    %   - ExpParameters.designDirections      = array (nr_blocks, numEventsPerBlock)
-    %    with the direction to present in a given block
-    %       - 0 90 180 270 indicate the angle
-    %       - -1 indicates static
+    % - cfg.designDirections = array (nr_blocks, numEventsPerBlock)
+    % with the direction to present in a given block
+    % - 0 90 180 270 indicate the angle
+    % - -1 indicates static
     %
-    %   - ExpParameters.designSpeeds          = array (nr_blocks, numEventsPerBlock) * speedEvent;
+    % - cfg.designSpeeds = array (nr_blocks, numEventsPerBlock) * speedEvent;
     %
-    %   - ExpParameters.designFixationTargets = array (nr_blocks, numEventsPerBlock)
-    %   showing for each event if it should be accompanied by a target
+    % - cfg.designFixationTargets = array (nr_blocks, numEventsPerBlock)
+    % showing for each event if it should be accompanied by a target
     %
-
-    % Set directions for static and motion condition
-    motionDirections = [0 90 180 270];
-    staticDirections = [-1 -1 -1 -1];
     
     
     %% Check inputs
     
-    % Set variables here for a dummy test of this function
-    if nargin < 1 || isempty(cfg)
-        cfg.names             = {'static', 'motion'};
-        cfg.numRepetitions    = 4;
-        cfg.dot.speed        = 4;
-        cfg.numEventsPerBlock = 12;
-        cfg.target.maxNbPerBlock = 2;
-    end
-
     % Set to 1 for a visualtion of the trials design order
-    if nargin < 2  || isempty(displayFigs)
+    if nargin < 2 || isempty(displayFigs)
         displayFigs = 0;
     end
-
-    % Get the parameters
-    names = cfg.names;
-    numRepetitions = cfg.numRepetitions;
-    dotsSpeed = cfg.dot.speedPixPerFrame;
-    numEventsPerBlock = cfg.numEventsPerBlock;
-    maxNumFixTargPerBlock = cfg.target.maxNbPerBlock;
-
-    if mod(numEventsPerBlock, length(motionDirections)) ~= 0
-        warning('Number of events/block not a multiple of number of motion/static direction');
+    
+    % Set variables here for a dummy test of this function
+    if nargin < 1 || isempty(cfg)
+        cfg.design.names = {'static'; 'motion'};
+        cfg.design.nbRepetitions = 4;
+        cfg.design.nbEventsPerBlock = 12;
+        cfg.dot.speedPixPerFrame = 4;
+        cfg.target.maxNbPerBlock = 2;
+        displayFigs = 1;
     end
     
+    [NB_BLOCKS, NB_REPETITIONS, NB_EVENTS_PER_BLOCK, MAX_TARGET_PER_BLOCK] = getInput(cfg);
+    [~, staticIndex, motionIndex] = assignConditions(cfg);
     
-    %% Adapt some variables according to input
+    RANGE_TARGETS = [1 MAX_TARGET_PER_BLOCK];
+    targetPerCondition = repmat(RANGE_TARGETS, 1, NB_REPETITIONS/2);
     
-    % Assign the conditions
-    condition = repmat(names, 1, numRepetitions);
-    nrBlocks = length(condition);
-    
-    % Assigne design parameters to be exported
-    cfg.designBlockNames      = cell(nrBlocks, 1);
-    cfg.designDirections      = zeros(nrBlocks, numEventsPerBlock);
-    cfg.designSpeeds          = ones(nrBlocks, numEventsPerBlock) * speedEvent;
-    cfg.designFixationTargets = zeros(nrBlocks, numEventsPerBlock);
-    
-    % Create a vector for the static condition
-    staticDirections = repmat(staticDirections, 1, numEventsPerBlock/length(staticDirections));
-    
-    % Get the index of each condition
-    staticIndex = find( strcmp(condition, 'static') );
-    motionIndex = find( strcmp(condition, 'motion') );
-    
-    for iMotionBlock = 1:numRepetitions
-        
-        % Shuffle and set motion direction order
-        cfg.designDirections(motionIndex(iMotionBlock),:) = ...
-            [ Shuffle(motionDirections), Shuffle(motionDirections), Shuffle(motionDirections)];
-        
-        % Set static condition
-        cfg.designDirections(staticIndex(iMotionBlock),:) = staticDirections;
-        
-    end
-    
-    % Assign the targets for each condition
-    rangeTargets = [1 maxNumFixTargPerBlock];
-    
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    
-    % % % IT COULD BE A PROBLEM IF WE SET THE N OF TARGETS RANDOMLY (TOO CHOOSE
-    % % % RANDOMLY B/W 1 AND 2 FOR N TIMES) BECAUSE AT THE END EACH PARTICIPANT
-    % % % HAS A DIFFERENET NUMBER OF TARKETS TO GET, LMK
-    
-    % Get random number of targets for one condition
-    targetPerCondition = randi(rangeTargets, 1, numRepetitions);
-    % Assign the number of targets for each condition after shuffling
-    numTargets = zeros(1, nrBlocks);
-    numTargets(staticIndex) = Shuffle(targetPerCondition);
-    numTargets(motionIndex) = Shuffle(targetPerCondition);
-    
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    numTargetsForEachBlock = zeros(1, NB_BLOCKS);
+    numTargetsForEachBlock(staticIndex) = shuffle(targetPerCondition);
+    numTargetsForEachBlock(motionIndex) = shuffle(targetPerCondition);
     
     %% Give the blocks the names with condition and design the task in each event
-    
     while 1
         
-        for iBlock = 1:nrBlocks
-            
-            
-            % Set block name
-            switch condition{iBlock}
-                case 'static'
-                    thisBlockName = {'static'};
-                case 'motion'
-                    thisBlockName = {'motion'};
-            end
-            
-            cfg.designBlockNames(iBlock) = thisBlockName;
+        fixationTargets = zeros(NB_BLOCKS, NB_EVENTS_PER_BLOCK);
+        
+        for iBlock = 1:NB_BLOCKS
             
             % Set target
-            %  - if there are 2 targets per block we make sure that they are at least
-            %  2 events apart
-            %  - targets cannot be on the first or last event of a block
-            %  - no more than 2 target in the same event order
+            % - if there are 2 targets per block we make sure that they are at least
+            % 2 events apart
+            % - targets cannot be on the first or last event of a block
+            % - no more than 2 target in the same event order
             
             chosenTarget = [];
             
-            tmpTarget = numTargets(iBlock);
+            tmpTarget = numTargetsForEachBlock(iBlock);
             
             switch tmpTarget
                 
                 case 1
                     
-                    chosenTarget = randsample(2:numEventsPerBlock-1, tmpTarget, false);
+                    chosenTarget = randsample(2:NB_EVENTS_PER_BLOCK - 1, tmpTarget, false);
                     
                 case 2
                     
                     targetDifference = 0;
                     
-                    
-                    while targetDifference <= 2
-                        chosenTarget = randsample(2:numEventsPerBlock-1, tmpTarget, false);
-                        targetDifference = (max(chosenTarget) - min(chosenTarget));
+                    while any(targetDifference <= 2)
+                        chosenTarget = randsample(2:NB_EVENTS_PER_BLOCK - 1, tmpTarget, false);
+                        targetDifference = diff(chosenTarget);
                     end
                     
             end
             
-            cfg.designFixationTargets(iBlock, chosenTarget) = 1;
+            fixationTargets(iBlock, chosenTarget) = 1;
             
         end
         
         % Check rule 3
-        if max(sum(cfg.designFixationTargets)) < 3
+        if max(sum(fixationTargets)) < 3
             break
-        else
-            cfg.designBlockNames      = cell(nrBlocks, 1);
-            cfg.designFixationTargets = zeros(nrBlocks, numEventsPerBlock);
         end
         
     end
     
+    %% Now we do the easy stuff
+    cfg.design.blockNames = assignConditions(cfg);
     
-    designSpeeds = cfg.designSpeeds';
-    designDirections = cfg.designDirections';
-    designFixationTargets = cfg.designFixationTargets';
+    cfg = setDirections(cfg);
+    directions = cfg.design.directions;
+    directions = directions';
     
-    cfg.trialList = [designDirections(:) designSpeeds(:) designFixationTargets(:)];
+    speeds = ones(NB_BLOCKS, NB_EVENTS_PER_BLOCK) * cfg.dot.speedPixPerFrame;
+    cfg.design.speeds = speeds;
+    speeds = speeds';
     
+    cfg.design.fixationTargets = fixationTargets;
+    fixationTargets = fixationTargets';
     
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    cfg.design.trialList = [directions(:) speeds(:) fixationTargets(:)];
+    
+    %% Plot
+    diplayDesign(cfg, displayFigs)
+    
+end
+
+function cfg = setDirections(cfg)
+    
+    % CONSTANTS
+    % Set directions for static and motion condition
+    MOTION_DIRECTIONS = [0 90 180 270];
+    STATIC_DIRECTIONS = [-1 -1 -1 -1];
+    
+    [NB_BLOCKS, NB_REPETITIONS, NB_EVENTS_PER_BLOCK] = getInput(cfg);
+    
+    [~, staticIndex, motionIndex] = assignConditions(cfg);
+    
+    if mod(NB_EVENTS_PER_BLOCK, length(MOTION_DIRECTIONS)) ~= 0
+        error('Number of events/block not a multiple of number of motion/static direction');
+    end
+    
+    % initialize
+    directions = zeros(NB_BLOCKS, NB_EVENTS_PER_BLOCK);
+    
+    % Create a vector for the static condition
+    static_directions = repmat( ...
+        STATIC_DIRECTIONS, ...
+        1, NB_EVENTS_PER_BLOCK / length(STATIC_DIRECTIONS));
+    
+    for iMotionBlock = 1:NB_REPETITIONS
+        
+        % Check that we never have twice the same direction
+        while 1
+            tmp = [ ...
+                shuffle(MOTION_DIRECTIONS), ...
+                shuffle(MOTION_DIRECTIONS), ...
+                shuffle(MOTION_DIRECTIONS)];
+            
+            if ~any(diff(tmp,[],2)==0)
+                break
+            end
+        end
+        
+        % Set motion direction and static order
+        directions(motionIndex(iMotionBlock), :) = tmp;
+        directions(staticIndex(iMotionBlock), :) = static_directions;
+        
+    end
+    
+    cfg.design.directions = directions;
+    
+end
+
+function [nbBlocks, nbRepet, nbEventsBlock, maxTargBlock] = getInput(cfg)
+    nbRepet = cfg.design.nbRepetitions;
+    nbEventsBlock = cfg.design.nbEventsPerBlock;
+    maxTargBlock = cfg.target.maxNbPerBlock;
+    nbBlocks = length(cfg.design.names) * nbRepet;
+end
+
+function [condition, staticIndex, motionIndex] = assignConditions(cfg)
+    
+    [~, nbRepet] = getInput(cfg);
+    
+    condition = repmat(cfg.design.names, nbRepet, 1);
+    
+    % Get the index of each condition
+    staticIndex = find(strcmp(condition, 'static'));
+    motionIndex = find(strcmp(condition, 'motion'));
+    
+end
+
+function shuffled = shuffle(unshuffled)
+    % in case PTB is not in the path
+    try
+        shuffled = Shuffle(unshuffled);
+    catch
+        shuffled = unshuffled(randperm(length(unshuffled)));
+    end
+end
+
+function diplayDesign(cfg, displayFigs)
     
     %% Visualize the design matrix
     if displayFigs
         
+        close all
+
         figure(1);
         
-        
         % Shows blocks (static and motion) and events (motion direction) order
-        subplot(3,3,1)
+        directions = cfg.design.directions;
+        directions(directions == -1) = -90;
         
-        designDirection = cfg.designDirections;
-        designDirection(designDirection==-1) = -90;
+        subplot(3, 1, 1);
+        imagesc(directions);
         
-        imagesc(designDirection)
+        labelAxesBlock();
         
-        labelAxesBlock()
-        
-        caxis([-90-37, 270+37])
+        caxis([-90 - 37, 270 + 37]);
         myColorMap = lines(5);
         colormap(myColorMap);
         
-        title('Block (static and motion) & Events (motion direction)')
-        
-        
-        % Shows the direction position distribution in the motion blocks
-        %  across the experiment
-        subplot(3,3,2)
-        
-        leftPosition = [];
-        for i=1:nrBlocks
-            leftPosition = [ leftPosition find(cfg.designDirections(i,:)==0) ];
-        end
-        hist(leftPosition)
-        scaleAxes()
-        labelAxesFreq()
-        title('0')
-        
-        subplot(3,3,3)
-        
-        rightPosition = [];
-        for i=1:nrBlocks
-            rightPosition = [ rightPosition find(cfg.designDirections(i,:)==90) ];
-        end
-        hist(rightPosition)
-        scaleAxes()
-        labelAxesFreq()
-        title('90')
-        
-        subplot(3,3,5)
-        
-        upPosition = [];
-        for i=1:nrBlocks
-            upPosition = [ upPosition find(cfg.designDirections(i,:)==180) ];
-        end
-        hist(upPosition)
-        scaleAxes()
-        labelAxesFreq()
-        title('180')
-        
-        subplot(3,3,6)
-        
-        downPosition = [];
-        for i=1:nrBlocks
-            downPosition = [ downPosition find(cfg.designDirections(i,:)==270) ];
-        end
-        hist(downPosition)
-        scaleAxes()
-        labelAxesFreq()
-        title('270')
-        
+        title('Block (static and motion) & Events (motion direction)');
         
         % Shows the fixation targets design in each event (1 or 0)
-        subplot(3,3,7)
+        fixationTargets = cfg.design.fixationTargets;
         
-        imagesc(cfg.designFixationTargets)
-        labelAxesBlock()
-        title('Fixation Targets design')
-        
+        subplot(3, 1, 2);
+        imagesc(fixationTargets);
+        labelAxesBlock();
+        title('Fixation Targets design');
+        colormap(gray);
         
         % Shows the fixation targets position distribution in the block across
-        %  the experimet
-        subplot(3,3,8)
+        % the experimet
+        [~, itargetPosition] = find(fixationTargets == 1);
         
-        itargetPosition = [];
-        for i=1:nrBlocks
-            itargetPosition = [ itargetPosition find(cfg.designFixationTargets(i,:)==1) ];
+        subplot(3, 1, 3);
+        hist(itargetPosition);
+        labelAxesFreq();
+        title('Fixation Targets position distribution');
+        
+        
+        figure(2);
+        
+        MOTION_DIRECTIONS = [0 90 180 270];
+        
+        for iMotion = 1:length(MOTION_DIRECTIONS)
+            
+            [~, position] = find(directions == MOTION_DIRECTIONS(iMotion));
+            
+            subplot(2, 2, iMotion);
+            hist(position);
+            scaleAxes();
+            labelAxesFreq();
+            title(num2str(MOTION_DIRECTIONS(iMotion)));
+            
         end
-        hist(itargetPosition)
-        labelAxesFreq()
-        title('Fixation Targets position distribution')
-        
+                
+
     end
     
 end
@@ -292,11 +284,11 @@ end
 
 function labelAxesFreq()
     % an old viking saying because they really cared about their axes
-    ylabel('freq.', 'Fontsize', 8);
+    ylabel('Number of targets', 'Fontsize', 8);
     xlabel('Events', 'Fontsize', 8);
 end
 
 function scaleAxes()
-    xlim([1 12])
-    ylim([0 5])
+    xlim([1 12]);
+    ylim([0 5]);
 end
