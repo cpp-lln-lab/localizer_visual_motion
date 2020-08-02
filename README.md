@@ -16,21 +16,12 @@ For instructions see the following links:
 | [Matlab](https://www.mathworks.com/products/matlab.html) | >=2017      |
 | or [octave](https://www.gnu.org/software/octave/)        | >=4.?        |
 
-## Installing dependencies
+## Installation
 
-All the dependencies needed to run this are listed in the [mpm-requirements.txt file](.mpm-requirements.txt). If those functions are not in the matlab path the scripts in this repository will not work.
+git clone --recurse-submodules https://github.com/Remi-Gau/repo_with_submod.git
+cd repo_with_submod/
+git submodule update --remote
 
-If you are using the [matlab package manager](https://github.com/mobeets/mpm), you can simply download the appropriate version of those dependencies and add them to your path by running the `getDependencies` function.
-
-```matlab
-getDependencies('update')
-```
-
-If you already have the appropriate version but just want to add them to the matlab path, then run.
-
-```matlab
-getDependencies()
-```
 ## Structure and function details
 
 ### visualLocTranslational
@@ -92,8 +83,3 @@ The `numEventsPerBlock` should be a multiple of the number of "base" listed in t
 - `expParameters.designSpeeds` is an array `(nr_blocks, numEventsPerBlock) * speedEvent`
 - `expParameters.designFixationTargets` is an array `(nr_blocks, numEventsPerBlock)` showing for each event if it should be accompanied by a target
 
-### subfun/eyeTracker
-Eyetracker script, still to be debugged. Will probably moved in the CPP_PTB package. It deals with the calibration (dufault or custom), eye movements recording and saving the files.
-
-### subfun/wait4Trigger
-Simple functions that counts the triggers sent by the MRI computer to the stimulation computer to sync brain volume recordings and stimulation.
