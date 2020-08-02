@@ -70,7 +70,7 @@ function [cfg] = setParameters()
     % Diameter/length of side of aperture in Visual angles
     cfg.aperture.type = 'circle';
     cfg.aperture.width = []; % if left empty it will take the screen height
-    cfg.aperture.xPos = -30;
+    cfg.aperture.xPos = 0;
 
     %% Task(s)
 
@@ -85,7 +85,7 @@ function [cfg] = setParameters()
     cfg.fixation.color = cfg.color.white;
     cfg.fixation.width = 1;
     cfg.fixation.lineWidthPix = 2;
-    cfg.fixation.xDisplacement = 30;
+    cfg.fixation.xDisplacement = 0;
     cfg.fixation.yDisplacement = 0;
 
     cfg.target.maxNbPerBlock = 2;

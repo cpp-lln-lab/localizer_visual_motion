@@ -13,14 +13,17 @@ For instructions see the following links:
 | [CPP_BIDS](https://github.com/cpp-lln-lab/CPP_BIDS)      | ?            |
 | [CPP_PTB](https://github.com/cpp-lln-lab/CPP_PTB)        | ?            |
 | [PsychToolBox](http://psychtoolbox.org/)                 | >=3.0.14     |
-| [Matlab](https://www.mathworks.com/products/matlab.html) | >=2017      |
+| [Matlab](https://www.mathworks.com/products/matlab.html) | >=2017       |
 | or [octave](https://www.gnu.org/software/octave/)        | >=4.?        |
 
 ## Installation
 
-git clone --recurse-submodules https://github.com/Remi-Gau/repo_with_submod.git
-cd repo_with_submod/
-git submodule update --remote
+The CPP_BIDS and CPP_PTB dependencies are already set up as submodule to this repository.
+You can install it all with git by doing. 
+
+```bash
+git clone --recurse-submodules https://github.com/cpp-lln-lab/localizer_visual_motion.git
+```
 
 ## Structure and function details
 
