@@ -40,7 +40,7 @@ function [cfg] = setParameters()
     % Time between events in secs
     cfg.ISI = 0.1;
     % Number of seconds before the motion stimuli are presented
-    cfg.onsetDelay = 5;
+    cfg.onsetDelay = 1;
     % Number of seconds after the end all the stimuli before ending the run
     cfg.endDelay = 1;
 
@@ -51,20 +51,21 @@ function [cfg] = setParameters()
     cfg.eventDuration = 1; % second
 
     % speed in visual angles
-    cfg.dot.speed = 8;
+    cfg.dot.speed = 1;
     % Coherence Level (0-1)
-    cfg.dot.coh = 1;
-    % Maximum number dots per frame
-    cfg.dot.maxNbPerFrame = 300;
+    cfg.dot.coh = .7;
+    % nb dots per visual angle square.
+    cfg.dot.density = 5; 
+    
     % Dot life time in seconds
     cfg.dot.lifeTime = 1;
     % Dot Size (dot width) in visual angles.
     cfg.dot.size = 0.1;
     cfg.dot.color = cfg.color.white;
-    cfg.dot.dontClear = 0;
 
     % Diameter/length of side of aperture in Visual angles
-    cfg.diameterAperture = 8;
+    cfg.aperture.type = 'circle';
+    cfg.aperture.width = []; % if left empty it will take the screen height
 
     %% Task(s)
 
@@ -74,14 +75,11 @@ function [cfg] = setParameters()
     cfg.task.instruction = '1-Detect the RED fixation cross\n \n\n';
 
     % Fixation cross (in pixels)
-    % Set the length of the lines of the fixation cross
-    cfg.fixation.dimensionPix = 10;
-    % Set the line width for our fixation cross
-    cfg.fixation.lineWidthPix = 4;
-    cfg.fixation.xDisplacement = 0; % Manual displacement of the fixation cross
-    cfg.fixation.yDisplacement = 0; % Manual displacement of the fixation cross
-    cfg.fixation.color = cfg.color.white;
+    cfg.fixation.type = 'cross';
     cfg.fixation.colorTarget = cfg.color.red;
+    cfg.fixation.color = cfg.color.white;
+    cfg.fixation.width = .15;
+    cfg.fixation.lineWidthPix = 2;
 
     cfg.target.maxNbPerBlock = 2;
     cfg.target.duration = 0.15; % In secs
