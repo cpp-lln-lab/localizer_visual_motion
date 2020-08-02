@@ -16,7 +16,7 @@ function [onset, duration] = doDotMo(cfg, thisEvent)
 
     %% Get parameters
 
-    dots = initializeDots(cfg, thisEvent);
+    dots = initDots(cfg, thisEvent);
 
     % Set for how many frames this event will last
     framesLeft = floor(cfg.eventDuration / cfg.screen.ifi);

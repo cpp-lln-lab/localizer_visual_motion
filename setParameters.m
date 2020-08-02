@@ -50,19 +50,16 @@ function [cfg] = setParameters()
     cfg.numEventsPerBlock = 12;
     cfg.eventDuration = 1; % second
 
-    % speed in visual angles / second
+    % Speed in visual angles / second
     cfg.dot.speed = 15;
     % Coherence Level (0-1)
     cfg.dot.coherence = 1;
-    % nb dots per visual angle square.
-    cfg.dot.density = .25;
-
+    % Number of dots per visual angle square.
+    cfg.dot.density = .05;
     % Dot life time in seconds
     cfg.dot.lifeTime = 10;
-
     % proportion of dots killed per frame
-    cfg.dot.proportionKilledPerFrame = .05;
-
+    cfg.dot.proportionKilledPerFrame = 0;
     % Dot Size (dot width) in visual angles.
     cfg.dot.size = 1;
     cfg.dot.color = cfg.color.white;
