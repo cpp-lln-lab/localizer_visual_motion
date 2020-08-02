@@ -119,18 +119,15 @@ function [cfg] = expDesign(cfg, displayFigs)
     %% Now we do the easy stuff
     cfg.design.blockNames = assignConditions(cfg);
     
+    cfg.design.nbBlocks = NB_BLOCKS;
+    
     cfg = setDirections(cfg);
-    directions = cfg.design.directions;
-    directions = directions';
     
     speeds = ones(NB_BLOCKS, NB_EVENTS_PER_BLOCK) * cfg.dot.speedPixPerFrame;
     cfg.design.speeds = speeds;
-    speeds = speeds';
     
     cfg.design.fixationTargets = fixationTargets;
-    fixationTargets = fixationTargets';
-    
-    cfg.design.trialList = [directions(:) speeds(:) fixationTargets(:)];
+
     
     %% Plot
     diplayDesign(cfg, displayFigs)

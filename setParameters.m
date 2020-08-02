@@ -11,6 +11,7 @@ function [cfg] = setParameters()
         'output');
 
     %% Debug mode settings
+    
     cfg.debug.do = true; % To test the script out of the scanner, skip PTB sync
     cfg.debug.smallWin = false; % To test on a part of the screen, change to 1
     cfg.debug.transpWin = true; % To test with trasparent full size screen
@@ -32,10 +33,14 @@ function [cfg] = setParameters()
     cfg = setMRI(cfg);
 
     %% Experiment Design
-    cfg.names = {'static', 'motion'};
-    cfg.possibleDirections = [-1 1]; % 1 motion , -1 static
-    cfg.numBlocks = size(cfg.possibleDirections, 2);
-    cfg.numRepetitions = 1; % AT THE MOMENT IT IS NOT SET IN THE MAIN SCRIPT
+
+    cfg.design.names = {'static'; 'motion'};
+    cfg.design.nbRepetitions = 4;
+    cfg.design.nbEventsPerBlock = 12; % DO NOT CHANGE
+
+    %% Timing
+    
+    % Time between blocs in secs
     cfg.IBI = .5; % 8;
     % Time between events in secs
     cfg.ISI = 0.5;
@@ -44,18 +49,16 @@ function [cfg] = setParameters()
     % Number of seconds after the end all the stimuli before ending the run
     cfg.endDelay = .1;
 
-    %% Visual Stimulation
-
-    % Number of events per block (should not be changed)
-    cfg.numEventsPerBlock = 12;
     cfg.eventDuration = 1; % second
+    
+    %% Visual Stimulation
 
     % Speed in visual angles / second
     cfg.dot.speed = 15;
     % Coherence Level (0-1)
     cfg.dot.coherence = 1;
     % Number of dots per visual angle square.
-    cfg.dot.density = .05;
+    cfg.dot.density = .1;
     % Dot life time in seconds
     cfg.dot.lifeTime = 10;
     % proportion of dots killed per frame
@@ -89,6 +92,7 @@ function [cfg] = setParameters()
     cfg.target.duration = 0.05; % In secs
 
     cfg.extraColumns = {'direction', 'speed', 'target', 'event', 'block'};
+    
 end
 
 function cfg = setKeyboards(cfg)
