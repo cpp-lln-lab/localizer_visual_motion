@@ -35,10 +35,16 @@ try
 
     % Convert some values from degrees to pixels
     cfg.dot = degToPix('size', cfg.dot, cfg);
+    cfg.dot = degToPix('speed', cfg.dot, cfg);
+    
+    % Get dot speeds in pixels per frame
+    cfg.dot.speedPixPerFrame = cfg.dot.speedPix / cfg.screen.monitorRefresh;
+    
+    cfg.aperture = degToPix('xPos', cfg.aperture, cfg);
     
     % dots are displayed on a square with a length in visual angle equal to the
     % field of view
-    cfg.dot.number = cfg.dot.density * cfg.screen.FOV^2;
+    cfg.dot.number = round(cfg.dot.density * (cfg.screen.winWidth / cfg.screen.ppd)^2);
 
     [el] = eyeTracker('Calibration', cfg);
 
