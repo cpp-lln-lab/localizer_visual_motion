@@ -48,9 +48,7 @@ try
 
     [el] = eyeTracker('Calibration', cfg);
 
-    % % % REFACTOR THIS FUNCTION
     [cfg] = expDesign(cfg);
-    % % %
 
     % Prepare for the output logfiles with all
     logFile.extraColumns = cfg.extraColumns;
@@ -78,20 +76,20 @@ try
 
     %% For Each Block
 
-    for iBlock = 1:cfg.numBlocks
+    for iBlock = 1:cfg.design.nbBlocks
 
         fprintf('\n - Running Block %.0f \n', iBlock);
 
         eyeTracker('StartRecording', cfg);
 
         % For each event in the block
-        for iEvent = 1:cfg.numEventsPerBlock
+        for iEvent = 1:cfg.design.nbEventsPerBlock
 
             % Check for experiment abortion from operator
             checkAbort(cfg, cfg.keyboard.keyboard);
 
             % set direction, speed of that event and if it is a target
-            thisEvent.trial_type = 'dummy';
+            thisEvent.trial_type = cfg.design.blockNames{iBlock};
             thisEvent.direction = cfg.design.directions(iBlock, iEvent);
             thisEvent.speed = cfg.design.speeds(iBlock, iEvent);
             thisEvent.target = cfg.design.fixationTargets(iBlock, iEvent);
