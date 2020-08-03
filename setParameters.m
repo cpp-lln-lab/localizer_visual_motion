@@ -11,7 +11,7 @@ function [cfg] = setParameters()
         'output');
 
     %% Debug mode settings
-    
+
     cfg.debug.do = true; % To test the script out of the scanner, skip PTB sync
     cfg.debug.smallWin = false; % To test on a part of the screen, change to 1
     cfg.debug.transpWin = true; % To test with trasparent full size screen
@@ -39,7 +39,7 @@ function [cfg] = setParameters()
     cfg.design.nbEventsPerBlock = 12; % DO NOT CHANGE
 
     %% Timing
-    
+
     % Time between blocs in secs
     cfg.IBI = .5; % 8;
     % Time between events in secs
@@ -50,7 +50,7 @@ function [cfg] = setParameters()
     cfg.endDelay = .1;
 
     cfg.eventDuration = 1; % second
-    
+
     %% Visual Stimulation
 
     % Speed in visual angles / second
@@ -92,7 +92,7 @@ function [cfg] = setParameters()
     cfg.target.duration = 0.05; % In secs
 
     cfg.extraColumns = {'direction', 'speed', 'target', 'event', 'block'};
-    
+
 end
 
 function cfg = setKeyboards(cfg)
