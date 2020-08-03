@@ -33,7 +33,7 @@ function [onset, duration] = doDotMo(cfg, thisEvent)
         % We assumed that zero is at the top left, but we want it to be
         %  in the center, so shift the dots up and left, which just means
         %  adding half of the screen width in pixel to both the x and y direction.
-        thisEvent.dot.positions = (dots.positions - cfg.screen.winWidth / 2)';
+        thisEvent.dot.positions = (dots.positions - cfg.dot.matrixWidth / 2)';
 
         %% make textures
         dotTexture('make', cfg, thisEvent);

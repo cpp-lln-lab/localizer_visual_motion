@@ -33,6 +33,8 @@ try
     %% Init the experiment
     [cfg] = initPTB(cfg);
 
+    cfg.dot.matrixWidth = cfg.screen.winHeight;
+    
     % Convert some values from degrees to pixels
     cfg.dot = degToPix('size', cfg.dot, cfg);
     cfg.dot = degToPix('speed', cfg.dot, cfg);
