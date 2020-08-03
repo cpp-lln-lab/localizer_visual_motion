@@ -4,6 +4,8 @@ function [cfg] = expDesign(cfg, displayFigs)
     % The conditions are consecutive static and motion blocks
     % (Gives better results than randomised).
     %
+    % Style guide: constants are in SNAKE_UPPER_CASE
+    %
     % EVENTS
     % The numEventsPerBlock should be a multiple of the number of "base"
     % listed in the MOTION_DIRECTIONS and STATIC_DIRECTIONS (4 at the moment).
@@ -55,6 +57,8 @@ function [cfg] = expDesign(cfg, displayFigs)
 
     % Set variables here for a dummy test of this function
     if nargin < 1 || isempty(cfg)
+%         cfg.design.motionType = 'translation';
+        cfg.design.motionType = 'radial';
         cfg.design.names = {'static'; 'motion'};
         cfg.design.nbRepetitions = 4;
         cfg.design.nbEventsPerBlock = 12;
@@ -64,7 +68,7 @@ function [cfg] = expDesign(cfg, displayFigs)
     end
 
     [NB_BLOCKS, NB_REPETITIONS, NB_EVENTS_PER_BLOCK, MAX_TARGET_PER_BLOCK] = getInput(cfg);
-    [~, STATIC_INDEX, motionIndex] = assignConditions(cfg);
+    [~, STATIC_INDEX, MOTION_INDEX] = assignConditions(cfg);
 
     RANGE_TARGETS = [1 MAX_TARGET_PER_BLOCK];
     targetPerCondition = repmat(RANGE_TARGETS, 1, NB_REPETITIONS / 2);
@@ -137,10 +141,7 @@ end
 
 function cfg = setDirections(cfg)
 
-    % CONSTANTS
-    % Set directions for static and motion condition
-    MOTION_DIRECTIONS = [0 90 180 270];
-    STATIC_DIRECTIONS = [-1 -1 -1 -1];
+    [MOTION_DIRECTIONS, STATIC_DIRECTIONS] = getDirectionBaseVectors(cfg);
 
     [NB_BLOCKS, NB_REPETITIONS, NB_EVENTS_PER_BLOCK] = getInput(cfg);
 
@@ -180,6 +181,23 @@ function cfg = setDirections(cfg)
 
     cfg.design.directions = directions;
 
+end
+
+function [MOTION_DIRECTIONS, STATIC_DIRECTIONS] = getDirectionBaseVectors(cfg)
+    
+    % CONSTANTS
+    % Set directions for static and motion condition
+    
+    STATIC_DIRECTIONS = [-1 -1 -1 -1];
+    
+    switch cfg.design.motionType
+        case 'translation'
+            MOTION_DIRECTIONS = [0 90 180 270];
+        case 'radial'
+            STATIC_DIRECTIONS = [666 -666 666 -666];
+            MOTION_DIRECTIONS = [666 -666 666 -666];
+    end    
+    
 end
 
 function [nbBlocks, nbRepet, nbEventsBlock, maxTargBlock] = getInput(cfg)
@@ -253,18 +271,19 @@ function diplayDesign(cfg, displayFigs)
         title('Fixation Targets position distribution');
 
         figure(2);
+        
+        [motionDirections] = getDirectionBaseVectors(cfg);
+        motionDirections = unique(motionDirections);
 
-        MOTION_DIRECTIONS = [0 90 180 270];
+        for iMotion = 1:length(motionDirections)
 
-        for iMotion = 1:length(MOTION_DIRECTIONS)
-
-            [~, position] = find(directions == MOTION_DIRECTIONS(iMotion));
+            [~, position] = find(directions == motionDirections(iMotion));
 
             subplot(2, 2, iMotion);
             hist(position);
             scaleAxes();
             labelAxesFreq();
-            title(num2str(MOTION_DIRECTIONS(iMotion)));
+            title(num2str(motionDirections(iMotion)));
 
         end
 

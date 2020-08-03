@@ -34,6 +34,9 @@ function [cfg] = setParameters()
 
     %% Experiment Design
 
+%     cfg.design.motionType = 'translation'; 
+%     cfg.design.motionType = 'radial';
+    cfg.design.motionType = 'translation';
     cfg.design.names = {'static'; 'motion'};
     cfg.design.nbRepetitions = 4;
     cfg.design.nbEventsPerBlock = 12; % DO NOT CHANGE
@@ -41,15 +44,15 @@ function [cfg] = setParameters()
     %% Timing
 
     % Time between blocs in secs
-    cfg.IBI = .5; % 8;
+    cfg.IBI = .1; % 8;
     % Time between events in secs
-    cfg.ISI = 0.5;
+    cfg.ISI = 0.1;
     % Number of seconds before the motion stimuli are presented
     cfg.onsetDelay = .1;
     % Number of seconds after the end all the stimuli before ending the run
     cfg.endDelay = .1;
 
-    cfg.eventDuration = 1; % second
+    cfg.eventDuration = 3; % second
 
     %% Visual Stimulation
 
@@ -68,7 +71,7 @@ function [cfg] = setParameters()
     cfg.dot.color = cfg.color.white;
 
     % Diameter/length of side of aperture in Visual angles
-    cfg.aperture.type = 'circle';
+    cfg.aperture.type = 'none';
     cfg.aperture.width = []; % if left empty it will take the screen height
     cfg.aperture.xPos = 0;
 
