@@ -71,7 +71,7 @@ function [cfg] = setParameters()
     cfg.dot.color = cfg.color.white;
 
     % Diameter/length of side of aperture in Visual angles
-    cfg.aperture.type = 'none';
+    cfg.aperture.type = 'circle';
     cfg.aperture.width = []; % if left empty it will take the screen height
     cfg.aperture.xPos = 0;
 

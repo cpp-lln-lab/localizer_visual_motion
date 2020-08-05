@@ -156,16 +156,8 @@ try
     getResponse('release', cfg.keyboard.responseBox);
 
     eyeTracker('Shutdown', cfg);
-
-    % save the whole workspace
-    matFile = fullfile( ...
-        cfg.dir.output, ...
-        strrep(cfg.fileName.events, 'tsv', 'mat'));
-    if IsOctave
-        save(matFile, '-mat7-binary');
-    else
-        save(matFile, '-v7.3');
-    end
+    
+    createBoldJson(cfg, cfg)
 
     farewellScreen(cfg);
 
