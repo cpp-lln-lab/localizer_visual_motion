@@ -11,7 +11,7 @@ function [cfg] = setParameters()
         'output');
 
     %% Debug mode settings
-    
+
     cfg.debug.do = true; % To test the script out of the scanner, skip PTB sync
     cfg.debug.smallWin = false; % To test on a part of the screen, change to 1
     cfg.debug.transpWin = true; % To test with trasparent full size screen
@@ -34,22 +34,31 @@ function [cfg] = setParameters()
 
     %% Experiment Design
 
+%     cfg.design.motionType = 'translation'; 
+%     cfg.design.motionType = 'radial';
+    cfg.design.motionType = 'translation';
     cfg.design.names = {'static'; 'motion'};
     cfg.design.nbRepetitions = 4;
     cfg.design.nbEventsPerBlock = 12; % DO NOT CHANGE
 
     %% Timing
     
+    % FOR 7T: if you want to create localizers on the fly, the following must be
+    % multiples of the scanneryour sequence TR
+    % 
+    % IBI
+    % block length = (cfg.eventDuration + cfg.ISI) * cfg.design.nbEventsPerBlock
+
     % Time between blocs in secs
-    cfg.IBI = .5; % 8;
+    cfg.IBI = 1.8*3; % 8;
     % Time between events in secs
-    cfg.ISI = 0.5;
+    cfg.ISI = 0.1;
     % Number of seconds before the motion stimuli are presented
     cfg.onsetDelay = .1;
     % Number of seconds after the end all the stimuli before ending the run
     cfg.endDelay = .1;
 
-    cfg.eventDuration = 1; % second
+    cfg.eventDuration = 0.8; % second
     
     %% Visual Stimulation
 
@@ -91,13 +100,13 @@ function [cfg] = setParameters()
     cfg.target.maxNbPerBlock = 2;
     cfg.target.duration = 0.05; % In secs
 
-    cfg.extraColumns = {'direction', 'speed', 'target', 'event', 'block'};
-    
+    cfg.extraColumns = {'direction', 'speed', 'target', 'event', 'block', 'keyName'};
+
 end
 
 function cfg = setKeyboards(cfg)
     cfg.keyboard.escapeKey = 'ESCAPE';
-    cfg.keyboard.responseKey = {'space'};
+    cfg.keyboard.responseKey = {'space', 't'};
     cfg.keyboard.keyboard = [];
     cfg.keyboard.responseBox = [];
 
@@ -112,7 +121,7 @@ function cfg = setMRI(cfg)
     cfg.mri.triggerKey = 't';
     cfg.mri.triggerNb = 4;
 
-    cfg.mri.repetitionTime = 2;
+    cfg.mri.repetitionTime = 1.8;
 
     cfg.bids.MRI.Instructions = 'Detect the RED fixation cross';
     cfg.bids.MRI.TaskDescription = [];
