@@ -1,2 +1,0 @@
-CPP_BIDS -u https://github.com/cpp-lln-lab/CPP_BIDS.git
-CPP_PTB -u https://github.com/cpp-lln-lab/CPP_PTB.git
