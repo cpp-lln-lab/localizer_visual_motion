@@ -42,9 +42,15 @@ function [cfg] = setParameters()
     cfg.design.nbEventsPerBlock = 12; % DO NOT CHANGE
 
     %% Timing
+    
+    % FOR 7T: if you want to create localizers on the fly, the following must be
+    % multiples of the scanneryour sequence TR
+    % 
+    % IBI
+    % block length = (cfg.eventDuration + cfg.ISI) * cfg.design.nbEventsPerBlock
 
     % Time between blocs in secs
-    cfg.IBI = .1; % 8;
+    cfg.IBI = 1.8*3; % 8;
     % Time between events in secs
     cfg.ISI = 0.1;
     % Number of seconds before the motion stimuli are presented
@@ -52,8 +58,8 @@ function [cfg] = setParameters()
     % Number of seconds after the end all the stimuli before ending the run
     cfg.endDelay = .1;
 
-    cfg.eventDuration = 3; % second
-
+    cfg.eventDuration = 0.8; % second
+    
     %% Visual Stimulation
 
     % Speed in visual angles / second
@@ -94,13 +100,13 @@ function [cfg] = setParameters()
     cfg.target.maxNbPerBlock = 2;
     cfg.target.duration = 0.05; % In secs
 
-    cfg.extraColumns = {'direction', 'speed', 'target', 'event', 'block'};
+    cfg.extraColumns = {'direction', 'speed', 'target', 'event', 'block', 'keyName'};
 
 end
 
 function cfg = setKeyboards(cfg)
     cfg.keyboard.escapeKey = 'ESCAPE';
-    cfg.keyboard.responseKey = {'space'};
+    cfg.keyboard.responseKey = {'space', 't'};
     cfg.keyboard.keyboard = [];
     cfg.keyboard.responseBox = [];
 
@@ -115,7 +121,7 @@ function cfg = setMRI(cfg)
     cfg.mri.triggerKey = 't';
     cfg.mri.triggerNb = 4;
 
-    cfg.mri.repetitionTime = 2;
+    cfg.mri.repetitionTime = 1.8;
 
     cfg.bids.MRI.Instructions = 'Detect the RED fixation cross';
     cfg.bids.MRI.TaskDescription = [];

@@ -46,7 +46,8 @@ try
 
     % dots are displayed on a square with a length in visual angle equal to the
     % field of view
-    cfg.dot.number = round(cfg.dot.density * (cfg.screen.winWidth / cfg.screen.ppd)^2);
+    cfg.dot.number = round(cfg.dot.density * ...
+        (cfg.dot.matrixWidth / cfg.screen.ppd)^2);
 
     [el] = eyeTracker('Calibration', cfg);
 
@@ -55,7 +56,7 @@ try
     % Prepare for the output logfiles with all
     logFile.extraColumns = cfg.extraColumns;
     logFile = saveEventsFile('open', cfg, logFile);
-
+    
     % prepare textures
     cfg = apertureTexture('init', cfg);
     cfg = dotTexture('init', cfg);
@@ -101,6 +102,7 @@ try
 
             thisEvent.event = iEvent;
             thisEvent.block = iBlock;
+            thisEvent.keyName = 'n/a';
             thisEvent.duration = duration;
             thisEvent.onset = onset - cfg.experimentStart;
 
@@ -115,32 +117,64 @@ try
 
             % collect the responses and appends to the event structure for
             % saving in the tsv file
-            responseEvents = collectAndSaveResponses(cfg, logFile, cfg.experimentStart);
-
-            responseEvents = getResponse('check', cfg.keyboard.responseBox, cfg, getOnlyPress);
-
+            responseEvents = getResponse('check', cfg.keyboard.responseBox, cfg, ...
+                getOnlyPress);
+     
             if isfield(responseEvents(1), 'onset') && ~isempty(responseEvents(1).onset)
-
+                
                 for iResp = 1:size(responseEvents, 1)
-
-                    responseEvents(iResp).event = iEvent;
-                    responseEvents(iResp).block = iBlock;
+                    responseEvents(iResp).onset = ...
+                        responseEvents(iResp).onset - cfg.experimentStart;
+                    responseEvents(iResp).event = 'n/a';
+                    responseEvents(iResp).block = 'n/a';
+                    responseEvents(iResp).direction = 'n/a';
+                    responseEvents(iResp).speed = 'n/a';
+                    responseEvents(iResp).target = 'n/a';
+                    if strcmp(responseEvents(iResp).keyName, 't')
+                        responseEvents(iResp).trial_type = 'trigger';
+                    end
                 end
-
+                
+                responseEvents(1).fileID = logFile.fileID;
+                responseEvents(1).extraColumns = logFile.extraColumns;
                 saveEventsFile('save', cfg, responseEvents);
-
+                
             end
-
+            
             % wait for the inter-stimulus interval
             WaitSecs(cfg.ISI);
 
-            getResponse('flush', cfg.keyboard.responseBox);
-
+        end
+        
+        eyeTracker('StopRecordings', cfg);
+        
+        WaitSecs(cfg.IBI);
+        
+        % trigger monitoring
+        triggerEvents = getResponse('check', cfg.keyboard.responseBox, cfg, ...
+            getOnlyPress);
+        
+        if isfield(triggerEvents(1), 'onset') && ~isempty(triggerEvents(1).onset)
+            
+            for iResp = 1:size(triggerEvents, 1)
+                triggerEvents(iResp).onset = ...
+                    triggerEvents(iResp).onset - cfg.experimentStart;
+                triggerEvents(iResp).event = 'n/a';
+                triggerEvents(iResp).block = 'n/a';
+                triggerEvents(iResp).direction = 'n/a';
+                triggerEvents(iResp).speed = 'n/a';
+                triggerEvents(iResp).target = 'n/a';
+                if strcmp(triggerEvents(iResp).keyName, 't')
+                    triggerEvents(iResp).trial_type = 'trigger-baseline';
+                end
+            end
+            
+            triggerEvents(1).fileID = logFile.fileID;
+            triggerEvents(1).extraColumns = logFile.extraColumns;
+            saveEventsFile('save', cfg, triggerEvents);
+            
         end
 
-        eyeTracker('StopRecordings', cfg);
-
-        WaitSecs(cfg.IBI);
 
     end
 
