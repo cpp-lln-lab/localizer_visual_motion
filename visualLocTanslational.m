@@ -67,13 +67,14 @@ try
 
     % prepare the KbQueue to collect responses
     getResponse('init', cfg.keyboard.responseBox, cfg);
-    getResponse('start', cfg.keyboard.responseBox);
 
     % Wait for Trigger from Scanner
     waitForTrigger(cfg);
 
     %% Experiment Start
     cfg = getExperimentStart(cfg);
+    
+    getResponse('start', cfg.keyboard.responseBox);
 
     WaitSecs(cfg.onsetDelay);
 
@@ -131,7 +132,8 @@ try
                     responseEvents(iResp).speed = 'n/a';
                     responseEvents(iResp).target = 'n/a';
                     if strcmp(responseEvents(iResp).keyName, 't')
-                        responseEvents(iResp).trial_type = 'trigger';
+                        responseEvents(iResp).trial_type = ...
+                            ['trigger_' cfg.design.blockNames{iBlock}];
                     end
                 end
 
@@ -165,7 +167,7 @@ try
                 triggerEvents(iResp).speed = 'n/a';
                 triggerEvents(iResp).target = 'n/a';
                 if strcmp(triggerEvents(iResp).keyName, 't')
-                    triggerEvents(iResp).trial_type = 'trigger-baseline';
+                    triggerEvents(iResp).trial_type = 'trigger_baseline';
                 end
             end
 
