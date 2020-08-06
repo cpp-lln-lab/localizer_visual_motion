@@ -34,23 +34,23 @@ function [cfg] = setParameters()
 
     %% Experiment Design
 
-%     cfg.design.motionType = 'translation'; 
-%     cfg.design.motionType = 'radial';
+    %     cfg.design.motionType = 'translation';
+    %     cfg.design.motionType = 'radial';
     cfg.design.motionType = 'translation';
     cfg.design.names = {'static'; 'motion'};
     cfg.design.nbRepetitions = 4;
     cfg.design.nbEventsPerBlock = 12; % DO NOT CHANGE
 
     %% Timing
-    
+
     % FOR 7T: if you want to create localizers on the fly, the following must be
     % multiples of the scanneryour sequence TR
-    % 
+    %
     % IBI
     % block length = (cfg.eventDuration + cfg.ISI) * cfg.design.nbEventsPerBlock
 
     % Time between blocs in secs
-    cfg.IBI = 1.8*3; % 8;
+    cfg.IBI = 1.8 * 3; % 8;
     % Time between events in secs
     cfg.ISI = 0.1;
     % Number of seconds before the motion stimuli are presented
@@ -59,7 +59,7 @@ function [cfg] = setParameters()
     cfg.endDelay = .1;
 
     cfg.eventDuration = 0.8; % second
-    
+
     %% Visual Stimulation
 
     % Speed in visual angles / second

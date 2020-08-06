@@ -57,7 +57,7 @@ function [cfg] = expDesign(cfg, displayFigs)
 
     % Set variables here for a dummy test of this function
     if nargin < 1 || isempty(cfg)
-%         cfg.design.motionType = 'translation';
+        %         cfg.design.motionType = 'translation';
         cfg.design.motionType = 'radial';
         cfg.design.names = {'static'; 'motion'};
         cfg.design.nbRepetitions = 4;
@@ -184,20 +184,20 @@ function cfg = setDirections(cfg)
 end
 
 function [MOTION_DIRECTIONS, STATIC_DIRECTIONS] = getDirectionBaseVectors(cfg)
-    
+
     % CONSTANTS
     % Set directions for static and motion condition
-    
+
     STATIC_DIRECTIONS = [-1 -1 -1 -1];
-    
+
     switch cfg.design.motionType
         case 'translation'
             MOTION_DIRECTIONS = [0 90 180 270];
         case 'radial'
             STATIC_DIRECTIONS = [666 -666 666 -666];
             MOTION_DIRECTIONS = [666 -666 666 -666];
-    end    
-    
+    end
+
 end
 
 function [nbBlocks, nbRepet, nbEventsBlock, maxTargBlock] = getInput(cfg)
@@ -271,7 +271,7 @@ function diplayDesign(cfg, displayFigs)
         title('Fixation Targets position distribution');
 
         figure(2);
-        
+
         [motionDirections] = getDirectionBaseVectors(cfg);
         motionDirections = unique(motionDirections);
 

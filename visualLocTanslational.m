@@ -34,7 +34,7 @@ try
     [cfg] = initPTB(cfg);
 
     cfg.dot.matrixWidth = cfg.screen.winHeight;
-    
+
     % Convert some values from degrees to pixels
     cfg.dot = degToPix('size', cfg.dot, cfg);
     cfg.dot = degToPix('speed', cfg.dot, cfg);
@@ -56,7 +56,7 @@ try
     % Prepare for the output logfiles with all
     logFile.extraColumns = cfg.extraColumns;
     logFile = saveEventsFile('open', cfg, logFile);
-    
+
     % prepare textures
     cfg = apertureTexture('init', cfg);
     cfg = dotTexture('init', cfg);
@@ -67,13 +67,14 @@ try
 
     % prepare the KbQueue to collect responses
     getResponse('init', cfg.keyboard.responseBox, cfg);
-    getResponse('start', cfg.keyboard.responseBox);
 
     % Wait for Trigger from Scanner
     waitForTrigger(cfg);
 
     %% Experiment Start
     cfg = getExperimentStart(cfg);
+
+    getResponse('start', cfg.keyboard.responseBox);
 
     WaitSecs(cfg.onsetDelay);
 
@@ -119,62 +120,25 @@ try
             % saving in the tsv file
             responseEvents = getResponse('check', cfg.keyboard.responseBox, cfg, ...
                 getOnlyPress);
-     
-            if isfield(responseEvents(1), 'onset') && ~isempty(responseEvents(1).onset)
-                
-                for iResp = 1:size(responseEvents, 1)
-                    responseEvents(iResp).onset = ...
-                        responseEvents(iResp).onset - cfg.experimentStart;
-                    responseEvents(iResp).event = 'n/a';
-                    responseEvents(iResp).block = 'n/a';
-                    responseEvents(iResp).direction = 'n/a';
-                    responseEvents(iResp).speed = 'n/a';
-                    responseEvents(iResp).target = 'n/a';
-                    if strcmp(responseEvents(iResp).keyName, 't')
-                        responseEvents(iResp).trial_type = 'trigger';
-                    end
-                end
-                
-                responseEvents(1).fileID = logFile.fileID;
-                responseEvents(1).extraColumns = logFile.extraColumns;
-                saveEventsFile('save', cfg, responseEvents);
-                
-            end
-            
+
+            triggerString = ['trigger_' cfg.design.blockNames{iBlock}];
+            saveResponsesAndTriggers(responseEvents, cfg, logFile, triggerString);
+
             % wait for the inter-stimulus interval
             WaitSecs(cfg.ISI);
 
         end
-        
+
         eyeTracker('StopRecordings', cfg);
-        
+
         WaitSecs(cfg.IBI);
-        
+
         % trigger monitoring
         triggerEvents = getResponse('check', cfg.keyboard.responseBox, cfg, ...
             getOnlyPress);
-        
-        if isfield(triggerEvents(1), 'onset') && ~isempty(triggerEvents(1).onset)
-            
-            for iResp = 1:size(triggerEvents, 1)
-                triggerEvents(iResp).onset = ...
-                    triggerEvents(iResp).onset - cfg.experimentStart;
-                triggerEvents(iResp).event = 'n/a';
-                triggerEvents(iResp).block = 'n/a';
-                triggerEvents(iResp).direction = 'n/a';
-                triggerEvents(iResp).speed = 'n/a';
-                triggerEvents(iResp).target = 'n/a';
-                if strcmp(triggerEvents(iResp).keyName, 't')
-                    triggerEvents(iResp).trial_type = 'trigger-baseline';
-                end
-            end
-            
-            triggerEvents(1).fileID = logFile.fileID;
-            triggerEvents(1).extraColumns = logFile.extraColumns;
-            saveEventsFile('save', cfg, triggerEvents);
-            
-        end
 
+        triggerString = 'trigger_baseline';
+        saveResponsesAndTriggers(triggerEvents, cfg, logFile, triggerString);
 
     end
 
@@ -190,8 +154,8 @@ try
     getResponse('release', cfg.keyboard.responseBox);
 
     eyeTracker('Shutdown', cfg);
-    
-    createBoldJson(cfg, cfg)
+
+    createBoldJson(cfg, cfg);
 
     farewellScreen(cfg);
 
