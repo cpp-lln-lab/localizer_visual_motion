@@ -33,6 +33,8 @@ try
     %% Init the experiment
     [cfg] = initPTB(cfg);
 
+    cfg.dot.matrixWidth = cfg.screen.winHeight;
+
     % Convert some values from degrees to pixels
     cfg.dot = degToPix('size', cfg.dot, cfg);
     cfg.dot = degToPix('speed', cfg.dot, cfg);
@@ -44,7 +46,8 @@ try
 
     % dots are displayed on a square with a length in visual angle equal to the
     % field of view
-    cfg.dot.number = round(cfg.dot.density * (cfg.screen.winWidth / cfg.screen.ppd)^2);
+    cfg.dot.number = round(cfg.dot.density * ...
+        (cfg.dot.matrixWidth / cfg.screen.ppd)^2);
 
     [el] = eyeTracker('Calibration', cfg);
 
@@ -64,13 +67,14 @@ try
 
     % prepare the KbQueue to collect responses
     getResponse('init', cfg.keyboard.responseBox, cfg);
-    getResponse('start', cfg.keyboard.responseBox);
 
     % Wait for Trigger from Scanner
     waitForTrigger(cfg);
 
     %% Experiment Start
     cfg = getExperimentStart(cfg);
+
+    getResponse('start', cfg.keyboard.responseBox);
 
     WaitSecs(cfg.onsetDelay);
 
@@ -99,6 +103,7 @@ try
 
             thisEvent.event = iEvent;
             thisEvent.block = iBlock;
+            thisEvent.keyName = 'n/a';
             thisEvent.duration = duration;
             thisEvent.onset = onset - cfg.experimentStart;
 
@@ -113,32 +118,27 @@ try
 
             % collect the responses and appends to the event structure for
             % saving in the tsv file
-            responseEvents = collectAndSaveResponses(cfg, logFile, cfg.experimentStart);
+            responseEvents = getResponse('check', cfg.keyboard.responseBox, cfg, ...
+                getOnlyPress);
 
-            responseEvents = getResponse('check', cfg.keyboard.responseBox, cfg, getOnlyPress);
-
-            if isfield(responseEvents(1), 'onset') && ~isempty(responseEvents(1).onset)
-
-                for iResp = 1:size(responseEvents, 1)
-
-                    responseEvents(iResp).event = iEvent;
-                    responseEvents(iResp).block = iBlock;
-                end
-
-                saveEventsFile('save', cfg, responseEvents);
-
-            end
+            triggerString = ['trigger_' cfg.design.blockNames{iBlock}];
+            saveResponsesAndTriggers(responseEvents, cfg, logFile, triggerString);
 
             % wait for the inter-stimulus interval
             WaitSecs(cfg.ISI);
-
-            getResponse('flush', cfg.keyboard.responseBox);
 
         end
 
         eyeTracker('StopRecordings', cfg);
 
         WaitSecs(cfg.IBI);
+
+        % trigger monitoring
+        triggerEvents = getResponse('check', cfg.keyboard.responseBox, cfg, ...
+            getOnlyPress);
+
+        triggerString = 'trigger_baseline';
+        saveResponsesAndTriggers(triggerEvents, cfg, logFile, triggerString);
 
     end
 
@@ -155,15 +155,7 @@ try
 
     eyeTracker('Shutdown', cfg);
 
-    % save the whole workspace
-    matFile = fullfile( ...
-        cfg.dir.output, ...
-        strrep(cfg.fileName.events, 'tsv', 'mat'));
-    if IsOctave
-        save(matFile, '-mat7-binary');
-    else
-        save(matFile, '-v7.3');
-    end
+    createBoldJson(cfg, cfg);
 
     farewellScreen(cfg);
 
