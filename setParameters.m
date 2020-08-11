@@ -50,15 +50,15 @@ function [cfg] = setParameters()
     % block length = (cfg.eventDuration + cfg.ISI) * cfg.design.nbEventsPerBlock
 
     % Time between blocs in secs
-    cfg.IBI = 1.8 * 3; % 8;
+    cfg.timing.IBI = 1.8 * 3; % 8;
     % Time between events in secs
-    cfg.ISI = 0.1;
+    cfg.timing.ISI = 0.1;
     % Number of seconds before the motion stimuli are presented
-    cfg.onsetDelay = .1;
+    cfg.timing.onsetDelay = .1;
     % Number of seconds after the end all the stimuli before ending the run
-    cfg.endDelay = .1;
+    cfg.timing.endDelay = .1;
 
-    cfg.eventDuration = 0.8; % second
+    cfg.timing.eventDuration = 0.8; % second
 
     %% Visual Stimulation
 
