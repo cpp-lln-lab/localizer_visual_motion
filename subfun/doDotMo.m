@@ -19,7 +19,7 @@ function [onset, duration] = doDotMo(cfg, thisEvent)
     dots = initDots(cfg, thisEvent);
 
     % Set for how many frames this event will last
-    framesLeft = floor(cfg.eventDuration / cfg.screen.ifi);
+    framesLeft = floor(cfg.timing.eventDuration / cfg.screen.ifi);
 
     %% Start the dots presentation
     vbl = Screen('Flip', cfg.screen.win);
