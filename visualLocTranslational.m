@@ -33,7 +33,7 @@ try
     %% Init the experiment
     [cfg] = initPTB(cfg);
 
-    cfg.dot.matrixWidth = cfg.screen.winHeight;
+    cfg.dot.matrixWidth = cfg.screen.winWidth;
 
     % Convert some values from degrees to pixels
     cfg.dot = degToPix('size', cfg.dot, cfg);
@@ -107,7 +107,14 @@ try
             thisEvent.keyName = 'n/a';
             thisEvent.duration = duration;
             thisEvent.onset = onset - cfg.experimentStart;
-
+            
+            % % this value should be in degrees / second in the log file
+            % % highlights that the way speed is passed around could be
+            % % simplified.
+            % %
+            % thisEvent.speed
+            % %
+            
             % Save the events txt logfile
             % we save event by event so we clear this variable every loop
             thisEvent.fileID = logFile.fileID;

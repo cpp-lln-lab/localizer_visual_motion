@@ -58,14 +58,16 @@ function [cfg] = expDesign(cfg, displayFigs)
     % Set variables here for a dummy test of this function
     if nargin < 1 || isempty(cfg)
         %         cfg.design.motionType = 'translation';
-        cfg.design.motionType = 'radial';
+        cfg.design.motionType = 'translation';
         cfg.design.names = {'static'; 'motion'};
-        cfg.design.nbRepetitions = 4;
+        cfg.design.nbRepetitions = 10;
         cfg.design.nbEventsPerBlock = 12;
         cfg.dot.speedPixPerFrame = 4;
-        cfg.target.maxNbPerBlock = 2;
+        cfg.target.maxNbPerBlock = 1;
         displayFigs = 1;
     end
+    
+    fprintf('\n\nCreating design.\n\n')
 
     [NB_BLOCKS, NB_REPETITIONS, NB_EVENTS_PER_BLOCK, MAX_TARGET_PER_BLOCK] = getInput(cfg);
     [~, STATIC_INDEX, MOTION_INDEX] = assignConditions(cfg);
@@ -104,7 +106,7 @@ function [cfg] = expDesign(cfg, displayFigs)
 
                     targetDifference = 0;
 
-                    while any(targetDifference <= 2)
+                    while abs(targetDifference) <= 2
                         chosenTarget = randsample(2:NB_EVENTS_PER_BLOCK - 1, tmpTarget, false);
                         targetDifference = diff(chosenTarget);
                     end
@@ -192,7 +194,7 @@ function [MOTION_DIRECTIONS, STATIC_DIRECTIONS] = getDirectionBaseVectors(cfg)
 
     switch cfg.design.motionType
         case 'translation'
-            MOTION_DIRECTIONS = [0 90 180 270];
+            MOTION_DIRECTIONS = [0 0 180 180];
         case 'radial'
             STATIC_DIRECTIONS = [666 -666 666 -666];
             MOTION_DIRECTIONS = [666 -666 666 -666];
