@@ -12,16 +12,16 @@ function [cfg] = setParameters()
 
     %% Debug mode settings
 
-    cfg.debug.do = true; % To test the script out of the scanner, skip PTB sync
+    cfg.debug.do = false; % To test the script out of the scanner, skip PTB sync
     cfg.debug.smallWin = false; % To test on a part of the screen, change to 1
-    cfg.debug.transpWin = true; % To test with trasparent full size screen
+    cfg.debug.transpWin = false; % To test with trasparent full size screen
 
     cfg.verbose = false;
 
     %% Engine parameters
 
-    cfg.testingDevice = 'pc';
-    cfg.eyeTracker.do = false;
+    cfg.testingDevice = 'mri';
+    cfg.eyeTracker.do = true;
     cfg.audio.do = false;
 
     cfg = setMonitor(cfg);
@@ -38,7 +38,7 @@ function [cfg] = setParameters()
     %     cfg.design.motionType = 'radial';
     cfg.design.motionType = 'translation';
     cfg.design.names = {'static'; 'motion'};
-    cfg.design.nbRepetitions = 4;
+    cfg.design.nbRepetitions = 10;
     cfg.design.nbEventsPerBlock = 12; % DO NOT CHANGE
 
     %% Timing
@@ -50,15 +50,15 @@ function [cfg] = setParameters()
     % block length = (cfg.eventDuration + cfg.ISI) * cfg.design.nbEventsPerBlock
 
     % Time between blocs in secs
-    cfg.timing.IBI = 1.8 * 3; % 8;
+    cfg.timing.IBI = 1.8;
     % Time between events in secs
-    cfg.timing.ISI = 0.1;
+    cfg.timing.ISI = 0;
     % Number of seconds before the motion stimuli are presented
-    cfg.timing.onsetDelay = .1;
+    cfg.timing.onsetDelay = 0;
     % Number of seconds after the end all the stimuli before ending the run
-    cfg.timing.endDelay = .1;
+    cfg.timing.endDelay = 3.6;
 
-    cfg.timing.eventDuration = 0.8; % second
+    cfg.timing.eventDuration = 0.9; % second
 
     %% Visual Stimulation
 
@@ -67,17 +67,17 @@ function [cfg] = setParameters()
     % Coherence Level (0-1)
     cfg.dot.coherence = 1;
     % Number of dots per visual angle square.
-    cfg.dot.density = .1;
+    cfg.dot.density = 1;
     % Dot life time in seconds
     cfg.dot.lifeTime = 10;
     % proportion of dots killed per frame
     cfg.dot.proportionKilledPerFrame = 0;
     % Dot Size (dot width) in visual angles.
-    cfg.dot.size = 1;
+    cfg.dot.size = .2;
     cfg.dot.color = cfg.color.white;
 
     % Diameter/length of side of aperture in Visual angles
-    cfg.aperture.type = 'circle';
+    cfg.aperture.type = 'none';
     cfg.aperture.width = []; % if left empty it will take the screen height
     cfg.aperture.xPos = 0;
 
@@ -92,12 +92,12 @@ function [cfg] = setParameters()
     cfg.fixation.type = 'cross';
     cfg.fixation.colorTarget = cfg.color.red;
     cfg.fixation.color = cfg.color.white;
-    cfg.fixation.width = 1;
-    cfg.fixation.lineWidthPix = 2;
+    cfg.fixation.width = .5;
+    cfg.fixation.lineWidthPix = 3;
     cfg.fixation.xDisplacement = 0;
     cfg.fixation.yDisplacement = 0;
 
-    cfg.target.maxNbPerBlock = 2;
+    cfg.target.maxNbPerBlock = 1;
     cfg.target.duration = 0.05; % In secs
 
     cfg.extraColumns = {'direction', 'speed', 'target', 'event', 'block', 'keyName'};
@@ -106,7 +106,10 @@ end
 
 function cfg = setKeyboards(cfg)
     cfg.keyboard.escapeKey = 'ESCAPE';
-    cfg.keyboard.responseKey = {'space', 't'};
+    cfg.keyboard.responseKey = {...
+        'r', 'g', 'y', 'b', ...
+        'd', 'n', 'z', 'e', ...
+        't'}; %dnze rgyb
     cfg.keyboard.keyboard = [];
     cfg.keyboard.responseBox = [];
 
@@ -119,7 +122,7 @@ end
 function cfg = setMRI(cfg)
     % letter sent by the trigger to sync stimulation and volume acquisition
     cfg.mri.triggerKey = 't';
-    cfg.mri.triggerNb = 4;
+    cfg.mri.triggerNb = 0;
 
     cfg.mri.repetitionTime = 1.8;
 
@@ -143,7 +146,7 @@ function cfg = setMonitor(cfg)
     cfg.screen.monitorDistance = 40; % distance from the screen in cm
 
     if strcmpi(cfg.testingDevice, 'mri')
-        cfg.screen.monitorWidth = 50;
-        cfg.screen.monitorDistance = 40;
+        cfg.screen.monitorWidth = 25;
+        cfg.screen.monitorDistance = 95;
     end
 end

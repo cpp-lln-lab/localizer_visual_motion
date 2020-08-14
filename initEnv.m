@@ -15,7 +15,7 @@
 function initEnv
 
     octaveVersion = '4.0.3';
-    matlabVersion = '9.1.0';
+    matlabVersion = '8.6.0';
 
     if isOctave
 
@@ -88,7 +88,7 @@ function addDependencies()
     pth = fileparts(mfilename('fullpath'));
     addpath(genpath(fullfile(pth, 'lib', 'CPP_BIDS', 'src')));
     addpath(fullfile(pth, 'lib', 'CPP_PTB'));
-    addpath(genpath(fullfile(pth, 'lib', 'CPP_PTB', 'src')));
+%     addpath(genpath(fullfile(pth, 'lib', 'CPP_PTB', 'src')));
     addpath(fullfile(pth, 'subfun'));
 
 end
