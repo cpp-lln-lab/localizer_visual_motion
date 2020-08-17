@@ -1,6 +1,7 @@
 *DS_Store
 
 *.m~
+*.asv
 *octave-workspace
 
 # exclude content of logfiles folders

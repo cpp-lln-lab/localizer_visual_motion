@@ -15,7 +15,7 @@
 function initEnv
 
     octaveVersion = '4.0.3';
-    matlabVersion = '9.2.0';
+    matlabVersion = '8.6.0';
 
     if isOctave
 
@@ -77,7 +77,7 @@ function retval = isOctave
     persistent cacheval   % speeds up repeated calls
 
     if isempty (cacheval)
-        cacheval = (exist ("OCTAVE_VERSION", "builtin") > 0);
+        cacheval = (exist ('OCTAVE_VERSION', 'builtin') > 0);
     end
 
     retval = cacheval;
@@ -86,9 +86,9 @@ end
 function addDependencies()
 
     pth = fileparts(mfilename('fullpath'));
-    addpath(fullfile(pth, 'lib', 'CPP_BIDS', 'src'));
+    addpath(genpath(fullfile(pth, 'lib', 'CPP_BIDS', 'src')));
     addpath(fullfile(pth, 'lib', 'CPP_PTB'));
-    addpath(genpath(fullfile(pth, 'lib', 'CPP_PTB', 'src')));
+%     addpath(genpath(fullfile(pth, 'lib', 'CPP_PTB', 'src')));
     addpath(fullfile(pth, 'subfun'));
 
 end
