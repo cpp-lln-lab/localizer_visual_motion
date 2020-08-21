@@ -57,14 +57,7 @@ function [cfg] = expDesign(cfg, displayFigs)
 
     % Set variables here for a dummy test of this function
     if nargin < 1 || isempty(cfg)
-        %         cfg.design.motionType = 'translation';
-        cfg.design.motionType = 'translation';
-        cfg.design.names = {'static'; 'motion'};
-        cfg.design.nbRepetitions = 10;
-        cfg.design.nbEventsPerBlock = 12;
-        cfg.dot.speedPixPerFrame = 4;
-        cfg.target.maxNbPerBlock = 1;
-        displayFigs = 1;
+        error('give me something to work with')
     end
     
     fprintf('\n\nCreating design.\n\n')

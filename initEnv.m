@@ -8,7 +8,7 @@
 %       - struct
 %       - statistics
 %
-%   MATLAB > R2017a
+%   MATLAB >= R2015b
 %
 % 2 - Add project to the O/M path
 
@@ -58,7 +58,9 @@ function initEnv
 
     % If external dir is empty throw an exception
     % and ask user to update submodules.
-    if numel(dir('lib')) <= 2 % Means that the external is empty
+    libDirectory = fullfile(fileparts(mfilename('fullpath')), 'lib');
+    
+    if numel(dir(libDirectory)) <= 2 % Means that the external is empty
         error(['Git submodules are not cloned!', ...
               'Try this in your terminal:', ...
               ' git submodule update --recursive ']);
