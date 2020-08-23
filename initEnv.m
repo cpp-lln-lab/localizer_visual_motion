@@ -59,7 +59,7 @@ function initEnv
     % If external dir is empty throw an exception
     % and ask user to update submodules.
     libDirectory = fullfile(fileparts(mfilename('fullpath')), 'lib');
-    
+
     if numel(dir(libDirectory)) <= 2 % Means that the external is empty
         error(['Git submodules are not cloned!', ...
               'Try this in your terminal:', ...
@@ -89,8 +89,7 @@ function addDependencies()
 
     pth = fileparts(mfilename('fullpath'));
     addpath(genpath(fullfile(pth, 'lib', 'CPP_BIDS', 'src')));
-    addpath(fullfile(pth, 'lib', 'CPP_PTB'));
-%     addpath(genpath(fullfile(pth, 'lib', 'CPP_PTB', 'src')));
+    addpath(genpath(fullfile(pth, 'lib', 'CPP_PTB', 'src')));
     addpath(fullfile(pth, 'subfun'));
 
 end
