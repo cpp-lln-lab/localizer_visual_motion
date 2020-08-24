@@ -22,10 +22,10 @@ function [cfg] = expDesign(cfg, displayFigs)
     % TARGETS
     %
     % Pseudorandomization rules:
-    % (1) If there are 2 targets per block we make sure that they are at least 2
+    % (1) If there are more than 1 target per block we make sure that they are at least 2
     % events apart.
     % (2) Targets cannot be on the first or last event of a block.
-    % (3) Targets can not be present more than 2 times in the same event
+    % (3) Targets can not be present more than NB_REPETITIONS - 1 times in the same event
     % position across blocks.
     %
     % Input:
@@ -57,16 +57,20 @@ function [cfg] = expDesign(cfg, displayFigs)
 
     % Set variables here for a dummy test of this function
     if nargin < 1 || isempty(cfg)
-        error('give me something to work with')
+        error('give me something to work with');
     end
-    
-    fprintf('\n\nCreating design.\n\n')
+
+    fprintf('\n\nCreating design.\n\n');
 
     [NB_BLOCKS, NB_REPETITIONS, NB_EVENTS_PER_BLOCK, MAX_TARGET_PER_BLOCK] = getInput(cfg);
     [~, STATIC_INDEX, MOTION_INDEX] = assignConditions(cfg);
 
-    RANGE_TARGETS = [1 MAX_TARGET_PER_BLOCK];
-    targetPerCondition = repmat(RANGE_TARGETS, 1, NB_REPETITIONS / 2);
+    if mod(NB_REPETITIONS, MAX_TARGET_PER_BLOCK) ~= 0
+        error('number of repetitions must be a multiple of max number of targets');
+    end
+
+    RANGE_TARGETS = 1:MAX_TARGET_PER_BLOCK;
+    targetPerCondition = repmat(RANGE_TARGETS, 1, NB_REPETITIONS / MAX_TARGET_PER_BLOCK);
 
     numTargetsForEachBlock = zeros(1, NB_BLOCKS);
     numTargetsForEachBlock(STATIC_INDEX) = shuffle(targetPerCondition);
@@ -85,33 +89,19 @@ function [cfg] = expDesign(cfg, displayFigs)
             % - targets cannot be on the first or last event of a block
             % - no more than 2 target in the same event order
 
-            chosenTarget = [];
+            nbTarget = numTargetsForEachBlock(iBlock);
 
-            tmpTarget = numTargetsForEachBlock(iBlock);
+            chosenPosition = setTargetPositionInSequence( ...
+                NB_EVENTS_PER_BLOCK, ...
+                nbTarget, ...
+                [1 NB_EVENTS_PER_BLOCK]);
 
-            switch tmpTarget
-
-                case 1
-
-                    chosenTarget = randsample(2:NB_EVENTS_PER_BLOCK - 1, tmpTarget, false);
-
-                case 2
-
-                    targetDifference = 0;
-
-                    while abs(targetDifference) <= 2
-                        chosenTarget = randsample(2:NB_EVENTS_PER_BLOCK - 1, tmpTarget, false);
-                        targetDifference = diff(chosenTarget);
-                    end
-
-            end
-
-            fixationTargets(iBlock, chosenTarget) = 1;
+            fixationTargets(iBlock, chosenPosition) = 1;
 
         end
 
         % Check rule 3
-        if max(sum(fixationTargets)) < 3
+        if max(sum(fixationTargets)) < NB_REPETITIONS - 1
             break
         end
 
@@ -150,26 +140,17 @@ function cfg = setDirections(cfg)
     directions = zeros(NB_BLOCKS, NB_EVENTS_PER_BLOCK);
 
     % Create a vector for the static condition
+    NB_REPEATS_BASE_VECTOR = NB_EVENTS_PER_BLOCK / length(STATIC_DIRECTIONS);
+
     static_directions = repmat( ...
         STATIC_DIRECTIONS, ...
-        1, NB_EVENTS_PER_BLOCK / length(STATIC_DIRECTIONS));
+        1, NB_REPEATS_BASE_VECTOR);
 
     for iMotionBlock = 1:NB_REPETITIONS
 
-        % Check that we never have twice the same direction
-        while 1
-            tmp = [ ...
-                shuffle(MOTION_DIRECTIONS), ...
-                shuffle(MOTION_DIRECTIONS), ...
-                shuffle(MOTION_DIRECTIONS)];
-
-            if ~any(diff(tmp, [], 2) == 0)
-                break
-            end
-        end
-
         % Set motion direction and static order
-        directions(MOTION_INDEX(iMotionBlock), :) = tmp;
+        directions(MOTION_INDEX(iMotionBlock), :) = ...
+            repeatShuffleConditions(MOTION_DIRECTIONS, NB_REPEATS_BASE_VECTOR);
         directions(STATIC_INDEX(iMotionBlock), :) = static_directions;
 
     end
@@ -183,15 +164,8 @@ function [MOTION_DIRECTIONS, STATIC_DIRECTIONS] = getDirectionBaseVectors(cfg)
     % CONSTANTS
     % Set directions for static and motion condition
 
-    STATIC_DIRECTIONS = [-1 -1 -1 -1];
-
-    switch cfg.design.motionType
-        case 'translation'
-            MOTION_DIRECTIONS = [0 0 180 180];
-        case 'radial'
-            STATIC_DIRECTIONS = [666 -666 666 -666];
-            MOTION_DIRECTIONS = [666 -666 666 -666];
-    end
+    MOTION_DIRECTIONS = cfg.design.motionDirections;
+    STATIC_DIRECTIONS = repmat(-1, size(MOTION_DIRECTIONS));
 
 end
 
@@ -202,25 +176,16 @@ function [nbBlocks, nbRepet, nbEventsBlock, maxTargBlock] = getInput(cfg)
     nbBlocks = length(cfg.design.names) * nbRepet;
 end
 
-function [condition, STATIC_INDEX, MOTION_INDEX] = assignConditions(cfg)
+function [conditionNamesVector, STATIC_INDEX, MOTION_INDEX] = assignConditions(cfg)
 
     [~, nbRepet] = getInput(cfg);
 
-    condition = repmat(cfg.design.names, nbRepet, 1);
+    conditionNamesVector = repmat(cfg.design.names, nbRepet, 1);
 
     % Get the index of each condition
-    STATIC_INDEX = find(strcmp(condition, 'static'));
-    MOTION_INDEX = find(strcmp(condition, 'motion'));
+    STATIC_INDEX = find(strcmp(conditionNamesVector, 'static'));
+    MOTION_INDEX = find(strcmp(conditionNamesVector, 'motion'));
 
-end
-
-function shuffled = shuffle(unshuffled)
-    % in case PTB is not in the path
-    try
-        shuffled = Shuffle(unshuffled);
-    catch
-        shuffled = unshuffled(randperm(length(unshuffled)));
-    end
 end
 
 function diplayDesign(cfg, displayFigs)
