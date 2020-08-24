@@ -17,6 +17,8 @@ function initEnv
     octaveVersion = '4.0.3';
     matlabVersion = '8.6.0';
 
+    installlist = {'io', 'statistics', 'image'};
+
     if isOctave
 
         % Exit if min version is not satisfied
@@ -24,27 +26,19 @@ function initEnv
             error('Minimum required Octave version: %s', octaveVersion);
         end
 
-        installlist = {'statistics', 'image'};
         for ii = 1:length(installlist)
+
+            packageName = installlist{ii};
+
             try
                 % Try loading Octave packages
-                disp(['loading ' installlist{ii}]);
-                pkg('load', installlist{ii});
+                disp(['loading ' packageName]);
+                pkg('load', packageName);
 
             catch
-                errorcount = 1;
-                while errorcount % Attempt twice in case installation fails
-                    try
-                        pkg('install', '-forge', installlist{ii});
-                        pkg('load', installlist{ii});
-                        errorcount = 0;
-                    catch err
-                        errorcount = errorcount + 1;
-                        if errorcount > 2
-                            error(err.message);
-                        end
-                    end
-                end
+
+                tryInstallFromForge(packageName);
+
             end
         end
 
@@ -72,10 +66,8 @@ function initEnv
 
 end
 
-%%
-%% Return: true if the environment is Octave.
-%%
 function retval = isOctave
+    % Return: true if the environment is Octave.
     persistent cacheval   % speeds up repeated calls
 
     if isempty (cacheval)
@@ -83,6 +75,25 @@ function retval = isOctave
     end
 
     retval = cacheval;
+
+end
+
+function tryInstallFromForge(packageName)
+
+    errorcount = 1;
+    while errorcount % Attempt twice in case installation fails
+        try
+            pkg('install', '-forge', packageName);
+            pkg('load', packageName);
+            errorcount = 0;
+        catch err
+            errorcount = errorcount + 1;
+            if errorcount > 2
+                error(err.message);
+            end
+        end
+    end
+
 end
 
 function addDependencies()

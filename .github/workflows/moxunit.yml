@@ -19,7 +19,7 @@ jobs:
       uses: joergbrech/moxunit-action@v1.1
       with:
         tests: tests
-        src: src
+        src: subfun
         with_coverage: true
         cover_xml_file: coverage.xml
     - name: Code coverage

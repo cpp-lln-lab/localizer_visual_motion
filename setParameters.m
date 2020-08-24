@@ -39,6 +39,7 @@ function [cfg] = setParameters()
     %     cfg.design.motionType = 'translation';
     %     cfg.design.motionType = 'radial';
     cfg.design.motionType = 'translation';
+    cfg.design.motionDirections = [0 0 180 180];
     cfg.design.names = {'static'; 'motion'};
     cfg.design.nbRepetitions = 10;
     cfg.design.nbEventsPerBlock = 12; % DO NOT CHANGE
