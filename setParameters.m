@@ -1,5 +1,7 @@
 function [cfg] = setParameters()
 
+    % VISUAL LOCALIZER    
+
     % Initialize the parameters and general configuration variables
     cfg = struct();
 
@@ -21,7 +23,7 @@ function [cfg] = setParameters()
     %% Engine parameters
 
     cfg.testingDevice = 'mri';
-    cfg.eyeTracker.do = false;
+    cfg.eyeTracker.do = true;
     cfg.audio.do = false;
 
     cfg = setMonitor(cfg);
@@ -41,7 +43,7 @@ function [cfg] = setParameters()
     cfg.design.motionType = 'translation';
     cfg.design.motionDirections = [0 0 180 180];
     cfg.design.names = {'static'; 'motion'};
-    cfg.design.nbRepetitions = 10;
+    cfg.design.nbRepetitions = 8;
     cfg.design.nbEventsPerBlock = 12; % DO NOT CHANGE
 
     %% Timing
@@ -52,10 +54,10 @@ function [cfg] = setParameters()
     % IBI
     % block length = (cfg.eventDuration + cfg.ISI) * cfg.design.nbEventsPerBlock
 
-    cfg.timing.eventDuration = 0.850; % second
+    cfg.timing.eventDuration = 0.8; % second
 
     % Time between blocs in secs
-    cfg.timing.IBI = 1.8;
+    cfg.timing.IBI = 0;
     % Time between events in secs
     cfg.timing.ISI = 0;
     % Number of seconds before the motion stimuli are presented
@@ -72,7 +74,7 @@ function [cfg] = setParameters()
         cfg.timing.eventDuration = cfg.mri.repetitionTime / 2 - 0.04; % second
 
         % Time between blocs in secs
-        cfg.timing.IBI = 1;
+        cfg.timing.IBI = 0;
         % Time between events in secs
         cfg.timing.ISI = 0;
         % Number of seconds before the motion stimuli are presented
@@ -94,7 +96,7 @@ function [cfg] = setParameters()
     % proportion of dots killed per frame
     cfg.dot.proportionKilledPerFrame = 0;
     % Dot Size (dot width) in visual angles.
-    cfg.dot.size = .2;
+    cfg.dot.size = .1;
     cfg.dot.color = cfg.color.white;
 
     % Diameter/length of side of aperture in Visual angles
@@ -143,7 +145,7 @@ end
 function cfg = setMRI(cfg)
     % letter sent by the trigger to sync stimulation and volume acquisition
     cfg.mri.triggerKey = 't';
-    cfg.mri.triggerNb = 0;
+    cfg.mri.triggerNb = 5;
 
     cfg.mri.repetitionTime = 1.8;
 
