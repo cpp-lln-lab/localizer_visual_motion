@@ -1,6 +1,6 @@
 function [cfg] = setParameters()
 
-    % VISUAL LOCALIZER    
+    % VISUAL LOCALIZER
 
     % Initialize the parameters and general configuration variables
     cfg = struct();
