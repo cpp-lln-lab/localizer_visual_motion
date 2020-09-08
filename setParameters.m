@@ -2,7 +2,7 @@ function [cfg] = setParameters()
 
     % VISUAL LOCALIZER
 
-    % Initialize the parameters and general configuration variables
+    % Initialize the general configuration variables structure
     cfg = struct();
 
     % by default the data will be stored in an output folder created where the
