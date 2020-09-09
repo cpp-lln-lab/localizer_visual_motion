@@ -80,6 +80,31 @@ Any details of the experiment can be changed in `setParameters.m` (e.g., experim
   - Instructions
   - Task #1 parameters
 
+#### Let the scanner pace the experiment
+
+Set `cfg.pacedByTriggers.do` to `true` and you can then set all the details in this `if` block
+
+```matlab
+% Time is here in in terms of number repetition time (i.e MRI volumes)
+if cfg.pacedByTriggers.do
+
+  cfg.pacedByTriggers.quietMode = true;
+  cfg.pacedByTriggers.nbTriggers = 1;
+
+  cfg.timing.eventDuration = cfg.mri.repetitionTime / 2 - 0.04; % second
+
+  % Time between blocs in secs
+  cfg.timing.IBI = 0;
+  % Time between events in secs
+  cfg.timing.ISI = 0;
+  % Number of seconds before the motion stimuli are presented
+  cfg.timing.onsetDelay = 0;
+  % Number of seconds after the end all the stimuli before ending the run
+  cfg.timing.endDelay = 2;
+
+end
+```
+
 ### 3.3. <a name='subfundoDotMo'></a>subfun/doDotMo
 
 #### 3.3.1. <a name='Input:'></a>Input:
