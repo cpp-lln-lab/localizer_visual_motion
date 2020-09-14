@@ -37,7 +37,11 @@ try
 
     [el] = eyeTracker('Calibration', cfg);
 
-    [cfg] = expDesign(cfg);
+    if isfield(cfg.design, 'localizer') && strcmpi(cfg.design.localizer, 'MT_MST')
+        [cfg] = expDesignMtMst(cfg);
+    else
+        [cfg] = expDesign(cfg);
+    end
 
     % Prepare for the output logfiles with all
     logFile.extraColumns = cfg.extraColumns;

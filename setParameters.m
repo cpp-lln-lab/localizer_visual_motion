@@ -37,6 +37,8 @@ function [cfg] = setParameters()
     cfg.pacedByTriggers.do = true;
 
     %% Experiment Design
+    
+    cfg.design.localizer = 'MT_MST';
 
     %     cfg.design.motionType = 'translation';
     %     cfg.design.motionType = 'radial';
@@ -111,8 +113,8 @@ function [cfg] = setParameters()
     
     if isfield(cfg.design, 'localizer') && strcmpi(cfg.design.localizer, 'MT_MST')
         cfg.aperture.type = 'circle';
-        cfg.aperture.width = 3; % if left empty it will take the screen height
-        cfg.aperture.xPos = 4;
+        cfg.aperture.width = 7; % if left empty it will take the screen height
+        cfg.aperture.xPos = 7;
     end
 
     %% Task(s)
@@ -126,7 +128,7 @@ function [cfg] = setParameters()
     cfg.fixation.type = 'cross';
     cfg.fixation.colorTarget = cfg.color.red;
     cfg.fixation.color = cfg.color.white;
-    cfg.fixation.width = .5;
+    cfg.fixation.width = .25;
     cfg.fixation.lineWidthPix = 3;
     cfg.fixation.xDisplacement = 0;
     cfg.fixation.yDisplacement = 0;

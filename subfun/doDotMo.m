@@ -66,7 +66,7 @@ function [onset, duration] = doDotMo(cfg, thisEvent, thisFixation)
 
     %% Erase last dots
 
-    drawFixation(cfg);
+    drawFixation(thisFixation);
 
     Screen('DrawingFinished', cfg.screen.win);
 
