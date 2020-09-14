@@ -113,6 +113,17 @@ try
         end
 
         eyeTracker('StopRecordings', cfg);
+        
+        % "prepare" cross for the baseline block
+        % if MT / MST this allows us to set the cross at the position of the next block
+        if iBlock < cfg.design.nbBlocks
+            nextBlock = iBlock+1;
+        else
+            nextBlock = cfg.design.nbBlocks;
+        end
+        [~, thisFixation] = preTrialSetup(cfg, nextBlock, 1);
+        drawFixation(thisFixation);
+        Screen('Flip', cfg.screen.win);
 
         waitFor(cfg, cfg.timing.IBI);
 
