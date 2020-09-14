@@ -62,7 +62,7 @@ function [cfg] = expDesign(cfg, displayFigs)
 
     fprintf('\n\nCreating design.\n\n');
 
-    [NB_BLOCKS, NB_REPETITIONS, NB_EVENTS_PER_BLOCK, MAX_TARGET_PER_BLOCK] = getInput(cfg);
+    [NB_BLOCKS, NB_REPETITIONS, NB_EVENTS_PER_BLOCK, MAX_TARGET_PER_BLOCK] = getDesignInput(cfg);
     [~, STATIC_INDEX, MOTION_INDEX] = assignConditions(cfg);
 
     if mod(NB_REPETITIONS, MAX_TARGET_PER_BLOCK) ~= 0
@@ -128,7 +128,7 @@ function cfg = setDirections(cfg)
 
     [MOTION_DIRECTIONS, STATIC_DIRECTIONS] = getDirectionBaseVectors(cfg);
 
-    [NB_BLOCKS, NB_REPETITIONS, NB_EVENTS_PER_BLOCK] = getInput(cfg);
+    [NB_BLOCKS, NB_REPETITIONS, NB_EVENTS_PER_BLOCK] = getDesignInput(cfg);
 
     [~, STATIC_INDEX, MOTION_INDEX] = assignConditions(cfg);
 
@@ -169,16 +169,10 @@ function [MOTION_DIRECTIONS, STATIC_DIRECTIONS] = getDirectionBaseVectors(cfg)
 
 end
 
-function [nbBlocks, nbRepet, nbEventsBlock, maxTargBlock] = getInput(cfg)
-    nbRepet = cfg.design.nbRepetitions;
-    nbEventsBlock = cfg.design.nbEventsPerBlock;
-    maxTargBlock = cfg.target.maxNbPerBlock;
-    nbBlocks = length(cfg.design.names) * nbRepet;
-end
 
 function [conditionNamesVector, STATIC_INDEX, MOTION_INDEX] = assignConditions(cfg)
 
-    [~, nbRepet] = getInput(cfg);
+    [~, nbRepet] = getDesignInput(cfg);
 
     conditionNamesVector = repmat(cfg.design.names, nbRepet, 1);
 
