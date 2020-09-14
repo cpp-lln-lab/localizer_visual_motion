@@ -23,6 +23,6 @@ function varargout = preSaveSetup(varargin)
     thisEvent.fileID = logFile.fileID;
     thisEvent.extraColumns = logFile.extraColumns;
     
-    varargout = thisEvent;
+    varargout = {thisEvent};
     
 end

@@ -22,6 +22,6 @@ function varargout = postInitializationSetup(varargin)
     cfg.dot.number = round(cfg.dot.density * ...
         (cfg.dot.matrixWidth / cfg.screen.ppd)^2);
 
-    varargout = cfg;
+    varargout = {cfg};
 
 end
