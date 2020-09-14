@@ -16,14 +16,14 @@ function [cfg] = setParameters()
 
     cfg.debug.do = false; % To test the script out of the scanner, skip PTB sync
     cfg.debug.smallWin = false; % To test on a part of the screen, change to 1
-    cfg.debug.transpWin = false; % To test with trasparent full size screen
+    cfg.debug.transpWin = true; % To test with trasparent full size screen
 
     cfg.verbose = false;
 
     %% Engine parameters
 
     cfg.testingDevice = 'mri';
-    cfg.eyeTracker.do = true;
+    cfg.eyeTracker.do = false;
     cfg.audio.do = false;
 
     cfg = setMonitor(cfg);
@@ -34,7 +34,7 @@ function [cfg] = setParameters()
     % MRI settings
     cfg = setMRI(cfg);
 
-    cfg.pacedByTriggers.do = true;
+    cfg.pacedByTriggers.do = false;
 
     %% Experiment Design
 
@@ -129,6 +129,9 @@ function [cfg] = setParameters()
     %% Task(s)
 
     cfg.task.name = 'visual localizer';
+    if isfield(cfg.design, 'localizer') && strcmpi(cfg.design.localizer, 'MT_MST')
+        cfg.task.name = 'mt mst localizer';
+    end
 
     % Instruction
     cfg.task.instruction = '1-Detect the RED fixation cross\n \n\n';
@@ -167,7 +170,7 @@ end
 function cfg = setMRI(cfg)
     % letter sent by the trigger to sync stimulation and volume acquisition
     cfg.mri.triggerKey = 't';
-    cfg.mri.triggerNb = 5;
+    cfg.mri.triggerNb = 1;
 
     cfg.mri.repetitionTime = 1.8;
 
