@@ -71,19 +71,19 @@ function [cfg] = setParameters()
     cfg.timing.onsetDelay = 0;
     % Number of seconds after the end all the stimuli before ending the run
     cfg.timing.endDelay = 3.6;
-    
+
     if isfield(cfg.design, 'localizer') && strcmpi(cfg.design.localizer, 'MT_MST')
         cfg.timing.IBI = 3.6;
     end
-    
+
     % reexpress those in terms of repetition time
     if cfg.pacedByTriggers.do
-        
+
         cfg.pacedByTriggers.quietMode = true;
         cfg.pacedByTriggers.nbTriggers = 1;
-        
+
         cfg.timing.eventDuration = cfg.mri.repetitionTime / 2 - 0.04; % second
-        
+
         % Time between blocs in secs
         cfg.timing.IBI = 0;
         % Time between events in secs
@@ -92,15 +92,15 @@ function [cfg] = setParameters()
         cfg.timing.onsetDelay = 0;
         % Number of seconds after the end all the stimuli before ending the run
         cfg.timing.endDelay = 2;
-        
+
         if isfield(cfg.design, 'localizer') && strcmpi(cfg.design.localizer, 'MT_MST')
             cfg.timing.IBI = 2;
         end
-        
+
     end
-    
+
     %% Visual Stimulation
-    
+
     % Speed in visual angles / second
     cfg.dot.speed = 15;
     % Coherence Level (0-1)
@@ -112,14 +112,14 @@ function [cfg] = setParameters()
     % proportion of dots killed per frame
     cfg.dot.proportionKilledPerFrame = 0;
     % Dot Size (dot width) in visual angles.
-    cfg.dot.size = .1;
+    cfg.dot.size = .2;
     cfg.dot.color = cfg.color.white;
 
     % Diameter/length of side of aperture in Visual angles
     cfg.aperture.type = 'none';
     cfg.aperture.width = []; % if left empty it will take the screen height
     cfg.aperture.xPos = 0;
-    
+
     if isfield(cfg.design, 'localizer') && strcmpi(cfg.design.localizer, 'MT_MST')
         cfg.aperture.type = 'circle';
         cfg.aperture.width = 7; % if left empty it will take the screen height

@@ -169,7 +169,6 @@ function [MOTION_DIRECTIONS, STATIC_DIRECTIONS] = getDirectionBaseVectors(cfg)
 
 end
 
-
 function [conditionNamesVector, STATIC_INDEX, MOTION_INDEX] = assignConditions(cfg)
 
     [~, nbRepet] = getDesignInput(cfg);
