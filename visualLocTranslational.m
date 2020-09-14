@@ -79,11 +79,7 @@ try
             % Check for experiment abortion from operator
             checkAbort(cfg, cfg.keyboard.keyboard);
 
-            % set direction, speed of that event and if it is a target
-            thisEvent.trial_type = cfg.design.blockNames{iBlock};
-            thisEvent.direction = cfg.design.directions(iBlock, iEvent);
-            thisEvent.speed = cfg.design.speeds(iBlock, iEvent);
-            thisEvent.target = cfg.design.fixationTargets(iBlock, iEvent);
+            [thisEvent, thisFixation] = preTrialSetup(cfg, iBlock, iEvent);
 
             % we wait for a trigger every 2 events
             if cfg.pacedByTriggers.do && mod(iEvent, 2) == 1
@@ -95,7 +91,7 @@ try
             end
 
             % play the dots and collect onset and duraton of the event
-            [onset, duration] = doDotMo(cfg, thisEvent);
+            [onset, duration] = doDotMo(cfg, thisEvent, thisFixation);
 
             thisEvent.event = iEvent;
             thisEvent.block = iBlock;

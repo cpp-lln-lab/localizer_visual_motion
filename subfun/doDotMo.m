@@ -1,4 +1,4 @@
-function [onset, duration] = doDotMo(cfg, thisEvent)
+function [onset, duration] = doDotMo(cfg, thisEvent, thisFixation)
     % Draws the stimulation of static/moving in 4 directions dots or static
     %
     % DIRECTIONS
@@ -46,9 +46,6 @@ function [onset, duration] = doDotMo(cfg, thisEvent)
 
         apertureTexture('draw', cfg, thisEvent);
 
-        % If this frame shows a target we change the color of the cross
-        thisFixation.fixation = cfg.fixation;
-        thisFixation.screen = cfg.screen;
         if thisEvent.target(1) && GetSecs < (onset + cfg.target.duration)
             thisFixation.fixation.color = cfg.fixation.colorTarget;
         end
