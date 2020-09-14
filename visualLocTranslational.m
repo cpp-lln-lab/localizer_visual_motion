@@ -79,7 +79,7 @@ try
             % Check for experiment abortion from operator
             checkAbort(cfg, cfg.keyboard.keyboard);
 
-            [thisEvent, thisFixation] = preTrialSetup(cfg, iBlock, iEvent);
+            [thisEvent, thisFixation, cfg] = preTrialSetup(cfg, iBlock, iEvent);
 
             % we wait for a trigger every 2 events
             if cfg.pacedByTriggers.do && mod(iEvent, 2) == 1
