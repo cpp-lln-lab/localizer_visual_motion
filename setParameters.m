@@ -41,10 +41,15 @@ function [cfg] = setParameters()
     %     cfg.design.motionType = 'translation';
     %     cfg.design.motionType = 'radial';
     cfg.design.motionType = 'translation';
+    
     cfg.design.motionDirections = [0 0 180 180];
     cfg.design.names = {'static'; 'motion'};
     cfg.design.nbRepetitions = 8;
     cfg.design.nbEventsPerBlock = 12; % DO NOT CHANGE
+    
+    if isfield(cfg.design, 'localizer') && strcmpi(cfg.design.localizer, 'MT_MST')
+        cfg.design.names = {'fixation_right'; 'fixation_left'};
+    end
 
     %% Timing
 
@@ -103,6 +108,12 @@ function [cfg] = setParameters()
     cfg.aperture.type = 'none';
     cfg.aperture.width = []; % if left empty it will take the screen height
     cfg.aperture.xPos = 0;
+    
+    if isfield(cfg.design, 'localizer') && strcmpi(cfg.design.localizer, 'MT_MST')
+        cfg.aperture.type = 'circle';
+        cfg.aperture.width = 3; % if left empty it will take the screen height
+        cfg.aperture.xPos = 4;
+    end
 
     %% Task(s)
 
