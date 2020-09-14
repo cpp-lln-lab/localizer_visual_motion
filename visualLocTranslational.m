@@ -93,27 +93,8 @@ try
             % play the dots and collect onset and duraton of the event
             [onset, duration] = doDotMo(cfg, thisEvent, thisFixation);
 
-            thisEvent.event = iEvent;
-            thisEvent.block = iBlock;
-            thisEvent.keyName = 'n/a';
-            thisEvent.duration = duration;
-            thisEvent.onset = onset - cfg.experimentStart;
-
-            % % this value should be in degrees / second in the log file
-            % % highlights that the way speed is passed around could be
-            % % simplified.
-            % %
-            % thisEvent.speed
-            % %
-
-            % Save the events txt logfile
-            % we save event by event so we clear this variable every loop
-            thisEvent.fileID = logFile.fileID;
-            thisEvent.extraColumns = logFile.extraColumns;
-
+            thisEvent = preSaveSetup(thisEvent, iBlock, iEvent, duration, onset, cfg, logFile);
             saveEventsFile('save', cfg, thisEvent);
-
-            clear thisEvent;
 
             % collect the responses and appends to the event structure for
             % saving in the tsv file
