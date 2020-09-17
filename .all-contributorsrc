@@ -28,7 +28,9 @@
         "bug",
         "userTesting",
         "review",
-        "question"
+        "question",
+        "infra",
+        "maintenance"
       ]
     }
   ],
