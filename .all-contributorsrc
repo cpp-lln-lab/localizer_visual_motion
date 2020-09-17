@@ -15,6 +15,21 @@
         "design",
         "ideas"
       ]
+    },
+    {
+      "login": "marcobarilari",
+      "name": "marcobarilari",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/38101692?v=4",
+      "profile": "https://github.com/marcobarilari",
+      "contributions": [
+        "code",
+        "design",
+        "ideas",
+        "bug",
+        "userTesting",
+        "review",
+        "question"
+      ]
     }
   ],
   "contributorsPerLine": 7,
