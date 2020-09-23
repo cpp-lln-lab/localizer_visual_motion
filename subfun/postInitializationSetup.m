@@ -22,7 +22,7 @@ function varargout = postInitializationSetup(varargin)
     % dots are displayed on a square with a length in visual angle equal to the
     % field of view
     cfg.dot.number = round(cfg.dot.density * ...
-        (cfg.dot.matrixWidth / cfg.screen.ppd)^2);
+                           (cfg.dot.matrixWidth / cfg.screen.ppd)^2);
 
     varargout = {cfg};
 

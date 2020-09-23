@@ -19,8 +19,8 @@ function cfg = setDirections(cfg)
     NB_REPEATS_BASE_VECTOR = NB_EVENTS_PER_BLOCK / length(CONDITION2_DIRECTIONS);
 
     static_directions = repmat( ...
-        CONDITION2_DIRECTIONS, ...
-        1, NB_REPEATS_BASE_VECTOR);
+                               CONDITION2_DIRECTIONS, ...
+                               1, NB_REPEATS_BASE_VECTOR);
 
     for iMotionBlock = 1:NB_REPETITIONS
 
