@@ -3,13 +3,16 @@ function varargout = preSaveSetup(varargin)
 
     % generic function to prepare structures before saving
 
-    [thisEvent, iBlock, iEvent, duration, onset, cfg, logFile] = deal(varargin{:});
+    [thisEvent, thisFixation, iBlock, iEvent, duration, onset, cfg, logFile] = ...
+        deal(varargin{:});
 
     thisEvent.event = iEvent;
     thisEvent.block = iBlock;
     thisEvent.keyName = 'n/a';
     thisEvent.duration = duration;
     thisEvent.onset = onset - cfg.experimentStart;
+    thisEvent.fixationPosition = thisFixation.fixation.xDisplacement;
+    thisEvent.aperturePosition = cfg.aperture.xPos * sign(cfg.aperture.xPosPix);
 
     % % this value should be in degrees / second in the log file
     % % highlights that the way speed is passed around could be
