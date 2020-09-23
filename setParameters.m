@@ -1,3 +1,5 @@
+% (C) Copyright 2020 CPP visual motion localizer developpers
+
 function [cfg] = setParameters()
 
     % VISUAL LOCALIZER
@@ -9,21 +11,21 @@ function [cfg] = setParameters()
     % setParamters.m file is
     % change that if you want the data to be saved somewhere else
     cfg.dir.output = fullfile( ...
-        fileparts(mfilename('fullpath')), '..', ...
-        'output');
+                              fileparts(mfilename('fullpath')), '..', ...
+                              'output');
 
     %% Debug mode settings
 
     cfg.debug.do = false; % To test the script out of the scanner, skip PTB sync
     cfg.debug.smallWin = false; % To test on a part of the screen, change to 1
-    cfg.debug.transpWin = false; % To test with trasparent full size screen
+    cfg.debug.transpWin = true; % To test with trasparent full size screen
 
     cfg.verbose = false;
 
     %% Engine parameters
 
     cfg.testingDevice = 'mri';
-    cfg.eyeTracker.do = true;
+    cfg.eyeTracker.do = false;
     cfg.audio.do = false;
 
     cfg = setMonitor(cfg);
@@ -34,17 +36,23 @@ function [cfg] = setParameters()
     % MRI settings
     cfg = setMRI(cfg);
 
-    cfg.pacedByTriggers.do = true;
+    cfg.pacedByTriggers.do = false;
 
     %% Experiment Design
 
-    %     cfg.design.motionType = 'translation';
+    %     cfg.design.localizer = 'MT_MST';
+
     %     cfg.design.motionType = 'radial';
     cfg.design.motionType = 'translation';
+
     cfg.design.motionDirections = [0 0 180 180];
     cfg.design.names = {'static'; 'motion'};
     cfg.design.nbRepetitions = 8;
     cfg.design.nbEventsPerBlock = 12; % DO NOT CHANGE
+
+    if isfield(cfg.design, 'localizer') && strcmpi(cfg.design.localizer, 'MT_MST')
+        cfg.design.names = {'fixation_right'; 'fixation_left'};
+    end
 
     %% Timing
 
@@ -65,6 +73,10 @@ function [cfg] = setParameters()
     % Number of seconds after the end all the stimuli before ending the run
     cfg.timing.endDelay = 3.6;
 
+    if isfield(cfg.design, 'localizer') && strcmpi(cfg.design.localizer, 'MT_MST')
+        cfg.timing.IBI = 3.6;
+    end
+
     % reexpress those in terms of repetition time
     if cfg.pacedByTriggers.do
 
@@ -81,6 +93,11 @@ function [cfg] = setParameters()
         cfg.timing.onsetDelay = 0;
         % Number of seconds after the end all the stimuli before ending the run
         cfg.timing.endDelay = 2;
+
+        if isfield(cfg.design, 'localizer') && strcmpi(cfg.design.localizer, 'MT_MST')
+            cfg.timing.IBI = 2;
+        end
+
     end
 
     %% Visual Stimulation
@@ -92,11 +109,11 @@ function [cfg] = setParameters()
     % Number of dots per visual angle square.
     cfg.dot.density = 1;
     % Dot life time in seconds
-    cfg.dot.lifeTime = 10;
+    cfg.dot.lifeTime = .15;
     % proportion of dots killed per frame
-    cfg.dot.proportionKilledPerFrame = 0;
+    cfg.dot.proportionKilledPerFrame = 0.005;
     % Dot Size (dot width) in visual angles.
-    cfg.dot.size = .1;
+    cfg.dot.size = .2;
     cfg.dot.color = cfg.color.white;
 
     % Diameter/length of side of aperture in Visual angles
@@ -104,9 +121,18 @@ function [cfg] = setParameters()
     cfg.aperture.width = []; % if left empty it will take the screen height
     cfg.aperture.xPos = 0;
 
+    if isfield(cfg.design, 'localizer') && strcmpi(cfg.design.localizer, 'MT_MST')
+        cfg.aperture.type = 'circle';
+        cfg.aperture.width = 7; % if left empty it will take the screen height
+        cfg.aperture.xPos = 7;
+    end
+
     %% Task(s)
 
     cfg.task.name = 'visual localizer';
+    if isfield(cfg.design, 'localizer') && strcmpi(cfg.design.localizer, 'MT_MST')
+        cfg.task.name = 'mt mst localizer';
+    end
 
     % Instruction
     cfg.task.instruction = '1-Detect the RED fixation cross\n \n\n';
@@ -115,7 +141,7 @@ function [cfg] = setParameters()
     cfg.fixation.type = 'cross';
     cfg.fixation.colorTarget = cfg.color.red;
     cfg.fixation.color = cfg.color.white;
-    cfg.fixation.width = .5;
+    cfg.fixation.width = .25;
     cfg.fixation.lineWidthPix = 3;
     cfg.fixation.xDisplacement = 0;
     cfg.fixation.yDisplacement = 0;
@@ -123,16 +149,24 @@ function [cfg] = setParameters()
     cfg.target.maxNbPerBlock = 1;
     cfg.target.duration = 0.05; % In secs
 
-    cfg.extraColumns = {'direction', 'speed', 'target', 'event', 'block', 'keyName'};
+    cfg.extraColumns = { ...
+                        'direction', ...
+                        'speed', ...
+                        'target', ...
+                        'event', ...
+                        'block', ...
+                        'keyName', ...
+                        'fixationPosition', ...
+                        'aperturePosition'};
 
 end
 
 function cfg = setKeyboards(cfg)
     cfg.keyboard.escapeKey = 'ESCAPE';
     cfg.keyboard.responseKey = { ...
-        'r', 'g', 'y', 'b', ...
-        'd', 'n', 'z', 'e', ...
-        't'}; % dnze rgyb
+                                'r', 'g', 'y', 'b', ...
+                                'd', 'n', 'z', 'e', ...
+                                't'};
     cfg.keyboard.keyboard = [];
     cfg.keyboard.responseBox = [];
 
@@ -145,7 +179,7 @@ end
 function cfg = setMRI(cfg)
     % letter sent by the trigger to sync stimulation and volume acquisition
     cfg.mri.triggerKey = 't';
-    cfg.mri.triggerNb = 5;
+    cfg.mri.triggerNb = 1;
 
     cfg.mri.repetitionTime = 1.8;
 

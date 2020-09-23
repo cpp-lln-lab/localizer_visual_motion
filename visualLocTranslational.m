@@ -1,17 +1,14 @@
-%% Visual hMT localizer using translational motion in four directions
-%  (up- down- left and right-ward)
+% (C) Copyright 2018 Mohamed Rezk
+% (C) Copyright 2020 CPP visual motion localizer developpers
 
-% by Mohamed Rezk 2018
-% adapted by MarcoB and RemiG 2020
-
-%%
+%% Visual motion localizer
 
 getOnlyPress = 1;
 
 more off;
 
 % Clear all the previous stuff
-% clc; clear;
+clc;
 if ~ismac
     close all;
     clear Screen;
@@ -37,7 +34,11 @@ try
 
     [el] = eyeTracker('Calibration', cfg);
 
+    %     if isfield(cfg.design, 'localizer') && strcmpi(cfg.design.localizer, 'MT_MST')
+    %         [cfg] = expDesignMtMst(cfg);
+    %     else
     [cfg] = expDesign(cfg);
+    %     end
 
     % Prepare for the output logfiles with all
     logFile.extraColumns = cfg.extraColumns;
@@ -79,50 +80,33 @@ try
             % Check for experiment abortion from operator
             checkAbort(cfg, cfg.keyboard.keyboard);
 
-            % set direction, speed of that event and if it is a target
-            thisEvent.trial_type = cfg.design.blockNames{iBlock};
-            thisEvent.direction = cfg.design.directions(iBlock, iEvent);
-            thisEvent.speed = cfg.design.speeds(iBlock, iEvent);
-            thisEvent.target = cfg.design.fixationTargets(iBlock, iEvent);
+            [thisEvent, thisFixation, cfg] = preTrialSetup(cfg, iBlock, iEvent);
 
             % we wait for a trigger every 2 events
             if cfg.pacedByTriggers.do && mod(iEvent, 2) == 1
                 waitForTrigger( ...
-                    cfg, ...
-                    cfg.keyboard.responseBox, ...
-                    cfg.pacedByTriggers.quietMode, ...
-                    cfg.pacedByTriggers.nbTriggers);
+                               cfg, ...
+                               cfg.keyboard.responseBox, ...
+                               cfg.pacedByTriggers.quietMode, ...
+                               cfg.pacedByTriggers.nbTriggers);
             end
 
             % play the dots and collect onset and duraton of the event
-            [onset, duration] = doDotMo(cfg, thisEvent);
+            [onset, duration] = doDotMo(cfg, thisEvent, thisFixation);
 
-            thisEvent.event = iEvent;
-            thisEvent.block = iBlock;
-            thisEvent.keyName = 'n/a';
-            thisEvent.duration = duration;
-            thisEvent.onset = onset - cfg.experimentStart;
-
-            % % this value should be in degrees / second in the log file
-            % % highlights that the way speed is passed around could be
-            % % simplified.
-            % %
-            % thisEvent.speed
-            % %
-
-            % Save the events txt logfile
-            % we save event by event so we clear this variable every loop
-            thisEvent.fileID = logFile.fileID;
-            thisEvent.extraColumns = logFile.extraColumns;
-
+            thisEvent = preSaveSetup( ...
+                                     thisEvent, ...
+                                     thisFixation, ...
+                                     iBlock, iEvent, ...
+                                     duration, onset, ...
+                                     cfg, ...
+                                     logFile);
             saveEventsFile('save', cfg, thisEvent);
-
-            clear thisEvent;
 
             % collect the responses and appends to the event structure for
             % saving in the tsv file
             responseEvents = getResponse('check', cfg.keyboard.responseBox, cfg, ...
-                getOnlyPress);
+                                         getOnlyPress);
 
             triggerString = ['trigger_' cfg.design.blockNames{iBlock}];
             saveResponsesAndTriggers(responseEvents, cfg, logFile, triggerString);
@@ -133,11 +117,22 @@ try
 
         eyeTracker('StopRecordings', cfg);
 
+        % "prepare" cross for the baseline block
+        % if MT / MST this allows us to set the cross at the position of the next block
+        if iBlock < cfg.design.nbBlocks
+            nextBlock = iBlock + 1;
+        else
+            nextBlock = cfg.design.nbBlocks;
+        end
+        [~, thisFixation] = preTrialSetup(cfg, nextBlock, 1);
+        drawFixation(thisFixation);
+        Screen('Flip', cfg.screen.win);
+
         waitFor(cfg, cfg.timing.IBI);
 
         % trigger monitoring
         triggerEvents = getResponse('check', cfg.keyboard.responseBox, cfg, ...
-            getOnlyPress);
+                                    getOnlyPress);
 
         triggerString = 'trigger_baseline';
         saveResponsesAndTriggers(triggerEvents, cfg, logFile, triggerString);
