@@ -40,9 +40,8 @@ function [cfg] = setParameters()
 
     %% Experiment Design
 
-    cfg.design.localizer = 'MT_MST';
+    %     cfg.design.localizer = 'MT_MST';
 
-    %     cfg.design.motionType = 'translation';
     %     cfg.design.motionType = 'radial';
     cfg.design.motionType = 'translation';
 
@@ -110,9 +109,9 @@ function [cfg] = setParameters()
     % Number of dots per visual angle square.
     cfg.dot.density = 1;
     % Dot life time in seconds
-    cfg.dot.lifeTime = 10;
+    cfg.dot.lifeTime = .15;
     % proportion of dots killed per frame
-    cfg.dot.proportionKilledPerFrame = 0;
+    cfg.dot.proportionKilledPerFrame = 0.005;
     % Dot Size (dot width) in visual angles.
     cfg.dot.size = .2;
     cfg.dot.color = cfg.color.white;
