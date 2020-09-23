@@ -1,3 +1,5 @@
+% (C) Copyright 2020 CPP visual motion localizer developpers
+
 function varargout = preSaveSetup(varargin)
     % varargout = postInitializatinSetup(varargin)
 

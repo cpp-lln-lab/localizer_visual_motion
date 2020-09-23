@@ -1,3 +1,5 @@
+% (C) Copyright 2020 CPP visual motion localizer developpers
+
 function [cfg] = expDesign(cfg, displayFigs)
     % Creates the sequence of blocks and the events in them
     %

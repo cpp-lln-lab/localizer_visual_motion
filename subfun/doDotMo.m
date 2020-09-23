@@ -1,3 +1,6 @@
+% (C) Copyright 2018 Mohamed Rezk
+% (C) Copyright 2020 CPP visual motion localizer developpers
+
 function [onset, duration] = doDotMo(cfg, thisEvent, thisFixation)
     % Draws the stimulation of static/moving in 4 directions dots or static
     %

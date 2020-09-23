@@ -1,17 +1,14 @@
-%% Visual hMT localizer using translational motion in four directions
-%  (up- down- left and right-ward)
+% (C) Copyright 2018 Mohamed Rezk
+% (C) Copyright 2020 CPP visual motion localizer developpers
 
-% by Mohamed Rezk 2018
-% adapted by MarcoB and RemiG 2020
-
-%%
+%% Visual motion localizer
 
 getOnlyPress = 1;
 
 more off;
 
 % Clear all the previous stuff
-% clc; clear;
+clc;
 if ~ismac
     close all;
     clear Screen;

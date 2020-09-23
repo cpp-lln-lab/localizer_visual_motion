@@ -1,3 +1,5 @@
+% (C) Copyright 2020 CPP visual motion localizer developpers
+
 function [cfg] = setParameters()
 
     % VISUAL LOCALIZER
