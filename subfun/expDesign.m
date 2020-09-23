@@ -65,7 +65,7 @@ function [cfg] = expDesign(cfg, displayFigs)
     fprintf('\n\nCreating design.\n\n');
 
     [NB_BLOCKS, NB_REPETITIONS, NB_EVENTS_PER_BLOCK, MAX_TARGET_PER_BLOCK] = getDesignInput(cfg);
-    [~, STATIC_INDEX, MOTION_INDEX] = assignConditions(cfg);
+    [~, CONDITON1_INDEX, CONDITON2_INDEX] = assignConditions(cfg);
 
     if mod(NB_REPETITIONS, MAX_TARGET_PER_BLOCK) ~= 0
         error('number of repetitions must be a multiple of max number of targets');
@@ -75,8 +75,8 @@ function [cfg] = expDesign(cfg, displayFigs)
     targetPerCondition = repmat(RANGE_TARGETS, 1, NB_REPETITIONS / MAX_TARGET_PER_BLOCK);
 
     numTargetsForEachBlock = zeros(1, NB_BLOCKS);
-    numTargetsForEachBlock(STATIC_INDEX) = shuffle(targetPerCondition);
-    numTargetsForEachBlock(MOTION_INDEX) = shuffle(targetPerCondition);
+    numTargetsForEachBlock(CONDITON1_INDEX) = shuffle(targetPerCondition);
+    numTargetsForEachBlock(CONDITON2_INDEX) = shuffle(targetPerCondition);
 
     %% Give the blocks the names with condition and design the task in each event
     while 1
@@ -124,141 +124,4 @@ function [cfg] = expDesign(cfg, displayFigs)
     %% Plot
     diplayDesign(cfg, displayFigs);
 
-end
-
-function cfg = setDirections(cfg)
-
-    [MOTION_DIRECTIONS, STATIC_DIRECTIONS] = getDirectionBaseVectors(cfg);
-
-    [NB_BLOCKS, NB_REPETITIONS, NB_EVENTS_PER_BLOCK] = getDesignInput(cfg);
-
-    [~, STATIC_INDEX, MOTION_INDEX] = assignConditions(cfg);
-
-    if mod(NB_EVENTS_PER_BLOCK, length(MOTION_DIRECTIONS)) ~= 0
-        error('Number of events/block not a multiple of number of motion/static direction');
-    end
-
-    % initialize
-    directions = zeros(NB_BLOCKS, NB_EVENTS_PER_BLOCK);
-
-    % Create a vector for the static condition
-    NB_REPEATS_BASE_VECTOR = NB_EVENTS_PER_BLOCK / length(STATIC_DIRECTIONS);
-
-    static_directions = repmat( ...
-        STATIC_DIRECTIONS, ...
-        1, NB_REPEATS_BASE_VECTOR);
-
-    for iMotionBlock = 1:NB_REPETITIONS
-
-        % Set motion direction and static order
-        directions(MOTION_INDEX(iMotionBlock), :) = ...
-            repeatShuffleConditions(MOTION_DIRECTIONS, NB_REPEATS_BASE_VECTOR);
-        directions(STATIC_INDEX(iMotionBlock), :) = static_directions;
-
-    end
-
-    cfg.design.directions = directions;
-
-end
-
-function [MOTION_DIRECTIONS, STATIC_DIRECTIONS] = getDirectionBaseVectors(cfg)
-
-    % CONSTANTS
-    % Set directions for static and motion condition
-
-    MOTION_DIRECTIONS = cfg.design.motionDirections;
-    STATIC_DIRECTIONS = repmat(-1, size(MOTION_DIRECTIONS));
-
-end
-
-function [conditionNamesVector, STATIC_INDEX, MOTION_INDEX] = assignConditions(cfg)
-
-    [~, nbRepet] = getDesignInput(cfg);
-
-    conditionNamesVector = repmat(cfg.design.names, nbRepet, 1);
-
-    % Get the index of each condition
-    STATIC_INDEX = find(strcmp(conditionNamesVector, 'static'));
-    MOTION_INDEX = find(strcmp(conditionNamesVector, 'motion'));
-
-end
-
-function diplayDesign(cfg, displayFigs)
-
-    %% Visualize the design matrix
-    if displayFigs
-
-        close all;
-
-        figure(1);
-
-        % Shows blocks (static and motion) and events (motion direction) order
-        directions = cfg.design.directions;
-        directions(directions == -1) = -90;
-
-        subplot(3, 1, 1);
-        imagesc(directions);
-
-        labelAxesBlock();
-
-        caxis([-90 - 37, 270 + 37]);
-        myColorMap = lines(5);
-        colormap(myColorMap);
-
-        title('Block (static and motion) & Events (motion direction)');
-
-        % Shows the fixation targets design in each event (1 or 0)
-        fixationTargets = cfg.design.fixationTargets;
-
-        subplot(3, 1, 2);
-        imagesc(fixationTargets);
-        labelAxesBlock();
-        title('Fixation Targets design');
-        colormap(gray);
-
-        % Shows the fixation targets position distribution in the block across
-        % the experimet
-        [~, itargetPosition] = find(fixationTargets == 1);
-
-        subplot(3, 1, 3);
-        hist(itargetPosition);
-        labelAxesFreq();
-        title('Fixation Targets position distribution');
-
-        figure(2);
-
-        [motionDirections] = getDirectionBaseVectors(cfg);
-        motionDirections = unique(motionDirections);
-
-        for iMotion = 1:length(motionDirections)
-
-            [~, position] = find(directions == motionDirections(iMotion));
-
-            subplot(2, 2, iMotion);
-            hist(position);
-            scaleAxes();
-            labelAxesFreq();
-            title(num2str(motionDirections(iMotion)));
-
-        end
-
-    end
-
-end
-
-function labelAxesBlock()
-    % an old viking saying because they really cared about their axes
-    ylabel('Block seq.', 'Fontsize', 8);
-    xlabel('Events', 'Fontsize', 8);
-end
-
-function labelAxesFreq()
-    % an old viking saying because they really cared about their axes
-    ylabel('Number of targets', 'Fontsize', 8);
-    xlabel('Events', 'Fontsize', 8);
-end
-
-function scaleAxes()
-    xlim([1 12]);
-    ylim([0 5]);
 end
