@@ -60,6 +60,9 @@ try
     waitForTrigger(cfg);
 
     %% Experiment Start
+
+    eyeTracker('StartRecording', cfg);
+
     cfg = getExperimentStart(cfg);
 
     getResponse('start', cfg.keyboard.responseBox);
@@ -72,7 +75,7 @@ try
 
         fprintf('\n - Running Block %.0f \n', iBlock);
 
-        eyeTracker('StartRecording', cfg);
+        eyeTracker('Message', cfg, ['start_block-', iBlock]);
 
         % For each event in the block
         for iEvent = 1:cfg.design.nbEventsPerBlock
@@ -115,7 +118,7 @@ try
 
         end
 
-        eyeTracker('StopRecordings', cfg);
+        eyeTracker('Message', cfg, ['end_block-', iBlock]);
 
         % "prepare" cross for the baseline block
         % if MT / MST this allows us to set the cross at the position of the next block
@@ -143,6 +146,8 @@ try
     waitFor(cfg, cfg.timing.endDelay);
 
     cfg = getExperimentEnd(cfg);
+
+    eyeTracker('StopRecordings', cfg);
 
     % Close the logfiles
     saveEventsFile('close', cfg, logFile);
