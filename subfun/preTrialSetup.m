@@ -16,18 +16,25 @@ function varargout = preTrialSetup(varargin)
     % If this frame shows a target we change the color of the cross
     thisFixation.fixation = cfg.fixation;
     thisFixation.screen = cfg.screen;
+    
+    % To shift the dot matrix 
+    thisEvent.dotCenterXPosPix = 0;
 
     switch thisEvent.trial_type
         case 'fixation_right'
             cfg.aperture.xPosPix = -abs(cfg.aperture.xPosPix);
+            
+            thisEvent.dotCenterXPosPix = cfg.aperture.xPosPix;
 
-            thisFixation.fixation.xDisplacement = cfg.aperture.xPos;
+            thisFixation.fixation.xDisplacement = cfg.design.xDisplacementFixation;
             thisFixation = initFixation(thisFixation);
 
         case 'fixation_left'
             cfg.aperture.xPosPix = +abs(cfg.aperture.xPosPix);
+            
+            thisEvent.dotCenterXPosPix = cfg.aperture.xPosPix;
 
-            thisFixation.fixation.xDisplacement = -cfg.aperture.xPos;
+            thisFixation.fixation.xDisplacement = -cfg.design.xDisplacementFixation;
             thisFixation = initFixation(thisFixation);
 
     end
