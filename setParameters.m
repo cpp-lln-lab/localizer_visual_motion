@@ -18,7 +18,7 @@ function [cfg] = setParameters()
 
     cfg.debug.do = false; % To test the script out of the scanner, skip PTB sync
     cfg.debug.smallWin = false; % To test on a part of the screen, change to 1
-    cfg.debug.transpWin = true; % To test with trasparent full size screen
+    cfg.debug.transpWin = false; % To test with trasparent full size screen
 
     cfg.verbose = false;
 
@@ -40,13 +40,18 @@ function [cfg] = setParameters()
 
     %% Experiment Design
 
-    %     cfg.design.localizer = 'MT_MST';
+    cfg.design.localizer = 'MT_MST';
 
-    %     cfg.design.motionType = 'radial';
-    cfg.design.motionType = 'translation';
-
-    cfg.design.motionDirections = [0 0 180 180];
+    cfg.design.motionType = 'radial';
+    cfg.design.motionDirections = [666 666 -666 -666];
     cfg.design.names = {'static'; 'motion'};
+    cfg.design.xDisplacementFixation = 7;
+    cfg.design.xDisplacementAperture = 3;
+    
+%     cfg.design.motionType = 'translation';
+%     cfg.design.motionDirections = [0 0 180 180];
+%     cfg.design.names = {'static'; 'motion'};
+    
     cfg.design.nbRepetitions = 8;
     cfg.design.nbEventsPerBlock = 12; % DO NOT CHANGE
 
@@ -109,9 +114,9 @@ function [cfg] = setParameters()
     % Number of dots per visual angle square.
     cfg.dot.density = 1;
     % Dot life time in seconds
-    cfg.dot.lifeTime = .15;
+    cfg.dot.lifeTime = .5;
     % proportion of dots killed per frame
-    cfg.dot.proportionKilledPerFrame = 0.005;
+    cfg.dot.proportionKilledPerFrame = 0.05;
     % Dot Size (dot width) in visual angles.
     cfg.dot.size = .2;
     cfg.dot.color = cfg.color.white;
@@ -124,7 +129,7 @@ function [cfg] = setParameters()
     if isfield(cfg.design, 'localizer') && strcmpi(cfg.design.localizer, 'MT_MST')
         cfg.aperture.type = 'circle';
         cfg.aperture.width = 7; % if left empty it will take the screen height
-        cfg.aperture.xPos = 7;
+        cfg.aperture.xPos = cfg.design.xDisplacementAperture;
     end
 
     %% Task(s)
