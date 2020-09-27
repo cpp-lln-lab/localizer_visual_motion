@@ -80,6 +80,8 @@ try
         % For each event in the block
         for iEvent = 1:cfg.design.nbEventsPerBlock
 
+            eyeTracker('Message', cfg, ['start_trial-', iEvent, '_', thisEvent]);
+
             % Check for experiment abortion from operator
             checkAbort(cfg, cfg.keyboard.keyboard);
 
@@ -118,7 +120,7 @@ try
 
         end
 
-        eyeTracker('Message', cfg, ['end_block-', iBlock]);
+        eyeTracker('Message', cfg, ['end_trial-', iEvent, '_', thisEvent]);
 
         % "prepare" cross for the baseline block
         % if MT / MST this allows us to set the cross at the position of the next block
