@@ -80,7 +80,8 @@ try
         % For each event in the block
         for iEvent = 1:cfg.design.nbEventsPerBlock
 
-            eyeTracker('Message', cfg, ['start_trial-', num2str(iEvent), '_', thisEvent.trial_type]);
+            eyeTracker('Message', cfg, ...
+                       ['start_trial-', num2str(iEvent), '_', thisEvent.trial_type]);
 
             % Check for experiment abortion from operator
             checkAbort(cfg, cfg.keyboard.keyboard);
@@ -116,7 +117,8 @@ try
             triggerString = ['trigger_' cfg.design.blockNames{iBlock}];
             saveResponsesAndTriggers(responseEvents, cfg, logFile, triggerString);
 
-            eyeTracker('Message', cfg, ['end_trial-', num2str(iEvent), '_', thisEvent.trial_type]);
+            eyeTracker('Message', cfg, ...
+                       ['end_trial-', num2str(iEvent), '_', thisEvent.trial_type]);
 
             waitFor(cfg, cfg.timing.ISI);
 
