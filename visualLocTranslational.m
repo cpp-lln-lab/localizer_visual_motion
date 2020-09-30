@@ -75,7 +75,7 @@ try
 
         fprintf('\n - Running Block %.0f \n', iBlock);
 
-        eyeTracker('Message', cfg, ['start_block-', iBlock]);
+        eyeTracker('Message', cfg, ['start_block-', num2str(iBlock)]);
 
         % For each event in the block
         for iEvent = 1:cfg.design.nbEventsPerBlock
