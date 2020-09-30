@@ -80,7 +80,7 @@ try
         % For each event in the block
         for iEvent = 1:cfg.design.nbEventsPerBlock
 
-            eyeTracker('Message', cfg, ['start_trial-', iEvent, '_', thisEvent]);
+            eyeTracker('Message', cfg, ['start_trial-', num2str(iEvent), '_', thisEvent.trial_type]);
 
             % Check for experiment abortion from operator
             checkAbort(cfg, cfg.keyboard.keyboard);
@@ -116,11 +116,11 @@ try
             triggerString = ['trigger_' cfg.design.blockNames{iBlock}];
             saveResponsesAndTriggers(responseEvents, cfg, logFile, triggerString);
 
+            eyeTracker('Message', cfg, ['end_trial-', num2str(iEvent), '_', thisEvent.trial_type]);
+
             waitFor(cfg, cfg.timing.ISI);
 
         end
-
-        eyeTracker('Message', cfg, ['end_trial-', iEvent, '_', thisEvent]);
 
         % "prepare" cross for the baseline block
         % if MT / MST this allows us to set the cross at the position of the next block
@@ -132,6 +132,8 @@ try
         [~, thisFixation] = preTrialSetup(cfg, nextBlock, 1);
         drawFixation(thisFixation);
         Screen('Flip', cfg.screen.win);
+
+        eyeTracker('Message', cfg, ['end_block-', num2str(iBlock)]);
 
         waitFor(cfg, cfg.timing.IBI);
 
