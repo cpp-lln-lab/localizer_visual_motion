@@ -16,14 +16,22 @@ function varargout = preTrialSetup(varargin)
     % If this frame shows a target we change the color of the cross
     thisFixation.fixation = cfg.fixation;
     thisFixation.screen = cfg.screen;
-    
-    % To shift the dot matrix 
+
+    % ThisEvent.dotCenterXPosPix determines by how much the dot matrix has to be
+    % shifted relative to the center of the screen.
+    % By default it is centered on screen but for the MT/MST localizer we
+    % shift so the center of the radial motion is matched to that of the
+    % aperture on the side of the screen.
+    %
+    % Meanwhile the cross is shifted on the opposite side
+    %
+
     thisEvent.dotCenterXPosPix = 0;
 
     switch thisEvent.trial_type
         case 'fixation_right'
             cfg.aperture.xPosPix = -abs(cfg.aperture.xPosPix);
-            
+
             thisEvent.dotCenterXPosPix = cfg.aperture.xPosPix;
 
             thisFixation.fixation.xDisplacement = cfg.design.xDisplacementFixation;
@@ -31,7 +39,7 @@ function varargout = preTrialSetup(varargin)
 
         case 'fixation_left'
             cfg.aperture.xPosPix = +abs(cfg.aperture.xPosPix);
-            
+
             thisEvent.dotCenterXPosPix = cfg.aperture.xPosPix;
 
             thisFixation.fixation.xDisplacement = -cfg.design.xDisplacementFixation;
