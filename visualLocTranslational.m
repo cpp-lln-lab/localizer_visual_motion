@@ -60,6 +60,9 @@ try
     waitForTrigger(cfg);
 
     %% Experiment Start
+
+    eyeTracker('StartRecording', cfg);
+
     cfg = getExperimentStart(cfg);
 
     getResponse('start', cfg.keyboard.responseBox);
@@ -72,7 +75,7 @@ try
 
         fprintf('\n - Running Block %.0f \n', iBlock);
 
-        eyeTracker('StartRecording', cfg);
+        eyeTracker('Message', cfg, ['start_block-', num2str(iBlock)]);
 
         % For each event in the block
         for iEvent = 1:cfg.design.nbEventsPerBlock
@@ -90,6 +93,9 @@ try
                                cfg.pacedByTriggers.quietMode, ...
                                cfg.pacedByTriggers.nbTriggers);
             end
+
+            eyeTracker('Message', cfg, ...
+                       ['start_trial-', num2str(iEvent), '_', thisEvent.trial_type]);
 
             % play the dots and collect onset and duraton of the event
             [onset, duration] = doDotMo(cfg, thisEvent, thisFixation);
@@ -111,11 +117,12 @@ try
             triggerString = ['trigger_' cfg.design.blockNames{iBlock}];
             saveResponsesAndTriggers(responseEvents, cfg, logFile, triggerString);
 
+            eyeTracker('Message', cfg, ...
+                       ['end_trial-', num2str(iEvent), '_', thisEvent.trial_type]);
+
             waitFor(cfg, cfg.timing.ISI);
 
         end
-
-        eyeTracker('StopRecordings', cfg);
 
         % "prepare" cross for the baseline block
         % if MT / MST this allows us to set the cross at the position of the next block
@@ -127,6 +134,8 @@ try
         [~, thisFixation] = preTrialSetup(cfg, nextBlock, 1);
         drawFixation(thisFixation);
         Screen('Flip', cfg.screen.win);
+
+        eyeTracker('Message', cfg, ['end_block-', num2str(iBlock)]);
 
         waitFor(cfg, cfg.timing.IBI);
 
@@ -143,6 +152,8 @@ try
     waitFor(cfg, cfg.timing.endDelay);
 
     cfg = getExperimentEnd(cfg);
+
+    eyeTracker('StopRecordings', cfg);
 
     % Close the logfiles
     saveEventsFile('close', cfg, logFile);
