@@ -132,7 +132,7 @@ function [cfg] = setParameters()
     cfg.fixation.yDisplacement = 0;
 
     cfg.target.maxNbPerBlock = 1;
-    cfg.target.duration = 0.025; % In secs
+    cfg.target.duration = 0.1; % In secs
 
     cfg.extraColumns = { ...
                         'direction', ...
