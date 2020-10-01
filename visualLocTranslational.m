@@ -80,9 +80,6 @@ try
         % For each event in the block
         for iEvent = 1:cfg.design.nbEventsPerBlock
 
-            eyeTracker('Message', cfg, ...
-                       ['start_trial-', num2str(iEvent), '_', thisEvent.trial_type]);
-
             % Check for experiment abortion from operator
             checkAbort(cfg, cfg.keyboard.keyboard);
 
@@ -96,6 +93,9 @@ try
                                cfg.pacedByTriggers.quietMode, ...
                                cfg.pacedByTriggers.nbTriggers);
             end
+
+            eyeTracker('Message', cfg, ...
+                       ['start_trial-', num2str(iEvent), '_', thisEvent.trial_type]);
 
             % play the dots and collect onset and duraton of the event
             [onset, duration] = doDotMo(cfg, thisEvent, thisFixation);
