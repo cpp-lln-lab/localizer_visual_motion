@@ -51,7 +51,8 @@ function [onset, duration] = doDotMo(cfg, thisEvent, thisFixation)
 
         apertureTexture('draw', cfg, thisEvent);
 
-        if thisEvent.target(1) && GetSecs < (onset + cfg.target.duration)
+        thisFixation.fixation.color = cfg.fixation.color;
+        if thisEvent.target(1) && vbl < (onset + cfg.target.duration)
             thisFixation.fixation.color = cfg.fixation.colorTarget;
         end
         drawFixation(thisFixation);

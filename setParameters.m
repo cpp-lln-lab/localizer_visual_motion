@@ -18,9 +18,9 @@ function [cfg] = setParameters()
 
     cfg.debug.do = false; % To test the script out of the scanner, skip PTB sync
     cfg.debug.smallWin = false; % To test on a part of the screen, change to 1
-    cfg.debug.transpWin = true; % To test with trasparent full size screen
+    cfg.debug.transpWin = false; % To test with trasparent full size screen
 
-    cfg.verbose = false;
+    cfg.verbose = 2;
 
     %% Engine parameters
 
@@ -40,19 +40,21 @@ function [cfg] = setParameters()
 
     %% Experiment Design
 
-    %     cfg.design.localizer = 'MT_MST';
+    % switching this on to MT or MT/MST with use:
+    % - MT: translational motion on the whole screen
+    %   - alternates static and motion (left or right) blocks
+    % - MST: radial motion centered in a circle aperture that is on the opposite
+    % side of the screen relative to the fixation
+    %   - alternates fixaton left and fixation right
+    cfg.design.localizer = 'MT';
+    % cfg.design.localizer = 'MT_MST';
 
-    %     cfg.design.motionType = 'radial';
     cfg.design.motionType = 'translation';
-
     cfg.design.motionDirections = [0 0 180 180];
     cfg.design.names = {'static'; 'motion'};
+
     cfg.design.nbRepetitions = 8;
     cfg.design.nbEventsPerBlock = 12; % DO NOT CHANGE
-
-    if isfield(cfg.design, 'localizer') && strcmpi(cfg.design.localizer, 'MT_MST')
-        cfg.design.names = {'fixation_right'; 'fixation_left'};
-    end
 
     %% Timing
 
@@ -73,10 +75,6 @@ function [cfg] = setParameters()
     % Number of seconds after the end all the stimuli before ending the run
     cfg.timing.endDelay = 3.6;
 
-    if isfield(cfg.design, 'localizer') && strcmpi(cfg.design.localizer, 'MT_MST')
-        cfg.timing.IBI = 3.6;
-    end
-
     % reexpress those in terms of repetition time
     if cfg.pacedByTriggers.do
 
@@ -94,10 +92,6 @@ function [cfg] = setParameters()
         % Number of seconds after the end all the stimuli before ending the run
         cfg.timing.endDelay = 2;
 
-        if isfield(cfg.design, 'localizer') && strcmpi(cfg.design.localizer, 'MT_MST')
-            cfg.timing.IBI = 2;
-        end
-
     end
 
     %% Visual Stimulation
@@ -109,9 +103,9 @@ function [cfg] = setParameters()
     % Number of dots per visual angle square.
     cfg.dot.density = 1;
     % Dot life time in seconds
-    cfg.dot.lifeTime = .15;
+    cfg.dot.lifeTime = .4;
     % proportion of dots killed per frame
-    cfg.dot.proportionKilledPerFrame = 0.005;
+    cfg.dot.proportionKilledPerFrame = 0;
     % Dot Size (dot width) in visual angles.
     cfg.dot.size = .2;
     cfg.dot.color = cfg.color.white;
@@ -121,18 +115,9 @@ function [cfg] = setParameters()
     cfg.aperture.width = []; % if left empty it will take the screen height
     cfg.aperture.xPos = 0;
 
-    if isfield(cfg.design, 'localizer') && strcmpi(cfg.design.localizer, 'MT_MST')
-        cfg.aperture.type = 'circle';
-        cfg.aperture.width = 7; % if left empty it will take the screen height
-        cfg.aperture.xPos = 7;
-    end
-
     %% Task(s)
 
     cfg.task.name = 'visual localizer';
-    if isfield(cfg.design, 'localizer') && strcmpi(cfg.design.localizer, 'MT_MST')
-        cfg.task.name = 'mt mst localizer';
-    end
 
     % Instruction
     cfg.task.instruction = '1-Detect the RED fixation cross\n \n\n';
@@ -147,7 +132,7 @@ function [cfg] = setParameters()
     cfg.fixation.yDisplacement = 0;
 
     cfg.target.maxNbPerBlock = 1;
-    cfg.target.duration = 0.05; % In secs
+    cfg.target.duration = 0.1; % In secs
 
     cfg.extraColumns = { ...
                         'direction', ...
@@ -158,6 +143,9 @@ function [cfg] = setParameters()
                         'keyName', ...
                         'fixationPosition', ...
                         'aperturePosition'};
+
+    %% orverrireds the relevant fields in case we use the MT / MST localizer
+    cfg = setParametersMtMst(cfg);
 
 end
 
@@ -206,4 +194,34 @@ function cfg = setMonitor(cfg)
         cfg.screen.monitorWidth = 25;
         cfg.screen.monitorDistance = 95;
     end
+
+end
+
+function cfg = setParametersMtMst(cfg)
+
+    if isfield(cfg.design, 'localizer') && strcmpi(cfg.design.localizer, 'MT_MST')
+
+        cfg.task.name = 'mt mst localizer';
+
+        cfg.design.motionType = 'radial';
+        cfg.design.motionDirections = [666 666 -666 -666];
+        cfg.design.names = {'fixation_right'; 'fixation_left'};
+        cfg.design.xDisplacementFixation = 7;
+        cfg.design.xDisplacementAperture = 3;
+
+        cfg.timing.IBI = 3.6;
+
+        % reexpress those in terms of repetition time
+        if cfg.pacedByTriggers.do
+
+            cfg.timing.IBI = 2;
+
+        end
+
+        cfg.aperture.type = 'circle';
+        cfg.aperture.width = 7; % if left empty it will take the screen height
+        cfg.aperture.xPos = cfg.design.xDisplacementAperture;
+
+    end
+
 end
