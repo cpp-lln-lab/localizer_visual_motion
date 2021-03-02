@@ -20,7 +20,7 @@ function [cfg] = setParameters()
     cfg.debug.smallWin = false; % To test on a part of the screen, change to 1
     cfg.debug.transpWin = false; % To test with trasparent full size screen
 
-    cfg.verbose = 2;
+    cfg.verbose = 1;
 
     %% Engine parameters
 
@@ -64,7 +64,7 @@ function [cfg] = setParameters()
     % IBI
     % block length = (cfg.eventDuration + cfg.ISI) * cfg.design.nbEventsPerBlock
 
-    cfg.timing.eventDuration = 0.8; % second
+    cfg.timing.eventDuration = 0.6; % second
 
     % Time between blocs in secs
     cfg.timing.IBI = 0;
@@ -79,7 +79,7 @@ function [cfg] = setParameters()
     if cfg.pacedByTriggers.do
 
         cfg.pacedByTriggers.quietMode = true;
-        cfg.pacedByTriggers.nbTriggers = 1;
+        cfg.pacedByTriggers.nbTriggers = 5;
 
         cfg.timing.eventDuration = cfg.mri.repetitionTime / 2 - 0.04; % second
 
@@ -103,7 +103,7 @@ function [cfg] = setParameters()
     % Number of dots per visual angle square.
     cfg.dot.density = 1;
     % Dot life time in seconds
-    cfg.dot.lifeTime = .4;
+    cfg.dot.lifeTime = 0.4;
     % proportion of dots killed per frame
     cfg.dot.proportionKilledPerFrame = 0;
     % Dot Size (dot width) in visual angles.
@@ -136,7 +136,7 @@ function [cfg] = setParameters()
 
     cfg.extraColumns = { ...
                         'direction', ...
-                        'speed', ...
+                        'speedDegVA', ...
                         'target', ...
                         'event', ...
                         'block', ...
@@ -167,7 +167,7 @@ end
 function cfg = setMRI(cfg)
     % letter sent by the trigger to sync stimulation and volume acquisition
     cfg.mri.triggerKey = 't';
-    cfg.mri.triggerNb = 1;
+    cfg.mri.triggerNb = 5;
 
     cfg.mri.repetitionTime = 1.8;
 
