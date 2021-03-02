@@ -42,6 +42,7 @@ try
 
     % Prepare for the output logfiles with all
     logFile.extraColumns = cfg.extraColumns;
+    logFile = saveEventsFile('init', cfg, logFile);
     logFile = saveEventsFile('open', cfg, logFile);
 
     % prepare textures
