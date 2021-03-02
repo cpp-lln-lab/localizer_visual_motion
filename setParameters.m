@@ -11,8 +11,7 @@ function [cfg] = setParameters()
     % setParamters.m file is
     % change that if you want the data to be saved somewhere else
     cfg.dir.output = fullfile( ...
-                              fileparts(mfilename('fullpath')), '..', ...
-                              'output');
+                              fileparts(mfilename('fullpath')),'output');
 
     %% Debug mode settings
 
