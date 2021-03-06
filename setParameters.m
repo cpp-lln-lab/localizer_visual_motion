@@ -11,7 +11,7 @@ function [cfg] = setParameters()
     % setParamters.m file is
     % change that if you want the data to be saved somewhere else
     cfg.dir.output = fullfile( ...
-                              fileparts(mfilename('fullpath')), 'output');
+                              fileparts(mfilename('fullpath')),'output');
 
     %% Debug mode settings
 
@@ -19,12 +19,14 @@ function [cfg] = setParameters()
     cfg.debug.smallWin = false; % To test on a part of the screen, change to 1
     cfg.debug.transpWin = false; % To test with trasparent full size screen
 
+    cfg.skipSyncTests = 0;
+
     cfg.verbose = 1;
 
     %% Engine parameters
 
     cfg.testingDevice = 'mri';
-    cfg.eyeTracker.do = false;
+    cfg.eyeTracker.do = true;
     cfg.audio.do = false;
 
     cfg = setMonitor(cfg);
@@ -34,6 +36,7 @@ function [cfg] = setParameters()
 
     % MRI settings
     cfg = setMRI(cfg);
+    cfg.suffix.acquisition = '0p75mmEvTr2p18';
 
     cfg.pacedByTriggers.do = false;
 
@@ -52,7 +55,7 @@ function [cfg] = setParameters()
     cfg.design.motionDirections = [0 0 180 180];
     cfg.design.names = {'static'; 'motion'};
 
-    cfg.design.nbRepetitions = 8;
+    cfg.design.nbRepetitions = 12;
     cfg.design.nbEventsPerBlock = 12; % DO NOT CHANGE
 
     %% Timing
@@ -63,7 +66,7 @@ function [cfg] = setParameters()
     % IBI
     % block length = (cfg.eventDuration + cfg.ISI) * cfg.design.nbEventsPerBlock
 
-    cfg.timing.eventDuration = 0.6; % second
+    cfg.timing.eventDuration = 0.79; % second
 
     % Time between blocs in secs
     cfg.timing.IBI = 0;
