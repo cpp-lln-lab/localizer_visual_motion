@@ -1,4 +1,7 @@
-function [onset, duration] = doDotMo(cfg, thisEvent)
+% (C) Copyright 2018 Mohamed Rezk
+% (C) Copyright 2020 CPP visual motion localizer developpers
+
+function [onset, duration] = doDotMo(cfg, thisEvent, thisFixation)
     % Draws the stimulation of static/moving in 4 directions dots or static
     %
     % DIRECTIONS
@@ -30,12 +33,14 @@ function [onset, duration] = doDotMo(cfg, thisEvent)
         [dots] = updateDots(dots, cfg);
 
         %% Center the dots
+
         % We assumed that zero is at the top left, but we want it to be
         %  in the center, so shift the dots up and left, which just means
         %  adding half of the screen width in pixel to both the x and y direction.
         thisEvent.dot.positions = (dots.positions - cfg.dot.matrixWidth / 2)';
 
         %% make textures
+
         dotTexture('make', cfg, thisEvent);
 
         apertureTexture('make', cfg, thisEvent);
@@ -46,10 +51,8 @@ function [onset, duration] = doDotMo(cfg, thisEvent)
 
         apertureTexture('draw', cfg, thisEvent);
 
-        % If this frame shows a target we change the color of the cross
-        thisFixation.fixation = cfg.fixation;
-        thisFixation.screen = cfg.screen;
-        if thisEvent.target(1) && GetSecs < (onset + cfg.target.duration)
+        thisFixation.fixation.color = cfg.fixation.color;
+        if thisEvent.target(1) && vbl < (onset + cfg.target.duration)
             thisFixation.fixation.color = cfg.fixation.colorTarget;
         end
         drawFixation(thisFixation);
@@ -67,7 +70,7 @@ function [onset, duration] = doDotMo(cfg, thisEvent)
 
     %% Erase last dots
 
-    drawFixation(cfg);
+    drawFixation(thisFixation);
 
     Screen('DrawingFinished', cfg.screen.win);
 
