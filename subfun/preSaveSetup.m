@@ -16,15 +16,12 @@ function varargout = preSaveSetup(varargin)
     thisEvent.fixationPosition = thisFixation.fixation.xDisplacement;
     thisEvent.aperturePosition = cfg.aperture.xPos * sign(cfg.aperture.xPosPix);
 
-    % % this value should be in degrees / second in the log file
-    % % highlights that the way speed is passed around could be
-    % % simplified.
-    % %
-    % thisEvent.speed
-    % %
+    thisEvent = pixToDeg('speedPix', thisEvent, cfg);
+    thisEvent.speedDegVA = thisEvent.speedDegVA * cfg.screen.monitorRefresh;
 
     % Save the events txt logfile
     % we save event by event so we clear this variable every loop
+    thisEvent.isStim = logFile.isStim;
     thisEvent.fileID = logFile.fileID;
     thisEvent.extraColumns = logFile.extraColumns;
 
