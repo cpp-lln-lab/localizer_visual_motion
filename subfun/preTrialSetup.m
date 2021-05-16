@@ -12,6 +12,7 @@ function varargout = preTrialSetup(varargin)
     thisEvent.direction = cfg.design.directions(iBlock, iEvent);
     thisEvent.speedPix = cfg.design.speeds(iBlock, iEvent);
     thisEvent.target = cfg.design.fixationTargets(iBlock, iEvent);
+    thisEvent.fixationPosition = cfg.design.blockFixationPosition{iBlock};
 
     % If this frame shows a target we change the color of the cross
     thisFixation.fixation = cfg.fixation;
@@ -28,7 +29,7 @@ function varargout = preTrialSetup(varargin)
 
     thisEvent.dotCenterXPosPix = 0;
 
-    switch thisEvent.trial_type
+    switch thisEvent.fixationPosition
         case 'fixation_right'
             cfg.aperture.xPosPix = -abs(cfg.aperture.xPosPix);
 
