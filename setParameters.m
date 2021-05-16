@@ -19,14 +19,14 @@ function [cfg] = setParameters()
     cfg.debug.smallWin = false; % To test on a part of the screen, change to 1
     cfg.debug.transpWin = false; % To test with trasparent full size screen
 
-    cfg.skipSyncTests = 0;
+    cfg.skipSyncTests = 1;
 
     cfg.verbose = 1;
 
     %% Engine parameters
 
     cfg.testingDevice = 'mri';
-    cfg.eyeTracker.do = true;
+    cfg.eyeTracker.do = false;
     cfg.audio.do = false;
 
     cfg = setMonitor(cfg);
@@ -36,7 +36,7 @@ function [cfg] = setParameters()
 
     % MRI settings
     cfg = setMRI(cfg);
-    cfg.suffix.acquisition = '0p75mmEvTr2p18';
+%     cfg.suffix.acquisition = '';
 
     cfg.pacedByTriggers.do = false;
 
@@ -49,14 +49,16 @@ function [cfg] = setParameters()
     % side of the screen relative to the fixation
     %   - alternates fixaton left and fixation right
     cfg.design.localizer = 'MT';
-    % cfg.design.localizer = 'MT_MST';
+%     cfg.design.localizer = 'MT_MST';
 
     cfg.design.motionType = 'translation';
     cfg.design.motionDirections = [0 0 180 180];
     cfg.design.names = {'static'; 'motion'};
 
-    cfg.design.nbRepetitions = 12;
-    cfg.design.nbEventsPerBlock = 12; % DO NOT CHANGE
+    % if you have static and motion and `nbRepetions` = 4, this will return 8 blocks (n blocks per 
+    % hemifield in case of MT/MST localizer) 
+    cfg.design.nbRepetitions = 4;
+    cfg.design.nbEventsPerBlock = 12; 
 
     %% Timing
 
@@ -66,7 +68,7 @@ function [cfg] = setParameters()
     % IBI
     % block length = (cfg.eventDuration + cfg.ISI) * cfg.design.nbEventsPerBlock
 
-    cfg.timing.eventDuration = 0.79; % second
+    cfg.timing.eventDuration = 0.45; % second
 
     % Time between blocs in secs
     cfg.timing.IBI = 0;
@@ -157,8 +159,8 @@ function cfg = setKeyboards(cfg)
                                 'r', 'g', 'y', 'b', ...
                                 'd', 'n', 'z', 'e', ...
                                 't'};
-    cfg.keyboard.keyboard = [];
-    cfg.keyboard.responseBox = [];
+    cfg.keyboard.keyboard = [7];
+    cfg.keyboard.responseBox = [7];
 
     if strcmpi(cfg.testingDevice, 'mri')
         cfg.keyboard.keyboard = [];
@@ -206,8 +208,10 @@ function cfg = setParametersMtMst(cfg)
         cfg.task.name = 'mt mst localizer';
 
         cfg.design.motionType = 'radial';
-        cfg.design.motionDirections = [666 666 -666 -666];
-        cfg.design.names = {'fixation_right'; 'fixation_left'};
+        cfg.design.motionDirections = [666 -666];
+        cfg.design.names = {'motion'; 'static'};
+        cfg.design.fixationPosition = {'fixation_left'; 'fixation_right'};
+%          cfg.design.fixationPosition = {'fixation_right'; 'fixation_left'};
         cfg.design.xDisplacementFixation = 7;
         cfg.design.xDisplacementAperture = 3;
 
