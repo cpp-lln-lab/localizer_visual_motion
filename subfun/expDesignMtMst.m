@@ -27,5 +27,85 @@ function [cfg] = expDesignMtMst(cfg, displayFigs)
     targetPerCondition = repmat(RANGE_TARGETS, 1, NB_REPETITIONS / MAX_TARGET_PER_BLOCK);
 
     numTargetsForEachBlock = zeros(1, NB_BLOCKS);
-    numTargetsForEachBlock(CONDITON1_INDEX) = shuffle(targetPerCondition);
+    
+    if strcmpi(cfg.design.localizer, 'MT_MST') && length(cfg.design.names) == 2
+        numTargetsForEachBlock(CONDITON1_INDEX) = shuffle(targetPerCondition);
+    end
+    
     numTargetsForEachBlock(CONDITON2_INDEX) = shuffle(targetPerCondition);
+    
+    %% Give the blocks the names with condition and design the task in each event
+    while 1
+
+        fixationTargets = zeros(NB_BLOCKS, NB_EVENTS_PER_BLOCK);
+
+        for iBlock = 1:NB_BLOCKS
+
+            % Set target
+            % - if there are 2 targets per block we make sure that they are at least
+            % 2 events apart
+            % - targets cannot be on the first or last event of a block
+            % - no more than 2 target in the same event order
+
+            nbTarget = numTargetsForEachBlock(iBlock);
+
+            chosenPosition = setTargetPositionInSequence( ...
+                                                         NB_EVENTS_PER_BLOCK, ...
+                                                         nbTarget, ...
+                                                         [1 NB_EVENTS_PER_BLOCK]);
+
+            fixationTargets(iBlock, chosenPosition) = 1;
+
+        end
+
+        % Check rule 3
+        if max(sum(fixationTargets)) < NB_REPETITIONS - 1
+            break
+        end
+
+    end
+    
+     %% Now we do the easy stuff
+    cfg.design.blockNames = assignConditions(cfg);
+    
+    if strcmpi(cfg.design.localizer, 'MT_MST')
+        
+        if length(cfg.design.names) == 1
+            
+            nbBlocksPerHemifield = (NB_REPETITIONS / 4) * ... 
+                                                  length(cfg.design.fixationPosition);
+                                              
+        else
+            
+            nbBlocksPerHemifield = (NB_REPETITIONS / 2) * ...
+                length(cfg.design.fixationPosition);
+            
+        end
+        
+        
+
+        cfg.design.blockFixationPosition = repmat(cfg.design.fixationPosition(1), ...
+                                                  nbBlocksPerHemifield, ...
+                                                  1);
+        
+        if length(cfg.design.fixationPosition) == 2
+           
+            cfg.design.blockFixationPosition = [ cfg.design.blockFixationPosition ; ...
+                                                 repmat(cfg.design.fixationPosition(2), ...
+                                                 nbBlocksPerHemifield, ...
+                                                 1) ];
+            
+        end
+                                           
+    end
+    
+    cfg.design.nbBlocks = NB_BLOCKS;
+
+    cfg = setDirections(cfg);
+
+    speeds = ones(NB_BLOCKS, NB_EVENTS_PER_BLOCK) * cfg.dot.speedPixPerFrame;
+    cfg.design.speeds = speeds;
+
+    cfg.design.fixationTargets = fixationTargets;
+    
+    

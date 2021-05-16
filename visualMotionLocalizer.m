@@ -34,11 +34,11 @@ try
 
     [el] = eyeTracker('Calibration', cfg);
 
-    %     if isfield(cfg.design, 'localizer') && strcmpi(cfg.design.localizer, 'MT_MST')
-    %         [cfg] = expDesignMtMst(cfg);
-    %     else
-    [cfg] = expDesign(cfg);
-    %     end
+    if isfield(cfg.design, 'localizer') && strcmpi(cfg.design.localizer, 'MT_MST')
+        [cfg] = expDesignMtMst(cfg);
+    else
+        [cfg] = expDesign(cfg);
+    end
 
     % Prepare for the output logfiles with all
     logFile.extraColumns = cfg.extraColumns;
@@ -99,7 +99,7 @@ try
                        ['start_trial-', num2str(iEvent), '_', thisEvent.trial_type]);
 
             % play the dots and collect onset and duraton of the event
-            [onset, duration] = doDotMo(cfg, thisEvent, thisFixation);
+            [onset, duration] = doDotMo(cfg, thisEvent, thisFixation, iEvent);
 
             thisEvent = preSaveSetup( ...
                                      thisEvent, ...
