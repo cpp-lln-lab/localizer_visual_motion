@@ -108,6 +108,7 @@ try
                                      duration, onset, ...
                                      cfg, ...
                                      logFile);
+                                 
             saveEventsFile('save', cfg, thisEvent);
 
             % collect the responses and appends to the event structure for
