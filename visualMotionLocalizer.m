@@ -140,7 +140,22 @@ try
         eyeTracker('Message', cfg, ['end_block-', num2str(iBlock)]);
 
         waitFor(cfg, cfg.timing.IBI);
+        
+        % IBI trigger paced
+        if cfg.pacedByTriggers.do
+            waitForTrigger( ...
+                cfg, ...
+                cfg.keyboard.responseBox, ...
+                cfg.pacedByTriggers.quietMode, ...
+                cfg.timing.triggerIBI);
+        end
 
+        if isfield(cfg.design, 'localizer') && strcmpi(cfg.design.localizer, 'MT_MST') && iBlock == cfg.design.nbBlocks/2
+            
+            waitFor(cfg, cfg.timing.changeFixationPosition);
+
+        end
+            
         % trigger monitoring
         triggerEvents = getResponse('check', cfg.keyboard.responseBox, cfg, ...
                                     getOnlyPress);

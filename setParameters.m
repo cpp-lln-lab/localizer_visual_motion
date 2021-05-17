@@ -17,16 +17,16 @@ function [cfg] = setParameters()
 
     cfg.debug.do = false; % To test the script out of the scanner, skip PTB sync
     cfg.debug.smallWin = false; % To test on a part of the screen, change to 1
-    cfg.debug.transpWin = true; % To test with trasparent full size screen
+    cfg.debug.transpWin = false; % To test with trasparent full size screen
 
-    cfg.skipSyncTests = 1;
+    cfg.skipSyncTests = 0;
 
     cfg.verbose = 1;
 
     %% Engine parameters
 
     cfg.testingDevice = 'mri';
-    cfg.eyeTracker.do = false;
+    cfg.eyeTracker.do = true;
     cfg.audio.do = false;
 
     cfg = setMonitor(cfg);
@@ -38,7 +38,7 @@ function [cfg] = setParameters()
     cfg = setMRI(cfg);
 %     cfg.suffix.acquisition = '';
 
-    cfg.pacedByTriggers.do = false;
+    cfg.pacedByTriggers.do = true;
 
     %% Experiment Design
 
@@ -48,8 +48,8 @@ function [cfg] = setParameters()
     % - MST: radial motion centered in a circle aperture that is on the opposite
     % side of the screen relative to the fixation
     %   - alternates fixaton left and fixation right
-%     cfg.design.localizer = 'MT';
-    cfg.design.localizer = 'MT_MST';
+    cfg.design.localizer = 'MT';
+%     cfg.design.localizer = 'MT_MST';
 
     cfg.design.motionType = 'translation';
     cfg.design.motionDirections = [0 0 180 180];
@@ -83,11 +83,13 @@ function [cfg] = setParameters()
     if cfg.pacedByTriggers.do
 
         cfg.pacedByTriggers.quietMode = true;
-        cfg.pacedByTriggers.nbTriggers = 5;
+        cfg.pacedByTriggers.nbTriggers = 1;
 
         cfg.timing.eventDuration = cfg.mri.repetitionTime / 2 - 0.04; % second
 
-        % Time between blocs in secs
+        % Time between blocs in nb of triggers (remember to consider the nb trigger to wait + 1)
+        cfg.timing.triggerIBI = 4;
+        % Time between blocks in secs
         cfg.timing.IBI = 0;
         % Time between events in secs
         cfg.timing.ISI = 0;
@@ -209,7 +211,8 @@ function cfg = setParametersMtMst(cfg)
 
         cfg.design.motionType = 'radial';
         cfg.design.motionDirections = [666 -666];
-        cfg.design.names = {'motion'};
+%         cfg.design.names = {'motion'};
+        cfg.design.names = {'static'; 'motion'};
         cfg.design.fixationPosition = {'fixation_left'; 'fixation_right'};
 %          cfg.design.fixationPosition = {'fixation_right'; 'fixation_left'};
         cfg.design.xDisplacementFixation = 7;
@@ -222,6 +225,8 @@ function cfg = setParametersMtMst(cfg)
         cfg.design.nbEventsPerBlock = cfg.design.nbEventsPerBlock * 2;
 
         cfg.timing.IBI = 4;
+        
+        cfg.timing.changeFixationPosition = 10; 
 
         % reexpress those in terms of repetition time
         if cfg.pacedByTriggers.do
