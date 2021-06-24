@@ -1,5 +1,5 @@
 % (C) Copyright 2020 Agah Karakuzu
-% (C) Copyright 2019 CPP BIDS SPM-pipeline developpers
+% (C) Copyright 2019 CPP visual motion localizer developpers
 
 function initEnv
     % 1 - Check if version requirements
