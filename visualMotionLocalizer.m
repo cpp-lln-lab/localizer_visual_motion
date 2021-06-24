@@ -77,7 +77,7 @@ try
         fprintf('\n - Running Block %.0f \n', iBlock);
 
         eyeTracker('Message', cfg, ['start_block-', num2str(iBlock)]);
-
+        dots=[];
         % For each event in the block
         for iEvent = 1:cfg.design.nbEventsPerBlock
 
@@ -99,7 +99,7 @@ try
                        ['start_trial-', num2str(iEvent), '_', thisEvent.trial_type]);
 
             % play the dots and collect onset and duraton of the event
-            [onset, duration] = doDotMo(cfg, thisEvent, thisFixation);
+            [onset, duration, dots] = doDotMo(cfg, thisEvent, thisFixation, dots);
 
             thisEvent = preSaveSetup( ...
                                      thisEvent, ...
