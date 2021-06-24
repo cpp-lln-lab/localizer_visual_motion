@@ -98,6 +98,9 @@ try
             eyeTracker('Message', cfg, ...
                        ['start_trial-', num2str(iEvent), '_', thisEvent.trial_type]);
 
+            if ~strcmp(cfg.target.type, 'static_repeat')
+                dots = [];
+            end
             % play the dots and collect onset and duraton of the event
             [onset, duration, dots] = doDotMo(cfg, thisEvent, thisFixation, dots);
 

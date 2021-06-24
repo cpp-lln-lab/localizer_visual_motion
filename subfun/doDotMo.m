@@ -18,8 +18,10 @@ function [onset, duration, dots] = doDotMo(cfg, thisEvent, thisFixation, dots)
     % We then draw an aperture on top to hide the certain dots.
 
     %% Get parameters
-
-    dots = initDots(cfg, thisEvent);
+    if ~(strcmp(thisEvent.trial_type, 'static') && thisEvent.target == 1) ...
+        || isempty(dots)
+        dots = initDots(cfg, thisEvent);
+    end
 
     % Set for how many frames this event will last
     framesLeft = floor(cfg.timing.eventDuration / cfg.screen.ifi);
