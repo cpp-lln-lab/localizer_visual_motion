@@ -66,6 +66,6 @@
   "projectOwner": "cpp-lln-lab",
   "repoType": "github",
   "repoHost": "https://github.com",
-  "skipCi": false
-  "contributorsSortAlphabetically": true
+  "skipCi": false,
+  "contributorsSortAlphabetically": false
 }
