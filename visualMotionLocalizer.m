@@ -78,6 +78,7 @@ try
 
         eyeTracker('Message', cfg, ['start_block-', num2str(iBlock)]);
         dots=[];
+        previousEvent.target = [];
         % For each event in the block
         for iEvent = 1:cfg.design.nbEventsPerBlock
 
@@ -99,6 +100,10 @@ try
                        ['start_trial-', num2str(iEvent), '_', thisEvent.trial_type]);
 
             if ~strcmp(cfg.target.type, 'static_repeat')
+            % we want to initialize the dots position when targets type is fixation cross
+            % or if this the first event of a target pair
+            if ~strcmp(cfg.target.type, 'static_repeat') || ...
+                    thisEvent.target ~= previousEvent.target
                 dots = [];
             end
             % play the dots and collect onset and duraton of the event
@@ -124,6 +129,8 @@ try
             eyeTracker('Message', cfg, ...
                        ['end_trial-', num2str(iEvent), '_', thisEvent.trial_type]);
 
+            previousEvent = thisEvent;        
+                   
             waitFor(cfg, cfg.timing.ISI);
 
         end
