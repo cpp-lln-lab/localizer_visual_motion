@@ -135,7 +135,7 @@ function [cfg] = setParameters()
     % target
     cfg.target.maxNbPerBlock = 1;
     cfg.target.duration = 0.1; % In secs
-    cfg.target.type = 'static_repeat';
+    cfg.target.type = 'fixation_cross';
     % 'fixation_cross' : the fixation cross changes color
     % 'static_repeat' : static dots are in the same position as previous trials
     
