@@ -138,7 +138,7 @@ function [cfg] = setParameters()
     cfg.target.type = 'static_repeat';
     % 'fixation_cross' : the fixation cross changes color
     % 'static_repeat' : static dots are in the same position as previous trials
-    
+
     cfg.fixation.colorTarget = cfg.fixation.color;
     if strcmp(cfg.target.type, 'fixation_cross')
         cfg.fixation.colorTarget = cfg.color.red;
