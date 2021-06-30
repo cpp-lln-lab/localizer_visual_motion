@@ -39,8 +39,8 @@ For instructions see the following links:
 
 | Requirements                                             | Used version |
 | -------------------------------------------------------- | ------------ |
-| [CPP_BIDS](https://github.com/cpp-lln-lab/CPP_BIDS)      | ?            |
-| [CPP_PTB](https://github.com/cpp-lln-lab/CPP_PTB)        | ?            |
+| [CPP_BIDS](https://github.com/cpp-lln-lab/CPP_BIDS)      | 2.1.0        |
+| [CPP_PTB](https://github.com/cpp-lln-lab/CPP_PTB)        | 1.2.0        |
 | [PsychToolBox](http://psychtoolbox.org/)                 | >=3.0.14     |
 | [Matlab](https://www.mathworks.com/products/matlab.html) | >=2017       |
 | or [octave](https://www.gnu.org/software/octave/)        | >=4.?        |
@@ -58,7 +58,7 @@ git clone --recurse-submodules https://github.com/cpp-lln-lab/localizer_visual_m
 
 ### visualLocTranslational
 
-Running this script will show blocks of motion dots (soon also moving gratings) and static dots. Motion blocks will show dots(/gratings) moving in one of four directions (up-, down-, left-, and right-ward)
+Running this script will show blocks of motion dots and static dots. Motion blocks will show dots(/gratings) moving in one of four directions (up-, down-, left-, and right-ward)
 
 By default it is run in `Debug mode` meaning that it does not run care about subjID, run n., fMRI triggers, Eye Tracker, etc..
 
