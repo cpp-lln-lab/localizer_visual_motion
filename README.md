@@ -105,22 +105,27 @@ end
 
 ### subfun/doDotMo
 
+Wrapper function that present the dot stimulation (static or motion) per event.
+
 #### Input
 
-- `cfg`: PTB/machine configurations returned by `setParameters` and `initPTB`
-- `expParameters`: parameters returned by `setParameters`
-- `logFile`: structure that stores the experiment logfile to be saved
+- `cfg`: PTB/machine and experiment configurations returned by `setParameters` and `initPTB`
+- `thisEvent`: structure that stores information about the event to present regarding the dots (static or motion, direction, etc.)
+- `thisFixation`: structure that stores information about the fixation cross task to present
+- `dots`: [...]
+- `iEvent`: index of the event of the block at the moment of the presentation
 
 #### Output
 
 - Event `onset`
 - Event `duration`
+- `dots`: [...]
 
-The dots are drawn on a square that contains the round aperture, then any dots outside of the aperture is turned into a NaN so effectively the actual number of dots on the screen at any given time is not the one that you input but a smaller number (nDots / Area of aperture) on average.
+> NB: The dots are drawn on a square that contains the round aperture, then any dots outside of the aperture is turned into a NaN so effectively the actual number of dots on the screen at any given time is not the one that you input but a smaller number (nDots / Area of aperture) on average.
 
-### subfun/expDesign
+### subfun/expDesign(MtMst)
 
-Creates the sequence of blocks and the events in them. The conditions are consecutive static and motion blocks (Gives better results than randomised). It can be run as a stand alone without inputs to display a visual example of possible design.
+These functions, one per MT+ and one per MT/MST localizer, create the sequence of blocks and the events in them. The conditions are consecutive static and motion blocks (Gives better results than randomised). It can be run as a stand alone with input `cfg` from `setParamenters.m` to display a visual example of possible design.
 
 #### EVENTS
 
