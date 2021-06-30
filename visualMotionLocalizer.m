@@ -34,11 +34,11 @@ try
 
     [el] = eyeTracker('Calibration', cfg);
 
-    %     if isfield(cfg.design, 'localizer') && strcmpi(cfg.design.localizer, 'MT_MST')
-    %         [cfg] = expDesignMtMst(cfg);
-    %     else
-    [cfg] = expDesign(cfg);
-    %     end
+    if isfield(cfg.design, 'localizer') && strcmpi(cfg.design.localizer, 'MT_MST')
+        [cfg] = expDesignMtMst(cfg);
+    else
+        [cfg] = expDesign(cfg);
+    end
 
     % Prepare for the output logfiles with all
     logFile.extraColumns = cfg.extraColumns;
@@ -108,7 +108,7 @@ try
             end
 
             % play the dots and collect onset and duraton of the event
-            [onset, duration, dots] = doDotMo(cfg, thisEvent, thisFixation, dots);
+            [onset, duration, dots] = doDotMo(cfg, thisEvent, thisFixation, dots, iEvent);
 
             thisEvent = preSaveSetup( ...
                                      thisEvent, ...
@@ -117,6 +117,7 @@ try
                                      duration, onset, ...
                                      cfg, ...
                                      logFile);
+
             saveEventsFile('save', cfg, thisEvent);
 
             % collect the responses and appends to the event structure for
@@ -150,6 +151,21 @@ try
         eyeTracker('Message', cfg, ['end_block-', num2str(iBlock)]);
 
         waitFor(cfg, cfg.timing.IBI);
+
+        % IBI trigger paced
+        if cfg.pacedByTriggers.do
+            waitForTrigger( ...
+                           cfg, ...
+                           cfg.keyboard.responseBox, ...
+                           cfg.pacedByTriggers.quietMode, ...
+                           cfg.timing.triggerIBI);
+        end
+
+        if isfield(cfg.design, 'localizer') && strcmpi(cfg.design.localizer, 'MT_MST') && iBlock == cfg.design.nbBlocks / 2
+
+            waitFor(cfg, cfg.timing.changeFixationPosition);
+
+        end
 
         % trigger monitoring
         triggerEvents = getResponse('check', cfg.keyboard.responseBox, cfg, ...

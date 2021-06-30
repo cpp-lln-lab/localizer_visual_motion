@@ -1,7 +1,7 @@
 % (C) Copyright 2018 Mohamed Rezk
 % (C) Copyright 2020 CPP visual motion localizer developpers
 
-function [onset, duration, dots] = doDotMo(cfg, thisEvent, thisFixation, dots)
+function [onset, duration, dots] = doDotMo(cfg, thisEvent, thisFixation, dots, iEvent)
     % Draws the stimulation of static/moving in 4 directions dots or static
     %
     % DIRECTIONS
@@ -43,7 +43,13 @@ function [onset, duration, dots] = doDotMo(cfg, thisEvent, thisFixation, dots)
 
         %% make textures
 
-        dotTexture('make', cfg, thisEvent);
+        if strcmp(cfg.design.localizer, 'MT_MST') && strcmpi(thisEvent.trial_type, 'static') && ~mod(iEvent, 2)
+
+        else
+
+            dotTexture('make', cfg, thisEvent);
+
+        end
 
         apertureTexture('make', cfg, thisEvent);
 
