@@ -11,7 +11,7 @@ function [cfg] = setParameters()
     % setParamters.m file is
     % change that if you want the data to be saved somewhere else
     cfg.dir.output = fullfile( ...
-                              fileparts(mfilename('fullpath')),'output');
+                              fileparts(mfilename('fullpath')), 'output');
 
     %% Debug mode settings
 
@@ -137,8 +137,12 @@ function [cfg] = setParameters()
     cfg.fixation.xDisplacement = 0;
     cfg.fixation.yDisplacement = 0;
 
+    % target
     cfg.target.maxNbPerBlock = 1;
     cfg.target.duration = 0.1; % In secs
+    cfg.target.type = 'fixation_cross';
+    % 'fixation_cross' : the fixation cross changes color
+    % 'static_repeat' : dots are in the same position
 
     cfg.extraColumns = { ...
                         'direction', ...
