@@ -12,11 +12,11 @@ function [CONDITION1_DIRECTIONS, CONDITION2_DIRECTIONS] = getDirectionBaseVector
     if isfield(cfg.design, 'localizer') && strcmpi(cfg.design.localizer, 'MT_MST')
         CONDITION1_DIRECTIONS = cfg.design.motionDirections;
         CONDITION2_DIRECTIONS = cfg.design.motionDirections;
-        
+
         if  length(cfg.design.names) == 2
-        CONDITION2_DIRECTIONS = repmat(-1, size(CONDITION1_DIRECTIONS)); % static
+            CONDITION2_DIRECTIONS = repmat(-1, size(CONDITION1_DIRECTIONS)); % static
         end
-        
+
     end
 
 end

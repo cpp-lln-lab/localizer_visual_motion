@@ -28,16 +28,16 @@ function cfg = setDirections(cfg)
 
             % Set motion direction for MT/MST localizer
 
-%             directions(CONDITON1_INDEX(iMotionBlock), :) = ...
-%                 repeatShuffleConditions(CONDITION1_DIRECTIONS, NB_REPEATS_BASE_VECTOR);
+            %             directions(CONDITON1_INDEX(iMotionBlock), :) = ...
+            %                 repeatShuffleConditions(CONDITION1_DIRECTIONS, NB_REPEATS_BASE_VECTOR);
 
             directions(CONDITON2_INDEX(iMotionBlock), :) = ...
                 repeatShuffleConditions(CONDITION1_DIRECTIONS, NB_REPEATS_BASE_VECTOR);
-            
+
             if length(cfg.design.names) == 2
-                
-               directions(CONDITON1_INDEX(iMotionBlock), :) = static_directions;
-               
+
+                directions(CONDITON1_INDEX(iMotionBlock), :) = static_directions;
+
             end
 
         else
