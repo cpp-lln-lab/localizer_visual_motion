@@ -29,21 +29,19 @@
 
 # fMRI localizers for visual motion
 
-## Translational Motion
-
 ## Requirements
 
-Make sure that the following toolboxes are installed and added to the matlab / octave path.
+Make sure that the following toolboxes are installed and added to the matlab / octave path. See the next session on how to install the submodule toolboxes.
 
 For instructions see the following links:
 
-| Requirements                                             | Used version |
-| -------------------------------------------------------- | ------------ |
-| [CPP_BIDS](https://github.com/cpp-lln-lab/CPP_BIDS)      | 2.1.0        |
-| [CPP_PTB](https://github.com/cpp-lln-lab/CPP_PTB)        | 1.2.0        |
-| [PsychToolBox](http://psychtoolbox.org/)                 | >=3.0.14     |
-| [Matlab](https://www.mathworks.com/products/matlab.html) | >=2017       |
-| or [octave](https://www.gnu.org/software/octave/)        | >=4.?        |
+| Requirements                                                    | Used version |
+| --------------------------------------------------------------- | ------------ |
+| [CPP_BIDS](https://github.com/cpp-lln-lab/CPP_BIDS) (submodule) | 2.1.0        |
+| [CPP_PTB](https://github.com/cpp-lln-lab/CPP_PTB) (submodule)   | 1.2.0        |
+| [PsychToolBox](http://psychtoolbox.org/)                        | >=3.0.14     |
+| [Matlab](https://www.mathworks.com/products/matlab.html)        | >=2017       |
+| or [octave](https://www.gnu.org/software/octave/)               | >=4.?        |
 
 ## Installation
 
@@ -56,11 +54,11 @@ git clone --recurse-submodules https://github.com/cpp-lln-lab/localizer_visual_m
 
 ## Structure and function details
 
-### visualLocTranslational
+### visualMotionLocalizer
 
-Running this script will show blocks of motion dots and static dots. Motion blocks will show dots(/gratings) moving in one of four directions (up-, down-, left-, and right-ward)
+Running this script will show blocks of motion dots and static dots. Motion blocks will show dots moving in one of four directions (up-, down-, left-, and right-ward) (MT+ localizer) or dots moving inward and outward in the peripheral of the screen (MT/MST localizer).
 
-By default it is run in `Debug mode` meaning that it does not run care about subjID, run n., fMRI triggers, Eye Tracker, etc..
+Run in `Debug mode` (see `setParameters.m`) it does not care about subjID, run n., Eye Tracker (soon, at the moment it needs to be set off manually), etc..
 
 Any details of the experiment can be changed in `setParameters.m` (e.g., experiment mode, motion stimuli details, exp. design, etc.)
 
@@ -85,7 +83,7 @@ Any details of the experiment can be changed in `setParameters.m` (e.g., experim
 Set `cfg.pacedByTriggers.do` to `true` and you can then set all the details in this `if` block
 
 ```matlab
-% Time is here in in terms of number repetition time (i.e MRI volumes)
+% Time is here in terms of `repetition time (TR)` (i.e. MRI volumes)
 if cfg.pacedByTriggers.do
 
   cfg.pacedByTriggers.quietMode = true;
