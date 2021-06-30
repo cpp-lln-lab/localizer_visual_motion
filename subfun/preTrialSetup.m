@@ -28,22 +28,28 @@ function varargout = preTrialSetup(varargin)
 
     thisEvent.dotCenterXPosPix = 0;
 
-    switch thisEvent.trial_type
-        case 'fixation_right'
-            cfg.aperture.xPosPix = -abs(cfg.aperture.xPosPix);
+    if isfield(cfg.design, 'localizer') && strcmpi(cfg.design.localizer, 'MT_MST')
 
-            thisEvent.dotCenterXPosPix = cfg.aperture.xPosPix;
+        thisEvent.fixationPosition = cfg.design.blockFixationPosition{iBlock};
 
-            thisFixation.fixation.xDisplacement = cfg.design.xDisplacementFixation;
-            thisFixation = initFixation(thisFixation);
+        switch thisEvent.fixationPosition
+            case 'fixation_right'
+                cfg.aperture.xPosPix = -abs(cfg.aperture.xPosPix);
 
-        case 'fixation_left'
-            cfg.aperture.xPosPix = +abs(cfg.aperture.xPosPix);
+                thisEvent.dotCenterXPosPix = cfg.aperture.xPosPix;
 
-            thisEvent.dotCenterXPosPix = cfg.aperture.xPosPix;
+                thisFixation.fixation.xDisplacement = cfg.design.xDisplacementFixation;
+                thisFixation = initFixation(thisFixation);
 
-            thisFixation.fixation.xDisplacement = -cfg.design.xDisplacementFixation;
-            thisFixation = initFixation(thisFixation);
+            case 'fixation_left'
+                cfg.aperture.xPosPix = +abs(cfg.aperture.xPosPix);
+
+                thisEvent.dotCenterXPosPix = cfg.aperture.xPosPix;
+
+                thisFixation.fixation.xDisplacement = -cfg.design.xDisplacementFixation;
+                thisFixation = initFixation(thisFixation);
+
+        end
 
     end
 
