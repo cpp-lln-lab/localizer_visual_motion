@@ -6,8 +6,6 @@ function [cfg] = expDesign(cfg, displayFigs)
     % The conditions are consecutive static and motion blocks
     % (Gives better results than randomised).
     %
-    % Style guide: constants are in SNAKE_UPPER_CASE
-    %
     % EVENTS
     % The numEventsPerBlock should be a multiple of the number of "base"
     % listed in the MOTION_DIRECTIONS and STATIC_DIRECTIONS (4 at the moment).
@@ -27,7 +25,7 @@ function [cfg] = expDesign(cfg, displayFigs)
     % (1) If there are more than 1 target per block we make sure that they are at least 2
     % events apart.
     % (2) Targets cannot be on the first or last event of a block.
-    % (3) Targets can not be present more than NB_REPETITIONS - 1 times in the same event
+    % (3) Targets can not be present more than `nbRepetitions` - 1 times in the same event
     % position across blocks.
     %
     % Input:
@@ -59,31 +57,35 @@ function [cfg] = expDesign(cfg, displayFigs)
 
     % Set variables here for a dummy test of this function
     if nargin < 1 || isempty(cfg)
-        error('give me something to work with');
+
+      cfg.design.nbRepetitions = 10;
+      cfg.design.nbEventsPerBlock = 10;
+      cfg.target.maxNbPerBlock = 1;
+
     end
 
-    fprintf('\n\nCreating design.\n\n');
+    fprintf('\n\nComputing the design...\n\n');
 
-    [NB_BLOCKS, NB_REPETITIONS, NB_EVENTS_PER_BLOCK, MAX_TARGET_PER_BLOCK] = getDesignInput(cfg);
+    [nbRepetitions, nbEventsPerBlock, maxNbPerBlock, nbBlocks] = getDesignInput(cfg);
     [~, CONDITON1_INDEX, CONDITON2_INDEX] = assignConditions(cfg);
 
-    if mod(NB_REPETITIONS, MAX_TARGET_PER_BLOCK) ~= 0
+    if mod(nbRepetitions, maxNbPerBlock) ~= 0
         error('number of repetitions must be a multiple of max number of targets');
     end
 
-    RANGE_TARGETS = 1:MAX_TARGET_PER_BLOCK;
-    targetPerCondition = repmat(RANGE_TARGETS, 1, NB_REPETITIONS / MAX_TARGET_PER_BLOCK);
+    RANGE_TARGETS = 1:maxNbPerBlock;
+    targetPerCondition = repmat(RANGE_TARGETS, 1, nbRepetitions / maxNbPerBlock);
 
-    numTargetsForEachBlock = zeros(1, NB_BLOCKS);
+    numTargetsForEachBlock = zeros(1, nbBlocks);
     numTargetsForEachBlock(CONDITON1_INDEX) = shuffle(targetPerCondition);
     numTargetsForEachBlock(CONDITON2_INDEX) = shuffle(targetPerCondition);
 
     %% Give the blocks the names with condition and design the task in each event
     while 1
 
-        fixationTargets = zeros(NB_BLOCKS, NB_EVENTS_PER_BLOCK);
+        fixationTargets = zeros(nbBlocks, nbEventsPerBlock);
 
-        for iBlock = 1:NB_BLOCKS
+        for iBlock = 1:nbBlocks
 
             % Set target
             % - if there are 2 targets per block we make sure that they are at least
@@ -94,16 +96,16 @@ function [cfg] = expDesign(cfg, displayFigs)
             nbTarget = numTargetsForEachBlock(iBlock);
 
             chosenPosition = setTargetPositionInSequence( ...
-                                                         NB_EVENTS_PER_BLOCK, ...
+                                                         nbEventsPerBlock, ...
                                                          nbTarget, ...
-                                                         [1 NB_EVENTS_PER_BLOCK]);
+                                                         [1 nbEventsPerBlock]);
 
             fixationTargets(iBlock, chosenPosition) = 1;
 
         end
 
         % Check rule 3
-        if max(sum(fixationTargets)) < NB_REPETITIONS - 1
+        if max(sum(fixationTargets)) < nbRepetitions - 1
             break
         end
 
@@ -112,16 +114,18 @@ function [cfg] = expDesign(cfg, displayFigs)
     %% Now we do the easy stuff
     cfg.design.blockNames = assignConditions(cfg);
 
-    cfg.design.nbBlocks = NB_BLOCKS;
+    cfg.design.nbBlocks = nbBlocks;
 
     cfg = setDirections(cfg);
 
-    speeds = ones(NB_BLOCKS, NB_EVENTS_PER_BLOCK) * cfg.dot.speedPixPerFrame;
+    speeds = ones(nbBlocks, nbEventsPerBlock) * cfg.dot.speedPixPerFrame;
     cfg.design.speeds = speeds;
 
     cfg.design.fixationTargets = fixationTargets;
 
     %% Plot
     diplayDesign(cfg, displayFigs);
+
+    fprintf('\n\n...design computed!\n\n');
 
 end
