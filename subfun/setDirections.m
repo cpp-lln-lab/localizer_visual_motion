@@ -4,7 +4,7 @@ function cfg = setDirections(cfg)
 
     [CONDITION1_DIRECTIONS, CONDITION2_DIRECTIONS] = getDirectionBaseVectors(cfg);
 
-    [NB_BLOCKS, NB_REPETITIONS, NB_EVENTS_PER_BLOCK] = getDesignInput(cfg);
+    [NB_REPETITIONS, NB_EVENTS_PER_BLOCK, ~, NB_BLOCKS] = getDesignInput(cfg);
 
     [~, CONDITON1_INDEX, CONDITON2_INDEX] = assignConditions(cfg);
 

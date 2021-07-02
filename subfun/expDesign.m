@@ -58,20 +58,31 @@ function [cfg] = expDesign(cfg, displayFigs)
     % Set variables here for a dummy test of this function
     if nargin < 1 || isempty(cfg)
 
+      displayFigs = 1;
+        
       cfg.design.nbRepetitions = 10;
-      cfg.design.nbEventsPerBlock = 10;
+      cfg.design.nbEventsPerBlock = 12;
       cfg.target.maxNbPerBlock = 1;
-
+      cfg.design.names = {'static'; 'motion'};
+      cfg.design.motionDirections = [0 0 180 180];
+      % This is only for mock trial of this function, see in `postInitializationSetUp` function how 
+      % it is calculated 
+      cfg.dot.speedPixPerFrame = 28; 
     end
 
     fprintf('\n\nComputing the design...\n\n');
 
+    % Get the parameter to compute the design with
     [nbRepetitions, nbEventsPerBlock, maxNbPerBlock, nbBlocks] = getDesignInput(cfg);
-    [~, CONDITON1_INDEX, CONDITON2_INDEX] = assignConditions(cfg);
 
+    % Check that
     if mod(nbRepetitions, maxNbPerBlock) ~= 0
         error('number of repetitions must be a multiple of max number of targets');
     end
+
+    [~, CONDITON1_INDEX, CONDITON2_INDEX] = assignConditions(cfg);
+
+
 
     RANGE_TARGETS = 1:maxNbPerBlock;
     targetPerCondition = repmat(RANGE_TARGETS, 1, nbRepetitions / maxNbPerBlock);

@@ -2,7 +2,7 @@
 
 function [conditionNamesVector, CONDITON1_INDEX, CONDITON2_INDEX] = assignConditions(cfg)
 
-    [~, nbRepet] = getDesignInput(cfg);
+    [nbRepet] = getDesignInput(cfg);
 
     conditionNamesVector = repmat(cfg.design.names, nbRepet, 1);
 
