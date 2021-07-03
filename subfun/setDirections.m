@@ -1,12 +1,12 @@
 % (C) Copyright 2020 CPP visual motion localizer developpers
 
-function cfg = setDirections(cfg)
+function directions = setDirections(cfg)
 
     [CONDITION1_DIRECTIONS, CONDITION2_DIRECTIONS] = getDirectionBaseVectors(cfg);
 
     [NB_REPETITIONS, NB_EVENTS_PER_BLOCK, ~, NB_BLOCKS] = getDesignInput(cfg);
 
-    [~, CONDITON1_INDEX, CONDITON2_INDEX] = assignConditions(cfg);
+    [~, CONDITON1_INDEX, CONDITON2_INDEX] = setBlocksConditions(cfg);
 
     if mod(NB_EVENTS_PER_BLOCK, length(CONDITION1_DIRECTIONS)) ~= 0
         error('Number of events/block not a multiple of number of motion/static direction');
@@ -52,7 +52,5 @@ function cfg = setDirections(cfg)
         end
 
     end
-
-    cfg.design.directions = directions;
 
 end
