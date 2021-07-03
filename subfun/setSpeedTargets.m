@@ -2,8 +2,8 @@
 
 function speeds = setSpeedTargets(cfg)
 
-  [~, nbEventsPerBlock, ~, nbBlocks] = getDesignInput(cfg);
+    [~, nbEventsPerBlock, ~, nbBlocks] = getDesignInput(cfg);
 
-  speeds = ones(nbBlocks, nbEventsPerBlock) * cfg.dot.speedPixPerFrame;
+    speeds = ones(nbBlocks, nbEventsPerBlock) * cfg.dot.speedPixPerFrame;
 
 end

@@ -58,22 +58,22 @@ function [cfg] = expDesign(cfg, displayFigs)
     % Set variables here for a dummy test of this function
     if nargin < 1 || isempty(cfg)
 
-      displayFigs = 1;
+        displayFigs = 1;
 
-      % Repetition per condition:
-      % 2 conditions [`cfg.design.names`] and 10 repetitions [`cfg.design.nbRepetitions`]
-      % means 20 blocks
-      cfg.design.nbRepetitions = 10;
-      cfg.design.names = {'static'; 'motion'};
-%       cfg.design.names = {'static'};
-      cfg.design.nbEventsPerBlock = 12;
-      cfg.design.motionDirections = [0 180];
+        % Repetition per condition:
+        % 2 conditions [`cfg.design.names`] and 10 repetitions [`cfg.design.nbRepetitions`]
+        % means 20 blocks
+        cfg.design.nbRepetitions = 10;
+        cfg.design.names = {'static'; 'motion'};
+        %       cfg.design.names = {'static'};
+        cfg.design.nbEventsPerBlock = 12;
+        cfg.design.motionDirections = [0 180];
 
-      cfg.target.maxNbPerBlock = 1;
+        cfg.target.maxNbPerBlock = 1;
 
-      % This is only for dummy trial of this function.
-      % See in `postInitializationSetUp` how it is calculated during the experiment
-      cfg.dot.speedPixPerFrame = 28;
+        % This is only for dummy trial of this function.
+        % See in `postInitializationSetUp` how it is calculated during the experiment
+        cfg.dot.speedPixPerFrame = 28;
 
     end
 

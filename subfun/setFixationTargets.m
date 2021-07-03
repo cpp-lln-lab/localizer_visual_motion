@@ -2,52 +2,52 @@
 
 function fixationTargets = setFixationTargets(cfg)
 
-  % Get the parameter to compute the design with
-  [nbRepetitions, nbEventsPerBlock, maxNbPerBlock, nbBlocks] = getDesignInput(cfg);
+    % Get the parameter to compute the design with
+    [nbRepetitions, nbEventsPerBlock, maxNbPerBlock, nbBlocks] = getDesignInput(cfg);
 
-  % Check that
-  if mod(nbRepetitions, maxNbPerBlock) ~= 0
-       error('number of repetitions must be a multiple of max number of targets');
-  end
+    % Check that
+    if mod(nbRepetitions, maxNbPerBlock) ~= 0
+        error('number of repetitions must be a multiple of max number of targets');
+    end
 
-  [~, idxCondition1, idxCondition2] = setBlocksConditions(cfg);
+    [~, idxCondition1, idxCondition2] = setBlocksConditions(cfg);
 
-  RANGE_TARGETS = 1:maxNbPerBlock;
-  targetPerCondition = repmat(RANGE_TARGETS, 1, nbRepetitions / maxNbPerBlock);
+    RANGE_TARGETS = 1:maxNbPerBlock;
+    targetPerCondition = repmat(RANGE_TARGETS, 1, nbRepetitions / maxNbPerBlock);
 
-  numTargetsForEachBlock = zeros(1, nbBlocks);
-  numTargetsForEachBlock(idxCondition1) = shuffle(targetPerCondition);
-  numTargetsForEachBlock(idxCondition2) = shuffle(targetPerCondition);
+    numTargetsForEachBlock = zeros(1, nbBlocks);
+    numTargetsForEachBlock(idxCondition1) = shuffle(targetPerCondition);
+    numTargetsForEachBlock(idxCondition2) = shuffle(targetPerCondition);
 
-  %% Give the blocks the names with condition and design the task in each event
-  while 1
+    %% Give the blocks the names with condition and design the task in each event
+    while 1
 
-      fixationTargets = zeros(nbBlocks, nbEventsPerBlock);
+        fixationTargets = zeros(nbBlocks, nbEventsPerBlock);
 
-      for iBlock = 1:nbBlocks
+        for iBlock = 1:nbBlocks
 
-          % Set target
-          % - if there are 2 targets per block we make sure that they are at least
-          % 2 events apart
-          % - targets cannot be on the first or last event of a block
-          % - no more than 2 target in the same event order
+            % Set target
+            % - if there are 2 targets per block we make sure that they are at least
+            % 2 events apart
+            % - targets cannot be on the first or last event of a block
+            % - no more than 2 target in the same event order
 
-          nbTarget = numTargetsForEachBlock(iBlock);
+            nbTarget = numTargetsForEachBlock(iBlock);
 
-          chosenPosition = setTargetPositionInSequence( ...
-                                                       nbEventsPerBlock, ...
-                                                       nbTarget, ...
-                                                       [1 nbEventsPerBlock]);
+            chosenPosition = setTargetPositionInSequence( ...
+                                                         nbEventsPerBlock, ...
+                                                         nbTarget, ...
+                                                         [1 nbEventsPerBlock]);
 
-          fixationTargets(iBlock, chosenPosition) = 1;
+            fixationTargets(iBlock, chosenPosition) = 1;
 
-      end
+        end
 
-      % Check rule 3
-      if max(sum(fixationTargets)) < nbRepetitions - 1
-          break
-      end
+        % Check rule 3
+        if max(sum(fixationTargets)) < nbRepetitions - 1
+            break
+        end
 
-  end
+    end
 
 end
