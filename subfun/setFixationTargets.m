@@ -2,10 +2,11 @@
 
 function fixationTargets = setFixationTargets(cfg)
 
-  if contains(cfg.target.type, 'fixation_cross')
-
     % Get the parameter to compute the design with
     [nbRepetitions, nbEventsPerBlock, maxNbPerBlock, nbBlocks] = getDesignInput(cfg);
+
+  if sum(contains(cfg.target.type, 'fixation_cross')) ~= 0
+
 
     % Check that
     if mod(nbRepetitions, maxNbPerBlock) ~= 0
