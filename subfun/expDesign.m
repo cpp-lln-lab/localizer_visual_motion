@@ -58,83 +58,48 @@ function [cfg] = expDesign(cfg, displayFigs)
     % Set variables here for a dummy test of this function
     if nargin < 1 || isempty(cfg)
 
-        displayFigs = 1;
+      displayFigs = 1;
 
-        cfg.design.nbRepetitions = 10;
-        cfg.design.nbEventsPerBlock = 12;
-        cfg.design.names = {'static'; 'motion'};
-        cfg.design.motionDirections = [0 0 180 180];
+      % Repetition per condition:
+      % 2 conditions [`cfg.design.names`] and 10 repetitions [`cfg.design.nbRepetitions`]
+      % means 20 blocks
+      cfg.design.nbRepetitions = 10;
+      cfg.design.names = {'static'; 'motion'};
+%       cfg.design.names = {'static'};
+      cfg.design.nbEventsPerBlock = 12;
+      cfg.design.motionDirections = [0 180];
 
-        cfg.target.maxNbPerBlock = 1;
+      cfg.target.maxNbPerBlock = 1;
 
-        % This is only for mock trial of this function, see in `postInitializationSetUp` function how
-        % it is calculated during the experiment
-        cfg.dot.speedPixPerFrame = 28;
+      % This is only for dummy trial of this function.
+      % See in `postInitializationSetUp` how it is calculated during the experiment
+      cfg.dot.speedPixPerFrame = 28;
+
     end
 
     fprintf('\n\nComputing the design...\n\n');
 
-    % Get the parameter to compute the design with
-    [nbRepetitions, nbEventsPerBlock, maxNbPerBlock, nbBlocks] = getDesignInput(cfg);
+    %% Stimuli design
 
-    % Check that
-    if mod(nbRepetitions, maxNbPerBlock) ~= 0
-        error('number of repetitions must be a multiple of max number of targets');
-    end
+    % Computer a vector [nbBlocks x 1] with the order of the conditions to present
+    cfg.design.blockNames = setBlocksConditions(cfg);
 
-    [~, CONDITON1_INDEX, CONDITON2_INDEX] = assignConditions(cfg);
+    % Get the nb of blocks
+    [~, ~, ~, cfg.design.nbBlocks] = getDesignInput(cfg);
 
-    RANGE_TARGETS = 1:maxNbPerBlock;
-    targetPerCondition = repmat(RANGE_TARGETS, 1, nbRepetitions / maxNbPerBlock);
+    % Compute a matrix [nbBlocks x nbEventsPerBlock]
+    cfg.design.directions = setDirections(cfg);
 
-    numTargetsForEachBlock = zeros(1, nbBlocks);
-    numTargetsForEachBlock(CONDITON1_INDEX) = shuffle(targetPerCondition);
-    numTargetsForEachBlock(CONDITON2_INDEX) = shuffle(targetPerCondition);
+    %% Task(s) design
 
-    %% Give the blocks the names with condition and design the task in each event
-    while 1
+    % Compute a matrix [nbBlocks x nbEventsPerBlock] with 0: no fixation target and 1: fixation target
+    cfg.design.fixationTargets = setFixationTargets(cfg);
 
-        fixationTargets = zeros(nbBlocks, nbEventsPerBlock);
+    % Compute a matrix [nbBlocks x nbEventsPerBlock] with the dots speeds (target speed will be
+    % different form the base one)
+    cfg.design.speeds = setSpeedTargets(cfg);
 
-        for iBlock = 1:nbBlocks
-
-            % Set target
-            % - if there are 2 targets per block we make sure that they are at least
-            % 2 events apart
-            % - targets cannot be on the first or last event of a block
-            % - no more than 2 target in the same event order
-
-            nbTarget = numTargetsForEachBlock(iBlock);
-
-            chosenPosition = setTargetPositionInSequence( ...
-                                                         nbEventsPerBlock, ...
-                                                         nbTarget, ...
-                                                         [1 nbEventsPerBlock]);
-
-            fixationTargets(iBlock, chosenPosition) = 1;
-
-        end
-
-        % Check rule 3
-        if max(sum(fixationTargets)) < nbRepetitions - 1
-            break
-        end
-
-    end
-
-    %% Now we do the easy stuff
-    cfg.design.blockNames = assignConditions(cfg);
-
-    cfg.design.nbBlocks = nbBlocks;
-
-    cfg = setDirections(cfg);
-
-    speeds = ones(nbBlocks, nbEventsPerBlock) * cfg.dot.speedPixPerFrame;
-    cfg.design.speeds = speeds;
-
-    cfg.design.fixationTargets = fixationTargets;
-
-    %% Plot
+    %% Plot a visual representation of the design
     diplayDesign(cfg, displayFigs);
 
     fprintf('\n\n...design computed!\n\n');
