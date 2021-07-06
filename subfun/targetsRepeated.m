@@ -1,7 +1,6 @@
-%Iqra Shahzad
 %This function gives the matrix with the targets(paired). This is used in
 %expDesign
-function [MYfixationTargets_matrix] = targets_repeated(fixationTargets)
+function [MYfixationTargets_matrix] = targetsRepeated(fixationTargets)
 
 cfg.design.fixationTargets=zeros(size(fixationTargets,1), (size(fixationTargets,2)+size(fixationTargets,2)));
     for t=1:size(fixationTargets,2)

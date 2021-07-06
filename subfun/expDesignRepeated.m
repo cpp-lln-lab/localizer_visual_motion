@@ -1,6 +1,6 @@
 % (C) Copyright 2020 CPP visual motion localizer developpers
 
-function [cfg] = expDesign_repeated(cfg, displayFigs)
+function [cfg] = expDesignRepeated(cfg, displayFigs)
     % Creates the sequence of blocks and the events in them
     %
     % The conditions are consecutive static and motion blocks

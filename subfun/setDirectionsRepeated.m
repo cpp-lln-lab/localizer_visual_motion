@@ -1,5 +1,5 @@
 % (C) Copyright 2020 CPP visual motion localizer developpers
-%This function is adapted by Iqra Shahzad from setDirections.m. It creates a direction matrix A with 12
+%This function creates a direction matrix A with 12
 %events [0 180 270 90]. 
 %Then it creates another direction matrix B such that the directions are
 %paired (0,180) and (270,90)
@@ -8,7 +8,7 @@
 %The target matrix is also created similarly. The targets are present
 %consecultively - to detect a consecutive event.
 
-function cfg = setDirections_repeated(cfg)
+function cfg = setDirectionsRepeated(cfg)
 
     [CONDITION1_DIRECTIONS, CONDITION2_DIRECTIONS] = getDirectionBaseVectors(cfg);
 
@@ -54,10 +54,10 @@ function cfg = setDirections_repeated(cfg)
 
     end
 
-    cfg.design.directionsA = directionsA;%%% direction matrix A with 12 events IQRA
+    cfg.design.directionsA = directionsA;%%% direction matrix A with 12 events 
     directionsB= changem(directionsA,[0, 180, 270, 90], [180, 0, 90, 270]);%creates another matrix B with values replaced for opposite directions
     
-    %%%%create paired directions or direction  matrix with 24 events IQRA
+    %%%%create paired directions or direction  matrix with 24 events 
     cfg.design.directions = zeros(size(directionsA,1), (size(directionsA,2)+size(directionsB,2)));
     
     for i=1:size(directionsA,2)
