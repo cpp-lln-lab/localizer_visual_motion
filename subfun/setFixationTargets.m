@@ -22,7 +22,7 @@ function fixationTargets = setFixationTargets(cfg)
         % Make a vector of length nb of block per contidion (nbBlock / 2)
         targetPerCondition = repmat(targetRange, 1, nbRepetitions / maxNbPerBlock);
 
-        % Shuffle and assign the number of target per each block (the nb of target event is 
+        % Shuffle and assign the number of target per each block (the nb of target event is
         % counterbalanced per condition)
         numTargetsForEachBlock = zeros(1, nbBlocks);
         numTargetsForEachBlock(idxCondition1) = shuffle(targetPerCondition);
