@@ -52,7 +52,7 @@ function fixationTargets = setFixationTargets(cfg)
                                                              nbEventsPerBlock, ...
                                                              nbTarget, ...
                                                              [1 nbEventsPerBlock]);
-                
+
                 % Add the target(s) to the final matrix
                 fixationTargets(iBlock, chosenPosition) = 1;
 
