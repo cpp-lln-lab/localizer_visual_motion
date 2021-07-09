@@ -63,7 +63,6 @@ function [cfg] = expDesign(cfg, displayFigs)
         % means 20 blocks
         cfg.design.nbRepetitions = 10;
         cfg.design.names = {'static'; 'motion'};
-        %       cfg.design.names = {'static'};
         cfg.design.nbEventsPerBlock = 12;
         cfg.design.motionDirections = [0 90 180 270];
 
@@ -92,8 +91,6 @@ function [cfg] = expDesign(cfg, displayFigs)
     %% Task(s) design
 
     % Compute a matrix [nbBlocks x nbEventsPerBlock] with
-    % - 0: no fixation target
-    % - 1: fixation target
     cfg.design.fixationTargets = setFixationTargets(cfg);
 
     % Compute a matrix [nbBlocks x nbEventsPerBlock] with the dots speeds (target speed will be

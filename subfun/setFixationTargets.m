@@ -12,7 +12,7 @@ function fixationTargets = setFixationTargets(cfg)
     % Get the parameter to compute the design with
     [nbRepetitions, nbEventsPerBlock, maxNbPerBlock, nbBlocks] = getDesignInput(cfg);
 
-    % Compute the matrix with thetargets if requested, otherwise output will be only zeros
+    % Compute the matrix with the fixation targets if requested, otherwise output will be only zeros
     if sum(contains(cfg.target.type, 'fixation_cross')) ~= 0
 
         % Check that ...
@@ -67,7 +67,7 @@ function fixationTargets = setFixationTargets(cfg)
 
     else
 
-        % Ouptup an "empty" matrix in case no fixation task is required
+        % Outpu an "empty" matrix in case no fixation task is required
         fixationTargets = zeros(nbBlocks, nbEventsPerBlock);
 
     end
