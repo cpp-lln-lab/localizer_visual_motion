@@ -1,5 +1,12 @@
 % (C) Copyright 2021 CPP visual motion localizer developpers
 
+% Set target in  a matrix of of ``nbBlocks`` by ``nbEventsPerBlock`` with some rules:
+% - if there are 2 targets per block we make sure that they are at least 2 events apart
+% - targets cannot be on the first or last event of a block
+% - no less than 1 target per event position in the whole run
+%
+% If the fixation target task is not required, it outputs a matrix with only zeros
+
 function fixationTargets = setFixationTargets(cfg)
 
     % Get the parameter to compute the design with
@@ -35,14 +42,10 @@ function fixationTargets = setFixationTargets(cfg)
 
             for iBlock = 1:nbBlocks
 
-                % Set target
-                % - if there are 2 targets per block we make sure that they are at least
-                % 2 events apart
-                % - targets cannot be on the first or last event of a block
-                % - no more than 2 target in the same event order
 
                 nbTarget = numTargetsForEachBlock(iBlock);
-
+                
+                % Check rule 1 and 2
                 chosenPosition = setTargetPositionInSequence( ...
                                                              nbEventsPerBlock, ...
                                                              nbTarget, ...
@@ -51,9 +54,11 @@ function fixationTargets = setFixationTargets(cfg)
                 fixationTargets(iBlock, chosenPosition) = 1;
 
             end
-
+            
+            disp('ciao')
+            
             % Check rule 3
-            if max(sum(fixationTargets)) < nbRepetitions - 1
+            if min(sum(fixationTargets(:,2:nbEventsPerBlock - 1))) ~= 0
                 break
             end
 
