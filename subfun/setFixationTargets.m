@@ -1,6 +1,6 @@
 % (C) Copyright 2021 CPP visual motion localizer developpers
 
-% Set target in  a matrix of of ``nbBlocks`` by ``nbEventsPerBlock`` with some rules:
+% Set fixation targets in a matrix of of ``nbBlocks`` by ``nbEventsPerBlock`` with some rules:
 % - if there are 2 targets per block we make sure that they are at least 2 events apart
 % - targets cannot be on the first or last event of a block
 % - no less than 1 target per event position in the whole run

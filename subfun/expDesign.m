@@ -13,20 +13,18 @@ function [cfg] = expDesign(cfg, displayFigs)
     %  STATIC_DIRECTIONS = [-1 -1 -1 -1];
     %
     % Pseudorandomization rules:
+    %
+    % - Directions:
     % (1) Directions are all present in random orders in `numEventsPerBlock/nDirections`
     % consecutive chunks. This evenly distribute the directions across the
     % block.
     % (2) No same consecutive direction
     %
     %
-    % TARGETS
-    %
-    % Pseudorandomization rules:
-    % (1) If there are more than 1 target per block we make sure that they are at least 2
-    % events apart.
+    % - Color change detection of the fixation cross:
+    % (1) If there are 2 targets per block we make sure that they are at least 2 events apart.
     % (2) Targets cannot be on the first or last event of a block.
-    % (3) Targets can not be present more than `nbRepetitions` - 1 times in the same event
-    % position across blocks.
+    % (3) No less than 1 target per event position in the whole run
     %
     % Input:
     % - cfg: parameters returned by setParameters
