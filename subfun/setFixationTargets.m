@@ -38,18 +38,22 @@ function fixationTargets = setFixationTargets(cfg)
         %% Give the blocks the names with condition and design the task in each event
         while 1
 
+            % Pre allocate the matrix with zeros
             fixationTargets = zeros(nbBlocks, nbEventsPerBlock);
 
+            % Build the matrix
             for iBlock = 1:nbBlocks
 
+                % Get how many targets in this block
                 nbTarget = numTargetsForEachBlock(iBlock);
 
-                % Check rule 1 and 2
+                % Get the target(s) position and check rule 1 and 2
                 chosenPosition = setTargetPositionInSequence( ...
                                                              nbEventsPerBlock, ...
                                                              nbTarget, ...
                                                              [1 nbEventsPerBlock]);
-
+                
+                % Add the target(s) to the final matrix
                 fixationTargets(iBlock, chosenPosition) = 1;
 
             end
@@ -63,6 +67,7 @@ function fixationTargets = setFixationTargets(cfg)
 
     else
 
+        % Ouptup an "empty" matrix in case no fixation task is required
         fixationTargets = zeros(nbBlocks, nbEventsPerBlock);
 
     end
