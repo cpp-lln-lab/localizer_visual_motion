@@ -24,8 +24,8 @@ function directions = setDirections(cfg)
     nbRepeatsDirectionBaseVector = nbEventsPerBlock / length(directionsCondition1);
 
     staticDirections = repmat( ...
-                               directionsCondition1, ...
-                               1, nbRepeatsDirectionBaseVector);
+                              directionsCondition1, ...
+                              1, nbRepeatsDirectionBaseVector);
 
     for iMotionBlock = 1:nbRepetitions
 
