@@ -53,9 +53,7 @@ function fixationTargets = setFixationTargets(cfg)
                 fixationTargets(iBlock, chosenPosition) = 1;
 
             end
-
-            disp('ciao');
-
+                        
             % Check rule 3
             if min(sum(fixationTargets(:, 2:nbEventsPerBlock - 1))) ~= 0
                 break

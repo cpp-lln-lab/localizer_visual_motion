@@ -70,7 +70,7 @@ function [cfg] = expDesign(cfg, displayFigs)
         cfg.design.motionDirections = [0 90 180 270];
 
         cfg.target.type = {'fixation_cross', 'speed'};
-        cfg.target.maxNbPerBlock = 1;
+        cfg.target.maxNbPerBlock = 2;
 
         % This is only for dummy trial of this function.
         % See in `postInitializationSetUp` how it is calculated during the experiment
