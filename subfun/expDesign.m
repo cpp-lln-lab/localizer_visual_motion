@@ -94,7 +94,7 @@ function [cfg] = expDesign(cfg, displayFigs)
     %% Task(s) design
 
     % Compute a matrix [nbBlocks x nbEventsPerBlock] with
-    % - 0: no fixation target 
+    % - 0: no fixation target
     % - 1: fixation target
     cfg.design.fixationTargets = setFixationTargets(cfg);
 

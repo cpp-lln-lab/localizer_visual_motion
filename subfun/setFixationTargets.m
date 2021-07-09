@@ -42,9 +42,8 @@ function fixationTargets = setFixationTargets(cfg)
 
             for iBlock = 1:nbBlocks
 
-
                 nbTarget = numTargetsForEachBlock(iBlock);
-                
+
                 % Check rule 1 and 2
                 chosenPosition = setTargetPositionInSequence( ...
                                                              nbEventsPerBlock, ...
@@ -54,11 +53,11 @@ function fixationTargets = setFixationTargets(cfg)
                 fixationTargets(iBlock, chosenPosition) = 1;
 
             end
-            
-            disp('ciao')
-            
+
+            disp('ciao');
+
             % Check rule 3
-            if min(sum(fixationTargets(:,2:nbEventsPerBlock - 1))) ~= 0
+            if min(sum(fixationTargets(:, 2:nbEventsPerBlock - 1))) ~= 0
                 break
             end
 
