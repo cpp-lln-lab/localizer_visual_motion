@@ -64,7 +64,7 @@ function [cfg] = expDesign(cfg, displayFigs)
         cfg.design.nbRepetitions = 10;
         cfg.design.names = {'static'; 'motion'};
         cfg.design.nbEventsPerBlock = 12;
-        cfg.design.motionDirections = [0 90 180 270];
+        cfg.design.motionDirections = [0 180];
 
         cfg.target.type = {'fixation_cross', 'speed'};
         cfg.target.maxNbPerBlock = 2;
