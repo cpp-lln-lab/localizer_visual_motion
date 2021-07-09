@@ -2,27 +2,32 @@
 
 function directions = setDirections(cfg)
 
-    [CONDITION1_DIRECTIONS, CONDITION2_DIRECTIONS] = getDirectionBaseVectors(cfg);
+    % Compute the directions to be displayed in a matric of size ``nbBlocks`` by ``nbEventsPerBlock``
+    %
+    % condition1 = 'static';
+    % condition2 = 'motion';
 
-    [NB_REPETITIONS, NB_EVENTS_PER_BLOCK, ~, NB_BLOCKS] = getDesignInput(cfg);
+    [directionsCondition1, directionsCondition2] = getDirectionBaseVectors(cfg);
 
-    [~, CONDITON1_INDEX, CONDITON2_INDEX] = setBlocksConditions(cfg);
+    [nbRepetitions, nbEventsPerBlock, ~, nbBlocks] = getDesignInput(cfg);
 
-    if mod(NB_EVENTS_PER_BLOCK, length(CONDITION1_DIRECTIONS)) ~= 0
+    [~, idxCondition1, idxCondition2] = setBlocksConditions(cfg);
+
+    if mod(nbEventsPerBlock, length(directionsCondition2)) ~= 0
         error('Number of events/block not a multiple of number of motion/static direction');
     end
 
     % initialize
-    directions = zeros(NB_BLOCKS, NB_EVENTS_PER_BLOCK);
+    directions = zeros(nbBlocks, nbEventsPerBlock);
 
     % Create a vector for the static condition
-    NB_REPEATS_BASE_VECTOR = NB_EVENTS_PER_BLOCK / length(CONDITION2_DIRECTIONS);
+    nbRepeatsDirectionBaseVector = nbEventsPerBlock / length(directionsCondition1);
 
-    static_directions = repmat( ...
-                               CONDITION2_DIRECTIONS, ...
-                               1, NB_REPEATS_BASE_VECTOR);
+    staticDirections = repmat( ...
+                               directionsCondition1, ...
+                               1, nbRepeatsDirectionBaseVector);
 
-    for iMotionBlock = 1:NB_REPETITIONS
+    for iMotionBlock = 1:nbRepetitions
 
         if isfield(cfg.design, 'localizer') && strcmpi(cfg.design.localizer, 'MT_MST')
 
@@ -31,12 +36,12 @@ function directions = setDirections(cfg)
             %             directions(CONDITON1_INDEX(iMotionBlock), :) = ...
             %                 repeatShuffleConditions(CONDITION1_DIRECTIONS, NB_REPEATS_BASE_VECTOR);
 
-            directions(CONDITON2_INDEX(iMotionBlock), :) = ...
-                repeatShuffleConditions(CONDITION1_DIRECTIONS, NB_REPEATS_BASE_VECTOR);
+            directions(idxCondition2(iMotionBlock), :) = ...
+                repeatShuffleConditions(directionsCondition2, nbRepeatsDirectionBaseVector);
 
             if length(cfg.design.names) == 2
 
-                directions(CONDITON1_INDEX(iMotionBlock), :) = static_directions;
+                directions(idxCondition1(iMotionBlock), :) = staticDirections;
 
             end
 
@@ -44,10 +49,10 @@ function directions = setDirections(cfg)
 
             % Set motion direction and static order
 
-            directions(CONDITON2_INDEX(iMotionBlock), :) = ...
-                repeatShuffleConditions(CONDITION1_DIRECTIONS, NB_REPEATS_BASE_VECTOR);
+            directions(idxCondition2(iMotionBlock), :) = ...
+                repeatShuffleConditions(directionsCondition2, nbRepeatsDirectionBaseVector);
 
-            directions(CONDITON1_INDEX(iMotionBlock), :) = static_directions;
+            directions(idxCondition1(iMotionBlock), :) = staticDirections;
 
         end
 
