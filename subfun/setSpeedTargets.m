@@ -1,6 +1,6 @@
 % (C) Copyright 2021 CPP visual motion localizer developpers
 
-% [ W I P ] 
+% [ W I P ]
 
 function speeds = setSpeedTargets(cfg)
 
@@ -10,14 +10,14 @@ function speeds = setSpeedTargets(cfg)
         [~, nbEventsPerBlock, ~, nbBlocks] = getDesignInput(cfg);
 
         speeds = ones(nbBlocks, nbEventsPerBlock) * cfg.dot.speedPixPerFrame;
-    
+
     else
 
         % Outpu an "empty" matrix in case no speed task is required
         [~, nbEventsPerBlock, ~, nbBlocks] = getDesignInput(cfg);
 
         speeds = ones(nbBlocks, nbEventsPerBlock) * cfg.dot.speedPixPerFrame;
-        
+
     end
 
 end
