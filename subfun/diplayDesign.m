@@ -44,7 +44,7 @@ function diplayDesign(cfg, displayFigs)
 
         figure(2);
 
-        [motionDirections] = getDirectionBaseVectors(cfg);
+        [~, motionDirections] = getDirectionBaseVectors(cfg);
         motionDirections = unique(motionDirections);
 
         for iMotion = 1:length(motionDirections)

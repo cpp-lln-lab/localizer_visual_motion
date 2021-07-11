@@ -9,10 +9,9 @@ function [directionsCondition1, directionsCondition2] = getDirectionBaseVectors(
     directionsCondition1 = repmat(-1, size(cfg.design.motionDirections));
     directionsCondition2 = cfg.design.motionDirections;
 
-    % for for the MT / MST localizer
+    % For the MT / MST localizer
     if isfield(cfg.design, 'localizer') && strcmpi(cfg.design.localizer, 'MT_MST')
 
-        directionsCondition2 = cfg.design.motionDirections;
         directionsCondition1 = cfg.design.motionDirections;
 
         if  length(cfg.design.names) == 2

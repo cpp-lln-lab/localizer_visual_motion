@@ -32,10 +32,6 @@ function directions = setDirections(cfg)
         if isfield(cfg.design, 'localizer') && strcmpi(cfg.design.localizer, 'MT_MST')
 
             % Set motion direction for MT/MST localizer
-
-            %             directions(CONDITON1_INDEX(iMotionBlock), :) = ...
-            %                 repeatShuffleConditions(CONDITION1_DIRECTIONS, NB_REPEATS_BASE_VECTOR);
-
             directions(idxCondition2(iMotionBlock), :) = ...
                 repeatShuffleConditions(directionsCondition2, nbRepeatsDirectionBaseVector);
 
@@ -48,7 +44,6 @@ function directions = setDirections(cfg)
         else
 
             % Set motion direction and static order
-
             directions(idxCondition2(iMotionBlock), :) = ...
                 repeatShuffleConditions(directionsCondition2, nbRepeatsDirectionBaseVector);
 

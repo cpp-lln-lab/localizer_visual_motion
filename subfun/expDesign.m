@@ -58,6 +58,7 @@ function [cfg] = expDesign(cfg, displayFigs)
 
         displayFigs = 1;
 
+        cfg.design.localizer = 'MT';
         % Repetition per condition:
         % 2 conditions [`cfg.design.names`] and 10 repetitions [`cfg.design.nbRepetitions`]
         % means 20 blocks
