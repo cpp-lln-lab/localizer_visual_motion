@@ -30,27 +30,27 @@ function directions = setDirections(cfg)
                               directionsCondition1, ...
                               1, nbRepeatsDirectionBaseVector);
 
-    % Compute the the directions matrix, setting the motion direction orders 
+    % Compute the the directions matrix, setting the motion direction orders
     for iMotionBlock = 1:nbRepetitions
 
         switch cfg.design.localizer
-            
+
             case 'MT'
 
                 % Set motion directions
                 directions(idxCondition2(iMotionBlock), :) = ...
                     repeatShuffleConditions(directionsCondition2, nbRepeatsDirectionBaseVector);
-             
+
                 % Set static "directions"
                 directions(idxCondition1(iMotionBlock), :) = staticDirections;
-            
+
             case 'MT_MST'
-                
+
                 % Set motion direction for MT/MST localizer
                 directions(idxCondition2(iMotionBlock), :) = ...
                     repeatShuffleConditions(directionsCondition2, nbRepeatsDirectionBaseVector);
 
-                 % Set static "directions" in case it is needed
+                % Set static "directions" in case it is needed
                 if length(cfg.design.names) == 2
 
                     directions(idxCondition1(iMotionBlock), :) = staticDirections;

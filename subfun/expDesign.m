@@ -59,28 +59,28 @@ function [cfg] = expDesign(cfg, displayFigs)
         displayFigs = 1;
 
         % Design
-        
+
         % ``nbRepetitions``:
         % 2 conditions [`cfg.design.names`] and 10 repetitions [`cfg.design.nbRepetitions`]
         % means 20 blocks
-        
-        cfg.design.localizer = 'MT'; % 'MT' ; 'MT_MST' 
-        
+
+        cfg.design.localizer = 'MT'; % 'MT' ; 'MT_MST'
+
         cfg.design.nbRepetitions = 10;
         cfg.design.names = {'motion'};
         cfg.design.nbEventsPerBlock = 12;
-        
+
         % MT loc
         cfg.design.motionDirections = [0 180]; % choices: [ 0 90 180 270 ] right down left up
-        
+
         % MT_MST loc
         if strcmpi(cfg.design.localizer, 'MT_MST')
-            
+
             cfg.design.motionDirections = [666 -666]; % choices [666 -666] outward inward
-            cfg.design.fixationPosition = {'fixation_left'; 'fixation_right'}; 
-            
+            cfg.design.fixationPosition = {'fixation_left'; 'fixation_right'};
+
         end
-            
+
         % Task
 
         cfg.target.type = {'fixation_cross', 'speed'};
