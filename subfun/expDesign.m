@@ -4,13 +4,18 @@ function [cfg] = expDesign(cfg, displayFigs)
     % Creates the sequence of blocks and the events in them
     %
     % The conditions are consecutive static and motion blocks. It gives better results than
-    % randomised.
+    % randomised. It can be run as a stand alone without inputs to display a visual example of
+    % possible design.
+    %
+    % It computes the directions to display and the task(s), at the moment:
+    % (1) detection of change in the color of the fixation target
+    % (2) detection of different speed of the moving dots [ W I P ]
     %
     % EVENTS
     % The ``nbEventsPerBlock`` should be a multiple of the number of motion directions requested in
     % ``motionDirections`` (which should be more than 1) e.g.:
-    %  MT localizer: cfg.design.motionDirections = [ 0 90 180 270 ]; % right down left up
-    %  MT_MST localizer: cfg.design.motionDirections = [666 -666]; % outward inward
+    %  MT localizer: ``cfg.design.motionDirections = [ 0 90 180 270 ]; % right down left up``
+    %  MT_MST localizer: ``cfg.design.motionDirections = [666 -666]; % outward inward``
     %
     % Pseudorandomization rules:
     %
