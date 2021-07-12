@@ -3,23 +3,22 @@
 function [cfg] = expDesign(cfg, displayFigs)
     % Creates the sequence of blocks and the events in them
     %
-    % The conditions are consecutive static and motion blocks
-    % (Gives better results than randomised).
+    % The conditions are consecutive static and motion blocks. It gives better results than
+    % randomised.
     %
     % EVENTS
-    % The numEventsPerBlock should be a multiple of the number of "base"
-    % listed in the MOTION_DIRECTIONS and STATIC_DIRECTIONS (4 at the moment).
-    %  MOTION_DIRECTIONS = [0 90 180 270];
-    %  STATIC_DIRECTIONS = [-1 -1 -1 -1];
+    % The ``nbEventsPerBlock`` should be a multiple of the number of motion directions requested in
+    % ``motionDirections`` (which should be more than 1) e.g.:
+    %  MT localizer: cfg.design.motionDirections = [ 0 90 180 270 ]; % right down left up
+    %  MT_MST localizer: cfg.design.motionDirections = [666 -666]; % outward inward
     %
     % Pseudorandomization rules:
     %
     % - Directions:
-    % (1) Directions are all present in random orders in `numEventsPerBlock/nDirections`
+    % (1) Directions are all presented in random orders in `numEventsPerBlock/nDirections`
     % consecutive chunks. This evenly distribute the directions across the
     % block.
     % (2) No same consecutive direction
-    %
     %
     % - Color change detection of the fixation cross:
     % (1) If there are 2 targets per block we make sure that they are at least 2 events apart.
@@ -32,19 +31,17 @@ function [cfg] = expDesign(cfg, displayFigs)
     % matrix of the design
     %
     % Output:
-    % - ExpParameters.designBlockNames = cell array (nr_blocks, 1) with the
-    % name for each block
-    %
-    % - cfg.designDirections = array (nr_blocks, numEventsPerBlock)
-    % with the direction to present in a given block
-    % - 0 90 180 270 indicate the angle
-    % - -1 indicates static
-    %
-    % - cfg.designSpeeds = array (nr_blocks, numEventsPerBlock) * speedEvent;
-    %
-    % - cfg.designFixationTargets = array (nr_blocks, numEventsPerBlock)
-    % showing for each event if it should be accompanied by a target
-    %
+    % - cfg.design.blockNames: cell array (nbBlocks, 1) with the condition name for each block
+    % - cfg.design.nbBlocks: integer for th etotal number of blocks in the run
+    % - cfg.design.directions: array (nbBlocks, nbEventsPerBlock) with the direction to present in a
+    % given event of a block.
+    %  - 0 90 180 270 indicate the angle for translational motion direction
+    %  - 666 -666 indicate in/out-ward direction in radial motion
+    %  - -1 indicates static
+    % - cfg.design.speeds: array (nbBlocks, nbEventsPerBlock) * speedEvent indicate the speed of the
+    % dots in each event, if different that represents a target [ W I P ]
+    % - cfg.design.fixationTargets: array (nbBlocks, numEventsPerBlock) showing for each event if it
+    % should be accompanied by a target
 
     %% Check inputs
 
