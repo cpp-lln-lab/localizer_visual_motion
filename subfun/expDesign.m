@@ -3,32 +3,32 @@
 function [cfg] = expDesign(cfg, displayFigs)
     % Creates the sequence of blocks and the events in them
     %
-    % The conditions are consecutive static and motion blocks
-    % (Gives better results than randomised).
+    % The conditions are consecutive static and motion blocks. It gives better results than
+    % randomised. It can be run as a stand alone without inputs to display a visual example of
+    % possible design.
     %
-    % Style guide: constants are in SNAKE_UPPER_CASE
+    % It computes the directions to display and the task(s), at the moment:
+    % (1) detection of change in the color of the fixation target
+    % (2) detection of different speed of the moving dots [ W I P ]
     %
     % EVENTS
-    % The numEventsPerBlock should be a multiple of the number of "base"
-    % listed in the MOTION_DIRECTIONS and STATIC_DIRECTIONS (4 at the moment).
-    %  MOTION_DIRECTIONS = [0 90 180 270];
-    %  STATIC_DIRECTIONS = [-1 -1 -1 -1];
+    % The ``nbEventsPerBlock`` should be a multiple of the number of motion directions requested in
+    % ``motionDirections`` (which should be more than 1) e.g.:
+    %  MT localizer: ``cfg.design.motionDirections = [ 0 90 180 270 ]; % right down left up``
+    %  MT_MST localizer: ``cfg.design.motionDirections = [666 -666]; % outward inward``
     %
     % Pseudorandomization rules:
-    % (1) Directions are all present in random orders in `numEventsPerBlock/nDirections`
+    %
+    % - Directions:
+    % (1) Directions are all presented in random orders in `numEventsPerBlock/nDirections`
     % consecutive chunks. This evenly distribute the directions across the
     % block.
     % (2) No same consecutive direction
     %
-    %
-    % TARGETS
-    %
-    % Pseudorandomization rules:
-    % (1) If there are more than 1 target per block we make sure that they are at least 2
-    % events apart.
+    % - Color change detection of the fixation cross:
+    % (1) If there are 2 targets per block we make sure that they are at least 2 events apart.
     % (2) Targets cannot be on the first or last event of a block.
-    % (3) Targets can not be present more than NB_REPETITIONS - 1 times in the same event
-    % position across blocks.
+    % (3) No less than 1 target per event position in the whole run
     %
     % Input:
     % - cfg: parameters returned by setParameters
@@ -36,19 +36,17 @@ function [cfg] = expDesign(cfg, displayFigs)
     % matrix of the design
     %
     % Output:
-    % - ExpParameters.designBlockNames = cell array (nr_blocks, 1) with the
-    % name for each block
-    %
-    % - cfg.designDirections = array (nr_blocks, numEventsPerBlock)
-    % with the direction to present in a given block
-    % - 0 90 180 270 indicate the angle
-    % - -1 indicates static
-    %
-    % - cfg.designSpeeds = array (nr_blocks, numEventsPerBlock) * speedEvent;
-    %
-    % - cfg.designFixationTargets = array (nr_blocks, numEventsPerBlock)
-    % showing for each event if it should be accompanied by a target
-    %
+    % - cfg.design.blockNames: cell array (nbBlocks, 1) with the condition name for each block
+    % - cfg.design.nbBlocks: integer for th etotal number of blocks in the run
+    % - cfg.design.directions: array (nbBlocks, nbEventsPerBlock) with the direction to present in a
+    % given event of a block.
+    %  - 0 90 180 270 indicate the angle for translational motion direction
+    %  - 666 -666 indicate in/out-ward direction in radial motion
+    %  - -1 indicates static
+    % - cfg.design.speeds: array (nbBlocks, nbEventsPerBlock) * speedEvent indicate the speed of the
+    % dots in each event, if different that represents a target [ W I P ]
+    % - cfg.design.fixationTargets: array (nbBlocks, numEventsPerBlock) showing for each event if it
+    % should be accompanied by a target
 
     %% Check inputs
 
@@ -59,69 +57,68 @@ function [cfg] = expDesign(cfg, displayFigs)
 
     % Set variables here for a dummy test of this function
     if nargin < 1 || isempty(cfg)
-        error('give me something to work with');
-    end
 
-    fprintf('\n\nCreating design.\n\n');
+        displayFigs = 1;
 
-    [NB_BLOCKS, NB_REPETITIONS, NB_EVENTS_PER_BLOCK, MAX_TARGET_PER_BLOCK] = getDesignInput(cfg);
-    [~, CONDITON1_INDEX, CONDITON2_INDEX] = assignConditions(cfg);
+        % Design
 
-    if mod(NB_REPETITIONS, MAX_TARGET_PER_BLOCK) ~= 0
-        error('number of repetitions must be a multiple of max number of targets');
-    end
+        % ``nbRepetitions``:
+        % 2 conditions [`cfg.design.names`] and 10 repetitions [`cfg.design.nbRepetitions`]
+        % means 20 blocks
 
-    RANGE_TARGETS = 1:MAX_TARGET_PER_BLOCK;
-    targetPerCondition = repmat(RANGE_TARGETS, 1, NB_REPETITIONS / MAX_TARGET_PER_BLOCK);
+        cfg.design.localizer = 'MT'; % 'MT' ; 'MT_MST'
 
-    numTargetsForEachBlock = zeros(1, NB_BLOCKS);
-    numTargetsForEachBlock(CONDITON1_INDEX) = shuffle(targetPerCondition);
-    numTargetsForEachBlock(CONDITON2_INDEX) = shuffle(targetPerCondition);
+        cfg.design.nbRepetitions = 10;
+        cfg.design.names = {'motion'};
+        cfg.design.nbEventsPerBlock = 12;
 
-    %% Give the blocks the names with condition and design the task in each event
-    while 1
+        % MT loc
+        cfg.design.motionDirections = [0 180]; % choices: [ 0 90 180 270 ] right down left up
 
-        fixationTargets = zeros(NB_BLOCKS, NB_EVENTS_PER_BLOCK);
+        % MT_MST loc
+        if strcmpi(cfg.design.localizer, 'MT_MST')
 
-        for iBlock = 1:NB_BLOCKS
-
-            % Set target
-            % - if there are 2 targets per block we make sure that they are at least
-            % 2 events apart
-            % - targets cannot be on the first or last event of a block
-            % - no more than 2 target in the same event order
-
-            nbTarget = numTargetsForEachBlock(iBlock);
-
-            chosenPosition = setTargetPositionInSequence( ...
-                                                         NB_EVENTS_PER_BLOCK, ...
-                                                         nbTarget, ...
-                                                         [1 NB_EVENTS_PER_BLOCK]);
-
-            fixationTargets(iBlock, chosenPosition) = 1;
+            cfg.design.motionDirections = [666 -666]; % choices [666 -666] outward inward
+            cfg.design.fixationPosition = {'fixation_left'; 'fixation_right'};
 
         end
 
-        % Check rule 3
-        if max(sum(fixationTargets)) < NB_REPETITIONS - 1
-            break
-        end
+        % Task
+
+        cfg.target.type = {'fixation_cross', 'speed'};
+        cfg.target.maxNbPerBlock = 2;
+
+        % This is only for a dummy trial of this function.
+        % See in `postInitializationSetUp` how it is calculated during the experiment
+        cfg.dot.speedPixPerFrame = 28;
 
     end
 
-    %% Now we do the easy stuff
-    cfg.design.blockNames = assignConditions(cfg);
+    fprintf('\n\nComputing the design...\n\n');
 
-    cfg.design.nbBlocks = NB_BLOCKS;
+    %% Stimuli design
 
-    cfg = setDirections(cfg);
+    % Computer a vector [nbBlocks x 1] with the order of the conditions to present
+    cfg.design.blockNames = setBlocksConditions(cfg);
 
-    speeds = ones(NB_BLOCKS, NB_EVENTS_PER_BLOCK) * cfg.dot.speedPixPerFrame;
-    cfg.design.speeds = speeds;
+    % Get the nb of blocks
+    [~, ~, ~, cfg.design.nbBlocks] = getDesignInput(cfg);
 
-    cfg.design.fixationTargets = fixationTargets;
+    % Compute a matrix [nbBlocks x nbEventsPerBlock]
+    cfg.design.directions = setDirections(cfg);
 
-    %% Plot
+    %% Task(s) design
+
+    % Compute a matrix [nbBlocks x nbEventsPerBlock] with
+    cfg.design.fixationTargets = setFixationTargets(cfg);
+
+    % Compute a matrix [nbBlocks x nbEventsPerBlock] with the dots speeds (target speed will be
+    % different form the base one)
+    cfg.design.speeds = setSpeedTargets(cfg);
+
+    %% Plot a visual representation of the design
     diplayDesign(cfg, displayFigs);
+
+    fprintf('\n\n...design computed!\n\n');
 
 end
