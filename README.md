@@ -31,7 +31,7 @@
 
 ## Requirements
 
-Make sure that the following toolboxes are installed and added to the matlab / octave path. See the next session on how to install the submodule toolboxes.
+Make sure that the following toolboxes are installed and added to the matlab / octave path. See the next section on how to install the submodule toolboxes.
 
 For instructions see the following links:
 
