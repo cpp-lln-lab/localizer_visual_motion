@@ -19,14 +19,14 @@ function [cfg] = setParameters()
     cfg.debug.smallWin = false; % To test on a part of the screen, change to 1
     cfg.debug.transpWin = false; % To test with trasparent full size screen
 
-    cfg.skipSyncTests = 0;
+    cfg.skipSyncTests = 1;
 
     cfg.verbose = 1;
 
     %% Engine parameters
 
     cfg.testingDevice = 'mri';
-    cfg.eyeTracker.do = true;
+    cfg.eyeTracker.do = false;
     cfg.audio.do = false;
 
     cfg = setMonitor(cfg);
@@ -52,11 +52,11 @@ function [cfg] = setParameters()
     % cfg.design.localizer = 'MT_MST';
 
     cfg.design.motionType = 'translation';
-    cfg.design.motionDirections = [0 0 180 180];
+    cfg.design.motionDirections = [0 180 90 270];
     cfg.design.names = {'static'; 'motion'};
 
-    cfg.design.nbRepetitions = 12;
-    cfg.design.nbEventsPerBlock = 12; % DO NOT CHANGE
+    cfg.design.nbRepetitions = 4;
+    cfg.design.nbEventsPerBlock = 24; % DO NOT CHANGE
 
     %% Timing
 
@@ -66,16 +66,16 @@ function [cfg] = setParameters()
     % IBI
     % block length = (cfg.eventDuration + cfg.ISI) * cfg.design.nbEventsPerBlock
 
-    cfg.timing.eventDuration = 0.79; % second
+    cfg.timing.eventDuration = 0.5; % second
 
     % Time between blocs in secs
-    cfg.timing.IBI = 0;
+    cfg.timing.IBI = 5;
     % Time between events in secs
-    cfg.timing.ISI = 0;
+    cfg.timing.ISI = 1;
     % Number of seconds before the motion stimuli are presented
-    cfg.timing.onsetDelay = 0;
+    cfg.timing.onsetDelay = 5;
     % Number of seconds after the end all the stimuli before ending the run
-    cfg.timing.endDelay = 3.6;
+    cfg.timing.endDelay = 14;
 
     % reexpress those in terms of repetition time
     if cfg.pacedByTriggers.do
@@ -105,15 +105,15 @@ function [cfg] = setParameters()
     % Number of dots per visual angle square.
     cfg.dot.density = 1;
     % Dot life time in seconds
-    cfg.dot.lifeTime = 0.4;
+    cfg.dot.lifeTime = 0.8;
     % proportion of dots killed per frame
     cfg.dot.proportionKilledPerFrame = 0;
     % Dot Size (dot width) in visual angles.
-    cfg.dot.size = .2;
+    cfg.dot.size = .25;
     cfg.dot.color = cfg.color.white;
 
     % Diameter/length of side of aperture in Visual angles
-    cfg.aperture.type = 'none';
+    cfg.aperture.type = 'circle';
     cfg.aperture.width = []; % if left empty it will take the screen height
     cfg.aperture.xPos = 0;
 
@@ -122,11 +122,11 @@ function [cfg] = setParameters()
     cfg.task.name = 'visual localizer';
 
     % Instruction
-    cfg.task.instruction = '1-Detect the RED fixation cross\n \n\n';
+    cfg.task.instruction = 'Detect the repetition\n \n\n';
 
     % Fixation cross (in pixels)
     cfg.fixation.type = 'cross';
-    cfg.fixation.colorTarget = cfg.color.red;
+    cfg.fixation.colorTarget = cfg.color.white;
     cfg.fixation.color = cfg.color.white;
     cfg.fixation.width = .25;
     cfg.fixation.lineWidthPix = 3;
@@ -134,9 +134,9 @@ function [cfg] = setParameters()
     cfg.fixation.yDisplacement = 0;
 
     % target
-    cfg.target.maxNbPerBlock = 1;
+    cfg.target.maxNbPerBlock = 2;
     cfg.target.duration = 0.1; % In secs
-    cfg.target.type = 'fixation_cross';  
+    cfg.target.type = 'static_repeat';  
     % 'fixation_cross' : the fixation cross changes color
     % 'static_repeat' : dots are in the same position
 
@@ -157,10 +157,7 @@ end
 
 function cfg = setKeyboards(cfg)
     cfg.keyboard.escapeKey = 'ESCAPE';
-    cfg.keyboard.responseKey = { ...
-                                'r', 'g', 'y', 'b', ...
-                                'd', 'n', 'z', 'e', ...
-                                't'};
+    cfg.keyboard.responseKey = { 'a', 'b', 'c', 'd'};
     cfg.keyboard.keyboard = [];
     cfg.keyboard.responseBox = [];
 
@@ -172,12 +169,12 @@ end
 
 function cfg = setMRI(cfg)
     % letter sent by the trigger to sync stimulation and volume acquisition
-    cfg.mri.triggerKey = 't';
-    cfg.mri.triggerNb = 5;
+    cfg.mri.triggerKey = 's';
+    cfg.mri.triggerNb = 1;
 
     cfg.mri.repetitionTime = 1.8;
 
-    cfg.bids.MRI.Instructions = 'Detect the RED fixation cross';
+    cfg.bids.MRI.Instructions = 'Detect the repetition';
     cfg.bids.MRI.TaskDescription = [];
 
 end
@@ -197,8 +194,8 @@ function cfg = setMonitor(cfg)
     cfg.screen.monitorDistance = 40; % distance from the screen in cm
 
     if strcmpi(cfg.testingDevice, 'mri')
-        cfg.screen.monitorWidth = 25;
-        cfg.screen.monitorDistance = 95;
+        cfg.screen.monitorWidth = 69.8; % 25;
+        cfg.screen.monitorDistance = 170; %95;
     end
 
 end
