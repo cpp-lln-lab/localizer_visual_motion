@@ -37,7 +37,7 @@ try
     %     if isfield(cfg.design, 'localizer') && strcmpi(cfg.design.localizer, 'MT_MST')
     %         [cfg] = expDesignMtMst(cfg);
     %     else
-    [cfg] = expDesign(cfg);
+    [cfg] = expDesignRepeated(cfg);
     %     end
 
     % Prepare for the output logfiles with all
@@ -129,10 +129,14 @@ try
 
             eyeTracker('Message', cfg, ...
                        ['end_trial-', num2str(iEvent), '_', thisEvent.trial_type]);
-
+                   
                    previousEvent = thisEvent;
                    
-            waitFor(cfg, cfg.timing.ISI);
+            if mod(iEvent,2) == 0
+                waitFor(cfg, cfg.timing.ISI);%%%% wait for ISI if event is even, that is after every second event
+            elseif mod(iEvent,2) == 1
+                waitFor(cfg, 0) %%%% dont wait for ISI if event is odd, so setting the ISI =0
+            end
 
         end
 
