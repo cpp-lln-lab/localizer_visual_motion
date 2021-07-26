@@ -115,9 +115,9 @@ function [cfg] = expDesignRepeated(cfg, displayFigs)
     cfg.design.nbBlocks = NB_BLOCKS;
     
    % target positions
-    cfg.design.fixationTargets = targets_repeated(fixationTargets);%Target design matrix
+    cfg.design.fixationTargets = targetsRepeated(fixationTargets);%Target design matrix
     
-    cfg = setDirections_repeated(cfg);%%%%original: cfg = setDirections(cfg) uses the design with 12 events
+    cfg = setDirectionsRepeated(cfg);%%%%original: cfg = setDirections(cfg) uses the design with 12 events
 
     speeds = ones(NB_BLOCKS, NB_EVENTS_PER_BLOCK) * cfg.dot.speedPixPerFrame;
     cfg.design.speeds = speeds;
