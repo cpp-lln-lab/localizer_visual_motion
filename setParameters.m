@@ -4,7 +4,7 @@ function [cfg] = setParameters()
 
     % VISUAL LOCALIZER
 
-    % Initialize the parameters and general configuration variables
+    % Initialize the general configuration variables structure
     cfg = struct();
 
     % by default the data will be stored in an output folder created where the
@@ -15,7 +15,7 @@ function [cfg] = setParameters()
 
     %% Debug mode settings
 
-    cfg.debug.do = false; % To test the script out of the scanner, skip PTB sync
+    cfg.debug.do = true; % To test the script out of the scanner, skip PTB sync
     cfg.debug.smallWin = false; % To test on a part of the screen, change to 1
     cfg.debug.transpWin = false; % To test with trasparent full size screen
 
@@ -26,7 +26,7 @@ function [cfg] = setParameters()
     %% Engine parameters
 
     cfg.testingDevice = 'mri';
-    cfg.eyeTracker.do = true;
+    cfg.eyeTracker.do = false;
     cfg.audio.do = false;
 
     cfg = setMonitor(cfg);
