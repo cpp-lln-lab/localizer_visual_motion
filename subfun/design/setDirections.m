@@ -1,12 +1,12 @@
-% (C) Copyright 2020 CPP visual motion localizer developpers
-
 function directions = setDirections(cfg)
-
+    %
     % Compute the directions to be displayed
     % in a matrix of size ``nbBlocks`` by ``nbEventsPerBlock``
     %
     % condition1 = 'static';
     % condition2 = 'motion';
+    %
+    % (C) Copyright 2020 CPP visual motion localizer developpers
 
     % Get the directions we should work with
     [directionsCondition1, directionsCondition2] = getDirectionBaseVectors(cfg);
@@ -33,30 +33,15 @@ function directions = setDirections(cfg)
 
     % Compute the the directions matrix, setting the motion direction orders
     for iMotionBlock = 1:nbRepetitions
+        
+        % Set motion directions
+        directions(idxCondition2(iMotionBlock), :) = ...
+        repeatShuffleConditions(directionsCondition2, nbRepeatsDirectionBaseVector);
 
-        switch cfg.design.localizer
-
-            case 'MT'
-
-                % Set motion directions
-                directions(idxCondition2(iMotionBlock), :) = ...
-                    repeatShuffleConditions(directionsCondition2, nbRepeatsDirectionBaseVector);
-
-                % Set static "directions"
-                directions(idxCondition1(iMotionBlock), :) = staticDirections;
-
-            case 'MT_MST'
-
-                % Set motion direction for MT/MST localizer
-                directions(idxCondition2(iMotionBlock), :) = ...
-                    repeatShuffleConditions(directionsCondition2, nbRepeatsDirectionBaseVector);
-
-                % Set static "directions" in case it is needed
-                if length(cfg.design.names) == 2
+        if  strcmp(cfg.design.localizer, 'MT') || ...
+            strcmp(cfg.design.localizer, 'MT_MST') && length(cfg.design.names) == 2   
 
                     directions(idxCondition1(iMotionBlock), :) = staticDirections;
-
-                end
 
         end
 
