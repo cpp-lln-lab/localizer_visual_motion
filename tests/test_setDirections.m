@@ -6,7 +6,7 @@ function test_suite = test_setDirections %#ok<*STOUT>
     initTestSuite;
 end
 
-function test_setDirectionsBasic()
+function test_setDirectionsMT()
 
     run ../initEnv();
 
@@ -23,4 +23,20 @@ function test_setDirectionsBasic()
     % static every second block
     assertEqual(directions(1:2:end,:), ones(10,12)*-1) 
 
+end
+
+function test_setDirectionsMST()
+
+    run ../initEnv();
+
+    isMT = false;
+    cfg = getTestConfig(isMT);
+
+    directions = setDirections(cfg);
+    
+    assertEqual(size(directions), [10, 12]);
+    
+    % only left right and static
+    assertEqual(unique(directions), [-666; 666])
+    
 end
