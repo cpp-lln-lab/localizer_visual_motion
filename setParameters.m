@@ -63,7 +63,7 @@ function [cfg] = setParameters()
     %% Timing
 
     % FOR 7T: if you want to create localizers on the fly, the following must be
-    % multiples of the scanneryour sequence TR
+    % multiples of the scanner sequence TR
     %
     % IBI
     % block length = (cfg.eventDuration + cfg.ISI) * cfg.design.nbEventsPerBlock
@@ -130,7 +130,6 @@ function [cfg] = setParameters()
 
     % Fixation cross (in pixels)
     cfg.fixation.type = 'cross';
-    cfg.fixation.colorTarget = cfg.color.red;
     cfg.fixation.color = cfg.color.white;
     cfg.fixation.width = .25;
     cfg.fixation.lineWidthPix = 3;
@@ -142,7 +141,12 @@ function [cfg] = setParameters()
     cfg.target.duration = 0.1; % In secs
     cfg.target.type = 'fixation_cross';
     % 'fixation_cross' : the fixation cross changes color
-    % 'static_repeat' : dots are in the same position
+    % 'static_repeat' : static dots are in the same position as previous trials
+
+    cfg.fixation.colorTarget = cfg.fixation.color;
+    if strcmp(cfg.target.type, 'fixation_cross')
+        cfg.fixation.colorTarget = cfg.color.red;
+    end
 
     cfg.extraColumns = { ...
                         'direction', ...

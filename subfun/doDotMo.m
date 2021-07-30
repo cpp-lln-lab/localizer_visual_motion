@@ -18,8 +18,7 @@ function [onset, duration, dots] = doDotMo(cfg, thisEvent, thisFixation, dots, i
     % We then draw an aperture on top to hide the certain dots.
 
     %% Get parameters
-    if ~(strcmp(thisEvent.trial_type, 'static') && thisEvent.target == 1) ||  ...
-        isempty(dots)
+    if isempty(dots)
         dots = initDots(cfg, thisEvent);
     end
 
