@@ -1,22 +1,18 @@
-% (C) Copyright 2021 CPP visual motion localizer developpers
-
 % [ W I P ]
 
 function speeds = setSpeedTargets(cfg)
-
     % Compute the matrix with the speed targets if requested, otherwise output will be only zeros
-    if sum(contains(cfg.target.type, 'speed')) ~= 0
-
+    %
+    % (C) Copyright 2021 CPP visual motion localizer developpers
+    
+    if ismember('speed', cfg.target.type)
         [~, nbEventsPerBlock, ~, nbBlocks] = getDesignInput(cfg);
-
         speeds = ones(nbBlocks, nbEventsPerBlock) * cfg.dot.speedPixPerFrame;
 
+    % Outputs an "empty" matrix in case no speed task is required
     else
-
-        % Outpu an "empty" matrix in case no speed task is required
         [~, nbEventsPerBlock, ~, nbBlocks] = getDesignInput(cfg);
-
-        speeds = ones(nbBlocks, nbEventsPerBlock) * cfg.dot.speedPixPerFrame;
+        speeds = zeros(nbBlocks, nbEventsPerBlock) * cfg.dot.speedPixPerFrame;
 
     end
 
