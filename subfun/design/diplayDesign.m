@@ -1,6 +1,6 @@
-% (C) Copyright 2020 CPP visual motion localizer developpers
-
 function diplayDesign(cfg, displayFigs)
+    %
+    % (C) Copyright 2020 CPP visual motion localizer developpers
 
     %% Visualize the design matrix
     if displayFigs

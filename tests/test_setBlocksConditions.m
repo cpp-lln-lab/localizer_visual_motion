@@ -16,7 +16,7 @@ function test_getDirectionBaseVectorsBasic()
     [conditionNamesVector, idxCondition1, idxCondition2] = setBlocksConditions(cfg);
 
     assertEqual(conditionNamesVector, repmat({'static'; 'motion'}, 10, 1));
-    assertEqual(idxCondition1, [1;3;5;7;9;11;13;15;17;19]);
-    assertEqual(idxCondition2, [2;4;6;8;10;12;14;16;18;20]);
+    assertEqual(idxCondition1, [1; 3; 5; 7; 9; 11; 13; 15; 17; 19]);
+    assertEqual(idxCondition2, [2; 4; 6; 8; 10; 12; 14; 16; 18; 20]);
 
 end

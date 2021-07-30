@@ -1,6 +1,5 @@
-% (C) Copyright 2020 CPP visual motion localizer developpers
-
 function [cfg] = expDesign(cfg, displayFigs)
+    %
     % Creates the sequence of blocks and the events in them
     %
     % The conditions are consecutive static and motion blocks. It gives better results than
@@ -39,59 +38,25 @@ function [cfg] = expDesign(cfg, displayFigs)
     % - cfg.design.blockNames: cell array (nbBlocks, 1) with the condition name for each block
     % - cfg.design.nbBlocks: integer for th etotal number of blocks in the run
     % - cfg.design.directions: array (nbBlocks, nbEventsPerBlock) with the direction to present in a
-    % given event of a block.
+    %                          given event of a block.
     %  - 0 90 180 270 indicate the angle for translational motion direction
-    %  - 666 -666 indicate in/out-ward direction in radial motion
-    %  - -1 indicates static
-    % - cfg.design.speeds: array (nbBlocks, nbEventsPerBlock) * speedEvent indicate the speed of the
-    % dots in each event, if different that represents a target [ W I P ]
+    %  - 666 -666     indicate in/out-ward direction in radial motion
+    %  - -1           indicates static
+    % - cfg.design.speeds: [ W I P ] array (nbBlocks, nbEventsPerBlock) * speedEvent indicate
+    %                      the dots speed in each event, if different that represents a target
     % - cfg.design.fixationTargets: array (nbBlocks, numEventsPerBlock) showing for each event if it
-    % should be accompanied by a target
+    %                               should be accompanied by a target
+    %
+    % (C) Copyright 2020 CPP visual motion localizer developpers
 
     %% Check inputs
+    if nargin < 1 || isempty(cfg)
+        error('no configuration provided');
+    end
 
     % Set to 1 for a visualtion of the trials design order
     if nargin < 2 || isempty(displayFigs)
         displayFigs = 0;
-    end
-
-    % Set variables here for a dummy test of this function
-    if nargin < 1 || isempty(cfg)
-
-        displayFigs = 1;
-
-        % Design
-
-        % ``nbRepetitions``:
-        % 2 conditions [`cfg.design.names`] and 10 repetitions [`cfg.design.nbRepetitions`]
-        % means 20 blocks
-
-        cfg.design.localizer = 'MT'; % 'MT' ; 'MT_MST'
-
-        cfg.design.nbRepetitions = 10;
-        cfg.design.names = {'motion'};
-        cfg.design.nbEventsPerBlock = 12;
-
-        % MT loc
-        cfg.design.motionDirections = [0 180]; % choices: [ 0 90 180 270 ] right down left up
-
-        % MT_MST loc
-        if strcmpi(cfg.design.localizer, 'MT_MST')
-
-            cfg.design.motionDirections = [666 -666]; % choices [666 -666] outward inward
-            cfg.design.fixationPosition = {'fixation_left'; 'fixation_right'};
-
-        end
-
-        % Task
-
-        cfg.target.type = {'fixation_cross', 'speed'};
-        cfg.target.maxNbPerBlock = 2;
-
-        % This is only for a dummy trial of this function.
-        % See in `postInitializationSetUp` how it is calculated during the experiment
-        cfg.dot.speedPixPerFrame = 28;
-
     end
 
     fprintf('\n\nComputing the design...\n\n');

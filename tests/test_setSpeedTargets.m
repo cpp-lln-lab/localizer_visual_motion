@@ -15,11 +15,11 @@ function test_setSpeedTargetsBasic()
 
     speeds = setSpeedTargets(cfg);
 
-    assertEqual(speeds, ones(20, 12)*28);
-    
+    assertEqual(speeds, ones(20, 12) * 28);
+
     % try when the target are just for the fixation cross
     cfg.target.type = {'fixation_cross'};
-    
+
     speeds = setSpeedTargets(cfg);
 
     assertEqual(speeds, zeros(20, 12));

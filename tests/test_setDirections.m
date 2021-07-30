@@ -14,14 +14,14 @@ function test_setDirectionsMT()
     cfg = getTestConfig(isMT);
 
     directions = setDirections(cfg);
-    
+
     assertEqual(size(directions), [20, 12]);
-    
+
     % only left right and static
-    assertEqual(unique(directions), [-1; 0; 180])
-    
+    assertEqual(unique(directions), [-1; 0; 180]);
+
     % static every second block
-    assertEqual(directions(1:2:end,:), ones(10,12)*-1) 
+    assertEqual(directions(1:2:end, :), ones(10, 12) * -1);
 
 end
 
@@ -33,10 +33,10 @@ function test_setDirectionsMST()
     cfg = getTestConfig(isMT);
 
     directions = setDirections(cfg);
-    
+
     assertEqual(size(directions), [10, 12]);
-    
+
     % only left right and static
-    assertEqual(unique(directions), [-666; 666])
-    
+    assertEqual(unique(directions), [-666; 666]);
+
 end

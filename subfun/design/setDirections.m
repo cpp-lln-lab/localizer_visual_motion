@@ -33,15 +33,15 @@ function directions = setDirections(cfg)
 
     % Compute the the directions matrix, setting the motion direction orders
     for iMotionBlock = 1:nbRepetitions
-        
+
         % Set motion directions
         directions(idxCondition2(iMotionBlock), :) = ...
-        repeatShuffleConditions(directionsCondition2, nbRepeatsDirectionBaseVector);
+          repeatShuffleConditions(directionsCondition2, nbRepeatsDirectionBaseVector);
 
         if  strcmp(cfg.design.localizer, 'MT') || ...
-            strcmp(cfg.design.localizer, 'MT_MST') && length(cfg.design.names) == 2   
+            strcmp(cfg.design.localizer, 'MT_MST') && length(cfg.design.names) == 2
 
-                    directions(idxCondition1(iMotionBlock), :) = staticDirections;
+            directions(idxCondition1(iMotionBlock), :) = staticDirections;
 
         end
 

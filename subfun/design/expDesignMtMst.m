@@ -1,6 +1,6 @@
-% (C) Copyright 2021 CPP visual motion localizer developpers
-
 function [cfg] = expDesignMtMst(cfg, displayFigs)
+    %
+    % (C) Copyright 2020 CPP visual motion localizer developpers
 
     %% Check inputs
 
