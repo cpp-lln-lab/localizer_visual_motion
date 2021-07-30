@@ -161,7 +161,9 @@ try
                            cfg.timing.triggerIBI);
         end
 
-        if isfield(cfg.design, 'localizer') && strcmpi(cfg.design.localizer, 'MT_MST') && iBlock == cfg.design.nbBlocks / 2
+        if isfield(cfg.design, 'localizer') && ...
+            strcmpi(cfg.design.localizer, 'MT_MST') && ...
+            iBlock == cfg.design.nbBlocks / 2
 
             waitFor(cfg, cfg.timing.changeFixationPosition);
 

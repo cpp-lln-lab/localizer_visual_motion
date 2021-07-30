@@ -2,7 +2,8 @@
 
 function directions = setDirections(cfg)
 
-    % Compute the directions to be displayed in a matric of size ``nbBlocks`` by ``nbEventsPerBlock``
+    % Compute the directions to be displayed
+    % in a matrix of size ``nbBlocks`` by ``nbEventsPerBlock``
     %
     % condition1 = 'static';
     % condition2 = 'motion';
