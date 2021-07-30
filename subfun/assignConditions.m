@@ -9,9 +9,12 @@ function [conditionNamesVector, CONDITON1_INDEX, CONDITON2_INDEX] = assignCondit
     % Get the index of each condition
     nameCondition1 = 'static';
     nameCondition2 = 'motion';
+
     if isfield(cfg.design, 'localizer') && strcmpi(cfg.design.localizer, 'MT_MST')
-        nameCondition1 = 'fixation_right';
-        nameCondition2 = 'fixation_left';
+
+        nameCondition1 = 'static';
+        nameCondition2 = 'motion';
+
     end
 
     CONDITON1_INDEX = find(strcmp(conditionNamesVector, nameCondition1));
