@@ -1,8 +1,8 @@
-% (C) Copyright 2020 CPP visual motion localizer developpers
-
 function [conditionNamesVector, idxCondition1, idxCondition2] = setBlocksConditions(cfg)
+    %
+    % (C) Copyright 2020 CPP visual motion localizer developpers
 
-    [nbRepetitions] = getDesignInput(cfg);
+    nbRepetitions = getDesignInput(cfg);
 
     conditionNamesVector = repmat(cfg.design.names, nbRepetitions, 1);
 
