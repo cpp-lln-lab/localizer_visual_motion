@@ -126,11 +126,13 @@ Wrapper function that present the dot stimulation (static or motion) per event.
 
 ### subfun/expDesign(MtMst)
 
-These functions, one per MT+ and one per MT/MST localizer, create the sequence of blocks and the events in them. The conditions are consecutive static and motion blocks (Gives better results than randomised). It can be run as a stand alone with input `cfg` from `setParamenters.m` to display a visual example of possible design.
+These functions, one per MT+ and one per MT/MST localizer, create the sequence of blocks and the events in them. The conditions are consecutive static and motion blocks (Gives better results than randomised).
+
+It can be run as a stand alone without inputs and display a visual example of the possible design. See `getMockConfig` to set up the mock configuration.
 
 It computes the directions to display and the task(s), at the moment
 1. detection of change in the color of the fixation target
-2. detection of different speed of the moving dots [ W I P ]
+2. detection of different speed of the moving dots [ W I P - if selected as a task it will give the same null output as if not selected ie no difference in speed]
 
 #### Events
 
@@ -160,7 +162,7 @@ The ``nbEventsPerBlock`` should be a multiple of the number of motion directions
   - 0 90 180 270 indicate the angle for translational motion direction
   - 666 -666 indicate in/out-ward direction in radial motion
   - -1 indicates static
-- `cfg.design.speeds`: array (nbBlocks, nbEventsPerBlock) * speedEvent indicate the speed of the dots in each event, if different that represents a target [ W I P ]
+- `cfg.design.speeds`: array (nbBlocks, nbEventsPerBlock) indicate the dots speed in each event, the target is represented by a higher/lower value
 - `cfg.design.fixationTargets`: array (nbBlocks, numEventsPerBlock) showing for each event if it should be accompanied by a target
 
 ## Contributors ✨

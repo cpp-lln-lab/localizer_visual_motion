@@ -3,12 +3,15 @@ function [cfg] = expDesign(cfg, displayFigs)
     % Creates the sequence of blocks and the events in them
     %
     % The conditions are consecutive static and motion blocks. It gives better results than
-    % randomised. It can be run as a stand alone without inputs to display a visual example of
-    % possible design.
+    % randomised.
+    %
+    % It can be run as a stand alone without inputs and display a visual example of the
+    % possible design. See `getMockConfig` to set up the mock configuration.
     %
     % It computes the directions to display and the task(s), at the moment:
     % (1) detection of change in the color of the fixation target
-    % (2) detection of different speed of the moving dots [ W I P ]
+    % (2) detection of different speed of the moving dots [ W I P - if selected as a task it will
+    %     give the same null output as if not selected ie no difference in speed ]
     %
     % EVENTS
     % The ``nbEventsPerBlock`` should be a multiple of the number of motion directions requested in
@@ -42,8 +45,8 @@ function [cfg] = expDesign(cfg, displayFigs)
     %  - 0 90 180 270 indicate the angle for translational motion direction
     %  - 666 -666     indicate in/out-ward direction in radial motion
     %  - -1           indicates static
-    % - cfg.design.speeds: [ W I P ] array (nbBlocks, nbEventsPerBlock) * speedEvent indicate
-    %                      the dots speed in each event, if different that represents a target
+    % - cfg.design.speeds: array (nbBlocks, nbEventsPerBlock) indicate the dots speed
+    %                 in each event, the target is represented by a higher/lower value
     % - cfg.design.fixationTargets: array (nbBlocks, numEventsPerBlock) showing for each event if it
     %                               should be accompanied by a target
     %
@@ -51,7 +54,18 @@ function [cfg] = expDesign(cfg, displayFigs)
 
     %% Check inputs
     if nargin < 1 || isempty(cfg)
-        error('no configuration provided');
+
+        % ``true`` for MT+ translational localizer
+        % ``false`` for MT/MST localizer
+        isMT = true;
+
+        % Get mock inputs to run this function as a stand alone and get a flavour of how the design
+        % looks like given certain inputs. Open this function to set different inputs.
+        getMockConfig(isMT)
+
+        % Get the computed design on a visual representation
+        displayFigs = 1;
+
     end
 
     % Set to 1 for a visualtion of the trials design order
