@@ -1,7 +1,11 @@
-% [ W I P ]
-
 function speeds = setSpeedTargets(cfg)
-    % Compute the matrix with the speed targets if requested, otherwise output will be only zeros
+    % If selected as task, it omputes the matrix with the speeds set in
+    % ``cfg.dot.speed`` (computed in pixels per frame) and the target ones (higher = faster, lower = slower).
+    %
+    % If this task is not requeste, the output will be a matrix where the values correspond to the
+    % set speed in ``cfg.dot.speed`` (computed in pixels per frame).
+    %
+    % This function is in * * W I P * *, the output is the same if the task is selected or not.
     %
     % (C) Copyright 2021 CPP visual motion localizer developpers
 
