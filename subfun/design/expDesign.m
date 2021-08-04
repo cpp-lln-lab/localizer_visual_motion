@@ -61,7 +61,7 @@ function [cfg] = expDesign(cfg, displayFigs)
 
         % Get mock inputs to run this function as a stand alone and get a flavour of how the design
         % looks like given certain inputs. Open this function to set different inputs.
-        getMockConfig(isMT)
+        getMockConfig(isMT);
 
         % Get the computed design on a visual representation
         displayFigs = 1;
