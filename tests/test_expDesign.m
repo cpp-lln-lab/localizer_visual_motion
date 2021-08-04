@@ -6,7 +6,7 @@ function test_suite = test_expDesign %#ok<*STOUT>
     initTestSuite;
 end
 
-function test_exDesignBasic()
+function test_expDesignBasic()
 
     displayFigs = 1;
 
@@ -14,7 +14,7 @@ function test_exDesignBasic()
 
     run ../initEnv();
 
-    cfg = getTestConfig(isMT);
+    cfg = getMockConfig(isMT);
 
     [cfg] = expDesign(cfg, displayFigs);
 
