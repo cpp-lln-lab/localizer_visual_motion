@@ -57,8 +57,8 @@ function [cfg] = setParameters()
 
     % if you have static and motion and `nbRepetions` = 4, this will return 8 blocks (n blocks per
     % hemifield in case of MT/MST localizer)
-    cfg.design.nbRepetitions = 10;
-    cfg.design.nbEventsPerBlock = 10;
+    cfg.design.nbRepetitions = 12;
+    cfg.design.nbEventsPerBlock = 12;
 
     %% Timing
 
