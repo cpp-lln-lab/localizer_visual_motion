@@ -42,9 +42,9 @@ function [onset, duration, dots] = doDotMo(cfg, thisEvent, thisFixation, dots, i
 
         %% make textures
 
-        if strcmp(cfg.design.localizer, 'MT_MST') && ...
-            strcmpi(thisEvent.trial_type, 'static') && ...
-            ~mod(iEvent, 2)
+        if cfg.dot.staticReSeed && ...
+           strcmpi(thisEvent.trial_type, 'static') && ...
+           iEvent ~= 1
 
         else
 
@@ -81,9 +81,20 @@ function [onset, duration, dots] = doDotMo(cfg, thisEvent, thisFixation, dots, i
 
     drawFixation(thisFixation);
 
-    Screen('DrawingFinished', cfg.screen.win);
 
-    vbl = Screen('Flip', cfg.screen.win, vbl + cfg.screen.ifi);
+    if cfg.dot.staticReSeed && strcmpi(thisEvent.trial_type, 'static')
+
+        dotTexture('draw', cfg, thisEvent);
+
+        apertureTexture('draw', cfg, thisEvent);
+
+    else
+
+        Screen('DrawingFinished', cfg.screen.win);
+
+        vbl = Screen('Flip', cfg.screen.win, vbl + cfg.screen.ifi);
+
+    end
 
     duration = vbl - onset;
 

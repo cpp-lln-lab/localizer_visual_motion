@@ -38,7 +38,7 @@ function [cfg] = setParameters()
     cfg = setMRI(cfg);
     %     cfg.suffix.acquisition = '';
 
-    cfg.pacedByTriggers.do = true;
+    cfg.pacedByTriggers.do = false;
 
     %% Experiment Design
 
@@ -115,6 +115,8 @@ function [cfg] = setParameters()
     % Dot Size (dot width) in visual angles.
     cfg.dot.size = .2;
     cfg.dot.color = cfg.color.white;
+    % Static dots should change position at each event or not
+    cfg.dot.staticReSeed = true;
 
     % Diameter/length of side of aperture in Visual angles
     cfg.aperture.type = 'none';
