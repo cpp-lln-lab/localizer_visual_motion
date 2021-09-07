@@ -51,8 +51,12 @@ function [cfg] = expDesign(cfg, displayFigs)
     %                               should be accompanied by a target
     %
     % (C) Copyright 2020 CPP visual motion localizer developpers
-
+    
     %% Check inputs
+    
+    % Do not display any figure during the experiment
+    displayFigs = 0;
+    
     if nargin < 1 || isempty(cfg)
 
         % ``true`` for MT+ translational localizer
@@ -61,17 +65,14 @@ function [cfg] = expDesign(cfg, displayFigs)
 
         % Get mock inputs to run this function as a stand alone and get a flavour of how the design
         % looks like given certain inputs. Open this function to set different inputs.
-        getMockConfig(isMT);
+        cfg = getMockConfig(isMT);
 
         % Get the computed design on a visual representation
         displayFigs = 1;
 
     end
 
-    % Set to 1 for a visualtion of the trials design order
-    if nargin < 2 || isempty(displayFigs)
-        displayFigs = 0;
-    end
+
 
     fprintf('\n\nComputing the design...\n\n');
 
