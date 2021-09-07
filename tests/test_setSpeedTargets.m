@@ -22,6 +22,6 @@ function test_setSpeedTargetsBasic()
 
     speeds = setSpeedTargets(cfg);
 
-    assertEqual(speeds, zeros(20, 12));
+    assertEqual(speeds, ones(20, 12));
 
 end
