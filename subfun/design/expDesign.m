@@ -51,12 +51,12 @@ function [cfg] = expDesign(cfg, displayFigs)
     %                               should be accompanied by a target
     %
     % (C) Copyright 2020 CPP visual motion localizer developpers
-    
+
     %% Check inputs
-    
+
     % Do not display any figure during the experiment
     displayFigs = 0;
-    
+
     if nargin < 1 || isempty(cfg)
 
         % ``true`` for MT+ translational localizer
@@ -71,8 +71,6 @@ function [cfg] = expDesign(cfg, displayFigs)
         displayFigs = 1;
 
     end
-
-
 
     fprintf('\n\nComputing the design...\n\n');
 
