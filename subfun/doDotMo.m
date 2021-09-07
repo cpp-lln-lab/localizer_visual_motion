@@ -81,7 +81,6 @@ function [onset, duration, dots] = doDotMo(cfg, thisEvent, thisFixation, dots, i
 
     drawFixation(thisFixation);
 
-
     if cfg.dot.staticReSeed && strcmpi(thisEvent.trial_type, 'static')
 
         dotTexture('draw', cfg, thisEvent);
