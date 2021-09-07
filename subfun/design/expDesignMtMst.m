@@ -1,54 +1,6 @@
-% (C) Copyright 2020 CPP visual motion localizer developpers
-
-function [cfg] = expDesign(cfg, displayFigs)
-    % Creates the sequence of blocks and the events in them
+function [cfg] = expDesignMtMst(cfg, displayFigs)
     %
-    % The conditions are consecutive static and motion blocks
-    % (Gives better results than randomised).
-    %
-    % Style guide: constants are in SNAKE_UPPER_CASE
-    %
-    % EVENTS
-    % The numEventsPerBlock should be a multiple of the number of "base"
-    % listed in the MOTION_DIRECTIONS and STATIC_DIRECTIONS (4 at the moment).
-    %  MOTION_DIRECTIONS = [0 90 180 270];
-    %  STATIC_DIRECTIONS = [-1 -1 -1 -1];
-    %
-    % Pseudorandomization rules:
-    % (1) Directions are all present in random orders in `numEventsPerBlock/nDirections`
-    % consecutive chunks. This evenly distribute the directions across the
-    % block.
-    % (2) No same consecutive direction
-    %
-    %
-    % TARGETS
-    %
-    % Pseudorandomization rules:
-    % (1) If there are more than 1 target per block we make sure that they are at least 2
-    % events apart.
-    % (2) Targets cannot be on the first or last event of a block.
-    % (3) Targets can not be present more than NB_REPETITIONS - 1 times in the same event
-    % position across blocks.
-    %
-    % Input:
-    % - cfg: parameters returned by setParameters
-    % - displayFigs: a boolean to decide whether to show the basic design
-    % matrix of the design
-    %
-    % Output:
-    % - ExpParameters.designBlockNames = cell array (nr_blocks, 1) with the
-    % name for each block
-    %
-    % - cfg.designDirections = array (nr_blocks, numEventsPerBlock)
-    % with the direction to present in a given block
-    % - 0 90 180 270 indicate the angle
-    % - -1 indicates static
-    %
-    % - cfg.designSpeeds = array (nr_blocks, numEventsPerBlock) * speedEvent;
-    %
-    % - cfg.designFixationTargets = array (nr_blocks, numEventsPerBlock)
-    % showing for each event if it should be accompanied by a target
-    %
+    % (C) Copyright 2020 CPP visual motion localizer developpers
 
     %% Check inputs
 
@@ -75,7 +27,11 @@ function [cfg] = expDesign(cfg, displayFigs)
     targetPerCondition = repmat(RANGE_TARGETS, 1, NB_REPETITIONS / MAX_TARGET_PER_BLOCK);
 
     numTargetsForEachBlock = zeros(1, NB_BLOCKS);
-    numTargetsForEachBlock(CONDITON1_INDEX) = shuffle(targetPerCondition);
+
+    if strcmpi(cfg.design.localizer, 'MT_MST') && length(cfg.design.names) == 2
+        numTargetsForEachBlock(CONDITON1_INDEX) = shuffle(targetPerCondition);
+    end
+
     numTargetsForEachBlock(CONDITON2_INDEX) = shuffle(targetPerCondition);
 
     %% Give the blocks the names with condition and design the task in each event
@@ -112,6 +68,35 @@ function [cfg] = expDesign(cfg, displayFigs)
     %% Now we do the easy stuff
     cfg.design.blockNames = assignConditions(cfg);
 
+    if strcmpi(cfg.design.localizer, 'MT_MST')
+
+        if length(cfg.design.names) == 1
+
+            nbBlocksPerHemifield = (NB_REPETITIONS / 4) * ...
+                                                  length(cfg.design.fixationPosition);
+
+        else
+
+            nbBlocksPerHemifield = (NB_REPETITIONS / 2) * ...
+                length(cfg.design.fixationPosition);
+
+        end
+
+        cfg.design.blockFixationPosition = repmat(cfg.design.fixationPosition(1), ...
+                                                  nbBlocksPerHemifield, ...
+                                                  1);
+
+        if length(cfg.design.fixationPosition) == 2
+
+            cfg.design.blockFixationPosition = [cfg.design.blockFixationPosition; ...
+                                                repmat(cfg.design.fixationPosition(2), ...
+                                                       nbBlocksPerHemifield, ...
+                                                       1)];
+
+        end
+
+    end
+
     cfg.design.nbBlocks = NB_BLOCKS;
 
     cfg = setDirections(cfg);
@@ -120,8 +105,3 @@ function [cfg] = expDesign(cfg, displayFigs)
     cfg.design.speeds = speeds;
 
     cfg.design.fixationTargets = fixationTargets;
-
-    %% Plot
-    diplayDesign(cfg, displayFigs);
-
-end

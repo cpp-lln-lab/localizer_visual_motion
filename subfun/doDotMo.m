@@ -42,7 +42,9 @@ function [onset, duration, dots] = doDotMo(cfg, thisEvent, thisFixation, dots, i
 
         %% make textures
 
-        if strcmp(cfg.design.localizer, 'MT_MST') && strcmpi(thisEvent.trial_type, 'static') && ~mod(iEvent, 2)
+        if strcmp(cfg.design.localizer, 'MT_MST') && ...
+            strcmpi(thisEvent.trial_type, 'static') && ...
+            ~mod(iEvent, 2)
 
         else
 

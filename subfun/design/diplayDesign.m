@@ -1,6 +1,6 @@
-% (C) Copyright 2020 CPP visual motion localizer developpers
-
 function diplayDesign(cfg, displayFigs)
+    %
+    % (C) Copyright 2020 CPP visual motion localizer developpers
 
     %% Visualize the design matrix
     if displayFigs
@@ -44,7 +44,7 @@ function diplayDesign(cfg, displayFigs)
 
         figure(2);
 
-        [motionDirections] = getDirectionBaseVectors(cfg);
+        [~, motionDirections] = getDirectionBaseVectors(cfg);
         motionDirections = unique(motionDirections);
 
         for iMotion = 1:length(motionDirections)
