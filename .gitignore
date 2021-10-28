@@ -8,8 +8,8 @@
 *.mat
 
 ## virtual env
-env/*
-venv/*
+env/
+venv/
 
 ## visual studio code
 .vscode
