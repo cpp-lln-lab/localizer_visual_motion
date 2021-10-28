@@ -1,2 +1,2 @@
-miss_hit==0.9.22
+miss_hit==0.9.29
 pre-commit

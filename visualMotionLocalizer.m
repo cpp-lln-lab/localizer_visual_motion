@@ -77,8 +77,10 @@ try
         fprintf('\n - Running Block %.0f \n', iBlock);
 
         eyeTracker('Message', cfg, ['start_block-', num2str(iBlock)]);
+
         dots = [];
         previousEvent.target = 0;
+
         % For each event in the block
         for iEvent = 1:cfg.design.nbEventsPerBlock
 
@@ -99,10 +101,15 @@ try
             eyeTracker('Message', cfg, ...
                        ['start_trial-', num2str(iEvent), '_', thisEvent.trial_type]);
 
-            % we want to initialize the dots position when targets type is fixation cross
-            % or if this the first event of a target pair
+            % we only reuse the dots position for targets that consists of
+            % presenting static dots with the same position as those of the
+            % previous trial
+            %
+            % TODO does not take into account what to do if 3 or more targets in a row
             if strcmp(cfg.target.type, 'static_repeat') && ...
-                    thisEvent.target == previousEvent.target
+               strcmp(thisEvent.trial_type, 'static') && ...
+               thisEvent.target == 1 && ...
+               thisEvent.target == previousEvent.target
             else
                 dots = [];
             end
@@ -161,7 +168,9 @@ try
                            cfg.timing.triggerIBI);
         end
 
-        if isfield(cfg.design, 'localizer') && strcmpi(cfg.design.localizer, 'MT_MST') && iBlock == cfg.design.nbBlocks / 2
+        if isfield(cfg.design, 'localizer') && ...
+            strcmpi(cfg.design.localizer, 'MT_MST') && ...
+            iBlock == cfg.design.nbBlocks / 2
 
             waitFor(cfg, cfg.timing.changeFixationPosition);
 

@@ -4,7 +4,7 @@ function [cfg] = setParameters()
 
     % VISUAL LOCALIZER
 
-    % Initialize the parameters and general configuration variables
+    % Initialize the general configuration variables structure
     cfg = struct();
 
     % by default the data will be stored in an output folder created where the
@@ -15,7 +15,7 @@ function [cfg] = setParameters()
 
     %% Debug mode settings
 
-    cfg.debug.do = false; % To test the script out of the scanner, skip PTB sync
+    cfg.debug.do = true; % To test the script out of the scanner, skip PTB sync
     cfg.debug.smallWin = false; % To test on a part of the screen, change to 1
     cfg.debug.transpWin = false; % To test with trasparent full size screen
 
@@ -26,7 +26,7 @@ function [cfg] = setParameters()
     %% Engine parameters
 
     cfg.testingDevice = 'mri';
-    cfg.eyeTracker.do = true;
+    cfg.eyeTracker.do = false;
     cfg.audio.do = false;
 
     cfg = setMonitor(cfg);
@@ -38,7 +38,7 @@ function [cfg] = setParameters()
     cfg = setMRI(cfg);
     %     cfg.suffix.acquisition = '';
 
-    cfg.pacedByTriggers.do = true;
+    cfg.pacedByTriggers.do = false;
 
     %% Experiment Design
 
@@ -57,13 +57,13 @@ function [cfg] = setParameters()
 
     % if you have static and motion and `nbRepetions` = 4, this will return 8 blocks (n blocks per
     % hemifield in case of MT/MST localizer)
-    cfg.design.nbRepetitions = 10;
-    cfg.design.nbEventsPerBlock = 10;
+    cfg.design.nbRepetitions = 12;
+    cfg.design.nbEventsPerBlock = 12;
 
     %% Timing
 
     % FOR 7T: if you want to create localizers on the fly, the following must be
-    % multiples of the scanneryour sequence TR
+    % multiples of the scanner sequence TR
     %
     % IBI
     % block length = (cfg.eventDuration + cfg.ISI) * cfg.design.nbEventsPerBlock
@@ -115,6 +115,8 @@ function [cfg] = setParameters()
     % Dot Size (dot width) in visual angles.
     cfg.dot.size = .2;
     cfg.dot.color = cfg.color.white;
+    % Static dots should change position at each event or not
+    cfg.dot.staticReSeed = true;
 
     % Diameter/length of side of aperture in Visual angles
     cfg.aperture.type = 'none';
@@ -130,7 +132,6 @@ function [cfg] = setParameters()
 
     % Fixation cross (in pixels)
     cfg.fixation.type = 'cross';
-    cfg.fixation.colorTarget = cfg.color.red;
     cfg.fixation.color = cfg.color.white;
     cfg.fixation.width = .25;
     cfg.fixation.lineWidthPix = 3;
@@ -142,7 +143,12 @@ function [cfg] = setParameters()
     cfg.target.duration = 0.1; % In secs
     cfg.target.type = 'fixation_cross';
     % 'fixation_cross' : the fixation cross changes color
-    % 'static_repeat' : dots are in the same position
+    % 'static_repeat' : static dots are in the same position as previous trials
+
+    cfg.fixation.colorTarget = cfg.fixation.color;
+    if strcmp(cfg.target.type, 'fixation_cross')
+        cfg.fixation.colorTarget = cfg.color.red;
+    end
 
     cfg.extraColumns = { ...
                         'direction', ...

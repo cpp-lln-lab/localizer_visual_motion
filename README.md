@@ -29,21 +29,19 @@
 
 # fMRI localizers for visual motion
 
-## Translational Motion
-
 ## Requirements
 
-Make sure that the following toolboxes are installed and added to the matlab / octave path.
+Make sure that the following toolboxes are installed and added to the matlab / octave path. See the next section on how to install the submodule toolboxes.
 
 For instructions see the following links:
 
-| Requirements                                             | Used version |
-| -------------------------------------------------------- | ------------ |
-| [CPP_BIDS](https://github.com/cpp-lln-lab/CPP_BIDS)      | ?            |
-| [CPP_PTB](https://github.com/cpp-lln-lab/CPP_PTB)        | ?            |
-| [PsychToolBox](http://psychtoolbox.org/)                 | >=3.0.14     |
-| [Matlab](https://www.mathworks.com/products/matlab.html) | >=2017       |
-| or [octave](https://www.gnu.org/software/octave/)        | >=4.?        |
+| Requirements                                                    | Used version |
+| --------------------------------------------------------------- | ------------ |
+| [CPP_BIDS](https://github.com/cpp-lln-lab/CPP_BIDS) (submodule) | 2.1.0        |
+| [CPP_PTB](https://github.com/cpp-lln-lab/CPP_PTB) (submodule)   | 1.2.0        |
+| [PsychToolBox](http://psychtoolbox.org/)                        | >=3.0.14     |
+| [Matlab](https://www.mathworks.com/products/matlab.html)        | >=2017       |
+| or [octave](https://www.gnu.org/software/octave/)               | >=4.?        |
 
 ## Installation
 
@@ -56,11 +54,11 @@ git clone --recurse-submodules https://github.com/cpp-lln-lab/localizer_visual_m
 
 ## Structure and function details
 
-### visualLocTranslational
+### visualMotionLocalizer
 
-Running this script will show blocks of motion dots (soon also moving gratings) and static dots. Motion blocks will show dots(/gratings) moving in one of four directions (up-, down-, left-, and right-ward)
+Running this script will show blocks of motion dots and static dots. Motion blocks will show dots moving in one of four directions (up-, down-, left-, and right-ward) (MT+ localizer) or dots moving inward and outward in the peripheral of the screen (MT/MST localizer).
 
-By default it is run in `Debug mode` meaning that it does not run care about subjID, run n., fMRI triggers, Eye Tracker, etc..
+Run in `Debug mode` (see `setParameters.m`) it does not care about subjID, run n., Eye Tracker (soon, at the moment it needs to be set off manually), etc..
 
 Any details of the experiment can be changed in `setParameters.m` (e.g., experiment mode, motion stimuli details, exp. design, etc.)
 
@@ -85,7 +83,7 @@ Any details of the experiment can be changed in `setParameters.m` (e.g., experim
 Set `cfg.pacedByTriggers.do` to `true` and you can then set all the details in this `if` block
 
 ```matlab
-% Time is here in in terms of number repetition time (i.e MRI volumes)
+% Time is here in terms of `repetition time (TR)` (i.e. MRI volumes)
 if cfg.pacedByTriggers.do
 
   cfg.pacedByTriggers.quietMode = true;
@@ -107,45 +105,65 @@ end
 
 ### subfun/doDotMo
 
+Wrapper function that present the dot stimulation (static or motion) per event.
+
 #### Input
 
-- `cfg`: PTB/machine configurations returned by `setParameters` and `initPTB`
-- `expParameters`: parameters returned by `setParameters`
+- `cfg`: PTB/machine and experiment configurations returned by `setParameters` and `initPTB`
 - `logFile`: structure that stores the experiment logfile to be saved
+- `thisEvent`: structure that stores information about the event to present regarding the dots (static or motion, direction, etc.)
+- `thisFixation`: structure that stores information about the fixation cross task to present
+- `dots`: [...]
+- `iEvent`: index of the event of the block at the moment of the presentation
 
 #### Output
 
 - Event `onset`
 - Event `duration`
+- `dots`: [...]
 
-The dots are drawn on a square that contains the round aperture, then any dots outside of the aperture is turned into a NaN so effectively the actual number of dots on the screen at any given time is not the one that you input but a smaller number (nDots / Area of aperture) on average.
+> NB: The dots are drawn on a square that contains the round aperture, then any dots outside of the aperture is turned into a NaN so effectively the actual number of dots on the screen at any given time is not the one that you input but a smaller number (nDots / Area of aperture) on average.
 
-### subfun/expDesign
+### subfun/expDesign(MtMst)
 
-Creates the sequence of blocks and the events in them. The conditions are consecutive static and motion blocks (Gives better results than randomised). It can be run as a stand alone without inputs to display a visual example of possible design.
+These functions, one per MT+ and one per MT/MST localizer, create the sequence of blocks and the events in them. The conditions are consecutive static and motion blocks (Gives better results than randomised).
 
-#### EVENTS
+It can be run as a stand alone without inputs and display a visual example of the possible design. See `getMockConfig` to set up the mock configuration.
 
-The `numEventsPerBlock` should be a multiple of the number of "base" listed in the `motionDirections` and `staticDirections` (4 at the moment).
+It computes the directions to display and the task(s), at the moment
+1. detection of change in the color of the fixation target
+2. detection of different speed of the moving dots [ W I P - if selected as a task it will give the same null output as if not selected ie no difference in speed]
 
-#### TARGETS
+#### Events
 
-- If there are 2 targets per block we make sure that they are at least 2 events apart.
-- Targets cannot be on the first or last event of a block
+The ``nbEventsPerBlock`` should be a multiple of the number of motion directions requested in ``motionDirections`` (which should be more than 1) e.g.:
+- MT localizer: `cfg.design.motionDirections = [ 0 90 180 270 ]; % right down left up`
+- MT_MST localizer: `cfg.design.motionDirections = [666 -666]; % outward inward`
 
-#### Input
+#### Pseudorandomization rules:
 
-- `expParameters`: parameters returned by `setParameters`
+- Directions:
+1. Directions are all presented in random orders in `numEventsPerBlock/nDirections` consecutive chunks. This evenly distribute the directions across the block.
+2. No same consecutive direction
+
+- Color change detection of the fixation cross:
+1. If there are 2 targets per block we make sure that they are at least 2 events apart.
+2. Targets cannot be on the first or last event of a block.
+3. No less than 1 target per event position in the whole run
+
+#### Input:
+- `cfg`: parameters returned by setParameters
 - `displayFigs`: a boolean to decide whether to show the basic design matrix of the design
 
-#### Output
-
-- `expParameters.designBlockNames` is a cell array `(nr_blocks, 1)` with the name for each block
-- `expParameters.designDirections` is an array `(nr_blocks, numEventsPerBlock)` with the direction to present in a given block
-  - `0 90 180 270` indicate the angle
-  - `-1` indicates static
-- `expParameters.designSpeeds` is an array `(nr_blocks, numEventsPerBlock) * speedEvent`
-- `expParameters.designFixationTargets` is an array `(nr_blocks, numEventsPerBlock)` showing for each event if it should be accompanied by a target
+#### Output:
+- `cfg.design.blockNames`: cell array (nbBlocks, 1) with the condition name for each block
+- `cfg.design.nbBlocks`: integer for th etotal number of blocks in the run
+- `cfg.design.directions`: array (nbBlocks, nbEventsPerBlock) with the direction to present in a given event of a block.
+  - 0 90 180 270 indicate the angle for translational motion direction
+  - 666 -666 indicate in/out-ward direction in radial motion
+  - -1 indicates static
+- `cfg.design.speeds`: array (nbBlocks, nbEventsPerBlock) indicate the dots speed in each event, the target is represented by a higher/lower value
+- `cfg.design.fixationTargets`: array (nbBlocks, numEventsPerBlock) showing for each event if it should be accompanied by a target
 
 ## Contributors ✨
 
