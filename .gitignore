@@ -7,6 +7,8 @@
 *.tsv
 *.mat
 
+output
+
 ## virtual env
 env/
 venv/
