@@ -104,6 +104,6 @@ function addDependencies()
     addpath(genpath(fullfile(pth, 'lib', 'CPP_PTB', 'src')));
     addpath(genpath(fullfile(pth, 'subfun')));
 
-    checkCppBidsDependencies()
+    checkCppBidsDependencies();
 
 end
