@@ -34,11 +34,7 @@ try
 
     [el] = eyeTracker('Calibration', cfg);
 
-    if isfield(cfg.design, 'localizer') && strcmpi(cfg.design.localizer, 'MT_MST')
-        [cfg] = expDesignMtMst(cfg);
-    else
-        [cfg] = expDesign(cfg);
-    end
+    [cfg] = expDesign(cfg);
 
     % Prepare for the output logfiles with all
     logFile.extraColumns = cfg.extraColumns;
@@ -151,6 +147,7 @@ try
         else
             nextBlock = cfg.design.nbBlocks;
         end
+        
         [~, thisFixation] = preTrialSetup(cfg, nextBlock, 1);
         drawFixation(thisFixation);
         Screen('Flip', cfg.screen.win);

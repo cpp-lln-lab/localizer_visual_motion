@@ -33,6 +33,7 @@ function varargout = preTrialSetup(varargin)
         thisEvent.fixationPosition = cfg.design.blockFixationPosition{iBlock};
 
         switch thisEvent.fixationPosition
+            
             case 'fixation_right'
                 cfg.aperture.xPosPix = -abs(cfg.aperture.xPosPix);
 
