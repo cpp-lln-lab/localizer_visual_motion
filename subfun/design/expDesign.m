@@ -42,6 +42,8 @@ function [cfg] = expDesign(cfg)
     % - cfg.design.nbBlocks: integer for th etotal number of blocks in the run
     % - cfg.design.directions: array (nbBlocks, nbEventsPerBlock) with the direction to present in a
     %                          given event of a block.
+    % - cfg.design.blockFixationPosition: [MT_MST] array (nbBlocks, 1) with the position in the hemifiled 
+    %                                     where to show the fixation cross 
     %  - 0 90 180 270 indicate the angle for translational motion direction
     %  - 666 -666     indicate in/out-ward direction in radial motion
     %  - -1           indicates static
