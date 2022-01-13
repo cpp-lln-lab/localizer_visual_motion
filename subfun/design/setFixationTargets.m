@@ -17,6 +17,7 @@ function fixationTargets = setFixationTargets(cfg)
 
     % Output an "empty" matrix in case no fixation task is required
     if ~ismember('fixation_cross', cfg.target.type)
+        
         fixationTargets = zeros(nbBlocks, nbEventsPerBlock);
         return
 
@@ -39,7 +40,14 @@ function fixationTargets = setFixationTargets(cfg)
         % Shuffle and assign the number of target per each block (the nb of target event is
         % counterbalanced per condition)
         numTargetsForEachBlock = zeros(1, nbBlocks);
-        numTargetsForEachBlock(idxCondition1) = shuffle(targetPerCondition);
+        
+        if  strcmp(cfg.design.localizer, 'MT') || ...
+                strcmp(cfg.design.localizer, 'MT_MST') && length(cfg.design.names) == 2
+            
+            numTargetsForEachBlock(idxCondition1) = shuffle(targetPerCondition);
+            
+        end
+        
         numTargetsForEachBlock(idxCondition2) = shuffle(targetPerCondition);
 
         %% Give the blocks the names with condition and design the task in each event
@@ -50,26 +58,62 @@ function fixationTargets = setFixationTargets(cfg)
 
             % Build the matrix
             for iBlock = 1:nbBlocks
-
+                
                 % Get how many targets in this block
                 nbTarget = numTargetsForEachBlock(iBlock);
-
-                % Get the target(s) position and check rule 1 and 2
-                chosenPosition = setTargetPositionInSequence( ...
-                                                             nbEventsPerBlock, ...
-                                                             nbTarget, ...
-                                                             [1 nbEventsPerBlock]);
-
+                
+                switch cfg.design.localizer
+                    
+                    case 'MT'
+                        
+                        % Get the target(s) position and check rule 1 and 2
+                        chosenPosition = setTargetPositionInSequence( ...
+                            nbEventsPerBlock, ...
+                            nbTarget, ...
+                            [1 nbEventsPerBlock]);
+                        
+                    case 'MT_MST'
+                        
+                        % Get the target(s) position and check rule 1 and 2
+                        % Since an event composed of inward+outward is divided in subevents, we
+                        % avoid the first and last two positions
+                        chosenPosition = setTargetPositionInSequence( ...
+                            nbEventsPerBlock, ...
+                            nbTarget, ...
+                            [1:2 nbEventsPerBlock - 1:nbEventsPerBlock]);
+                        
+                end
+                
                 % Add the target(s) to the final matrix
                 fixationTargets(iBlock, chosenPosition) = 1;
-
+                
             end
-
-            % Check rule 3
-            if min(sum(fixationTargets(:, 2:nbEventsPerBlock - 1))) ~= 0
-                break
+            
+            switch cfg.design.localizer
+                
+                case 'MT'
+                    
+                    % Check rule 3
+                    if min(sum(fixationTargets(:, 2:nbEventsPerBlock - 1))) ~= 0
+                        break
+                    end
+                    
+                case 'MT_MST'
+                    
+                    mergedSubEvents = zeros(size(fixationTargets, 1), size(fixationTargets, 2)/2);
+                    
+                    for i = 1:size(fixationTargets, 1)
+                        mergedSubEvents(i, :) = squeeze(sum( ...
+                            reshape(fixationTargets(i, :), 1, 2, []), 2))';
+                    end
+                    
+                    % Check rule 3
+                    if min(sum(mergedSubEvents(:, 2:(nbEventsPerBlock / 2) - 1))) ~= 0
+                        break
+                    end
+                    
             end
-
+            
         end
 
     end
