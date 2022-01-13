@@ -55,8 +55,8 @@ function [cfg] = setParameters()
     cfg.design.motionDirections = [0 0 180 180];
     cfg.design.names = {'static'; 'motion'};
 
-    % if you have static and motion and `nbRepetions` = 4, this will return 8 blocks (for MT/MST 
-    % localizer && 2 hemifield it is 8 blocks per hemifield), i.e. how many times each condition 
+    % if you have static and motion and `nbRepetions` = 4, this will return 8 blocks (for MT/MST
+    % localizer && 2 hemifield it is 8 blocks per hemifield), i.e. how many times each condition
     % will be repeated
     cfg.design.nbRepetitions = 12;
     cfg.design.nbEventsPerBlock = 12;

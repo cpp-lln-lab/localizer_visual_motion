@@ -35,18 +35,18 @@ function directions = setDirections(cfg)
     for iMotionBlock = 1:nbRepetitions
 
         switch cfg.design.localizer
-            
+
             case 'MT'
-                
+
                 % Set motion directions
                 directions(idxCondition2(iMotionBlock), :) = ...
                     repeatShuffleConditions(directionsCondition2, nbRepeatsDirectionBaseVector);
-                
+
             case 'MT_MST'
-                
+
                 directions(idxCondition2(iMotionBlock), :) = ...
                     repmat(shuffle(directionsCondition2), 1, nbRepeatsDirectionBaseVector);
-                
+
         end
 
         if  strcmp(cfg.design.localizer, 'MT') || ...

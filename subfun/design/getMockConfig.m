@@ -9,8 +9,8 @@ function cfg = getMockConfig(isMT)
 
     %% Set specific localizer configurations as conditions, directions (MT) and stimulation
     %  position (MT_MST)
-    
-    
+
+
     %% Nb blocks and events
 
     % 2 conditions [`cfg.design.names`] and 10 repetitions [`cfg.design.nbRepetitions`]
@@ -34,9 +34,9 @@ function cfg = getMockConfig(isMT)
         cfg.design.names = {'static'; 'motion'};
         % choices: {'fixation_left'; 'fixation_right'} ; or only one of the two
         cfg.design.fixationPosition = {'fixation_left'; 'fixation_right'};
-        
+
         % To not touch
-        
+
         % here we double the repetions (2 hemifields)
         cfg.design.nbRepetitions = cfg.design.nbRepetitions * length(cfg.design.fixationPosition);
 

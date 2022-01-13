@@ -147,7 +147,7 @@ try
         else
             nextBlock = cfg.design.nbBlocks;
         end
-        
+
         [~, thisFixation] = preTrialSetup(cfg, nextBlock, 1);
         drawFixation(thisFixation);
         Screen('Flip', cfg.screen.win);

@@ -69,7 +69,7 @@ function [cfg] = expDesign(cfg)
 
         % Get the computed design on a visual representation
         displayFigs = 1;
-        
+
         % make sure we got access to all the required functions and inputs
         run('../../initEnv.m');
 
@@ -87,7 +87,7 @@ function [cfg] = expDesign(cfg)
 
     % Compute a matrix [nbBlocks x nbEventsPerBlock]
     cfg.design.directions = setDirections(cfg);
-    
+
     % Compute the fixation position (left/right hemifield) for MT/MST
     cfg.design.blockFixationPosition = setFixationPosition(cfg);
 

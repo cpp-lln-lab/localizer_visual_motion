@@ -9,18 +9,18 @@ function [conditionNamesVector, idxCondition1, idxCondition2] = setBlocksConditi
     % Get the index of each condition
     nameCondition1 = 'static';
     nameCondition2 = 'motion';
-    
+
     if  strcmp(cfg.design.localizer, 'MT') || ...
             strcmp(cfg.design.localizer, 'MT_MST') && length(cfg.design.names) == 2
-        
+
         idxCondition1 = find(strcmp(conditionNamesVector, nameCondition1));
-        
-    else 
-        
+
+    else
+
         idxCondition1 = [];
-        
+
     end
-    
+
     idxCondition2 = find(strcmp(conditionNamesVector, nameCondition2));
 
 end
