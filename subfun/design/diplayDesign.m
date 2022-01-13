@@ -22,7 +22,16 @@ function diplayDesign(cfg, displayFigs)
         myColorMap = lines(5);
         colormap(myColorMap);
 
-        title('Block (static and motion) & Events (motion direction)');
+        if  strcmp(cfg.design.localizer, 'MT') || ...
+                strcmp(cfg.design.localizer, 'MT_MST') && length(cfg.design.names) == 2
+            
+            title('Blocks (rows, static-odd and motion-even) & Events (columns, colors: motion direction)');
+            
+        else
+           
+            title('Block (rows, only motion blocks) & Events (columns, colors: motion direction)');
+
+        end
 
         % Shows the fixation targets design in each event (1 or 0)
         fixationTargets = cfg.design.fixationTargets;
@@ -39,14 +48,16 @@ function diplayDesign(cfg, displayFigs)
 
         subplot(3, 1, 3);
         hist(itargetPosition);
-        labelAxesFreq();
+        labelAxesFreqTarget();
         title('Fixation Targets position distribution');
 
+        % Show the direction presented distribution per event position in the blocks across the
+        % experiment
         figure(2);
 
         [~, motionDirections] = getDirectionBaseVectors(cfg);
         motionDirections = unique(motionDirections);
-
+        
         for iMotion = 1:length(motionDirections)
 
             [~, position] = find(directions == motionDirections(iMotion));
@@ -54,10 +65,12 @@ function diplayDesign(cfg, displayFigs)
             subplot(2, 2, iMotion);
             hist(position);
             scaleAxes();
-            labelAxesFreq();
+            labelAxesFreqDirection();
             title(num2str(motionDirections(iMotion)));
 
         end
+        
+         suptitle('Distribution of events for each direction');
 
     end
 
@@ -69,9 +82,15 @@ function labelAxesBlock()
     xlabel('Events', 'Fontsize', 8);
 end
 
-function labelAxesFreq()
+function labelAxesFreqTarget()
     % an old viking saying because they really cared about their axes
     ylabel('Number of targets', 'Fontsize', 8);
+    xlabel('Events', 'Fontsize', 8);
+end
+
+function labelAxesFreqDirection()
+    % an old viking saying because they really cared about their axes
+    ylabel('Number of directions', 'Fontsize', 8);
     xlabel('Events', 'Fontsize', 8);
 end
 
