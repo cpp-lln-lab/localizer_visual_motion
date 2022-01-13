@@ -1,4 +1,4 @@
-function [cfg] = expDesign(cfg, displayFigs)
+function [cfg] = expDesign(cfg)
     %
     % Creates the sequence of blocks and the events in them
     %
@@ -61,7 +61,7 @@ function [cfg] = expDesign(cfg, displayFigs)
 
         % ``true`` for MT+ translational localizer
         % ``false`` for MT/MST localizer
-        isMT = true;
+        isMT = false;
 
         % Get mock inputs to run this function as a stand alone and get a flavour of how the design
         % looks like given certain inputs. Open this function to set different inputs.
@@ -69,6 +69,9 @@ function [cfg] = expDesign(cfg, displayFigs)
 
         % Get the computed design on a visual representation
         displayFigs = 1;
+        
+        % make sure we got access to all the required functions and inputs
+        run('../../initEnv.m');
 
     end
 
@@ -84,6 +87,9 @@ function [cfg] = expDesign(cfg, displayFigs)
 
     % Compute a matrix [nbBlocks x nbEventsPerBlock]
     cfg.design.directions = setDirections(cfg);
+    
+    % Compute the fixation position (left/right hemifield) for MT/MST
+    cfg.design.blockFixationPosition = setFixationPosition(cfg);
 
     %% Task(s) design
 
