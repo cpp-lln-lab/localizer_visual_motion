@@ -1,5 +1,8 @@
 function diplayDesign(cfg, displayFigs)
     %
+    % diplayDesign(cfg, displayFigs)
+    %
+    %
     % (C) Copyright 2020 CPP visual motion localizer developpers
 
     %% Visualize the design matrix

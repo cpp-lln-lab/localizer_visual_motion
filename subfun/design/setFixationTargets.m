@@ -1,5 +1,7 @@
 function fixationTargets = setFixationTargets(cfg)
     %
+    % fixationTargets = setFixationTargets(cfg)
+    %
     % Set fixation targets in a matrix of ``nbBlocks`` by ``nbEventsPerBlock`` with some rules:
     %
     % - if there are 2 targets per block we make sure that they are at least 2 events apart
@@ -7,6 +9,7 @@ function fixationTargets = setFixationTargets(cfg)
     % - no less than 1 target per event position in the whole run
     %
     % If the fixation target task is not required, it outputs a matrix with only zeros
+    %
     %
     % (C) Copyright 2021 CPP visual motion localizer developpers
 

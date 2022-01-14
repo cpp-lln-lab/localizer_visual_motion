@@ -1,10 +1,13 @@
 function directions = setDirections(cfg)
     %
+    % directions = setDirections(cfg)
+    %
     % Compute the directions to be displayed
     % in a matrix of size ``nbBlocks`` by ``nbEventsPerBlock``
     %
     % condition1 = 'static';
     % condition2 = 'motion';
+    %
     %
     % (C) Copyright 2020 CPP visual motion localizer developpers
 

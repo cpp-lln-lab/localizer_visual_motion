@@ -1,5 +1,8 @@
 function [conditionNamesVector, idxCondition1, idxCondition2] = setBlocksConditions(cfg)
     %
+    % [conditionNamesVector, idxCondition1, idxCondition2] = setBlocksConditions(cfg)
+    %
+    %
     % (C) Copyright 2020 CPP visual motion localizer developpers
 
     nbRepetitions = getDesignInput(cfg);

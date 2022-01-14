@@ -1,7 +1,10 @@
 function blockFixationPosition = setFixationPosition(cfg)
     %
+    % blockFixationPosition = setFixationPosition(cfg)
+    %
     % Compute the fixation position (center of the stimulation) for the MT/MST localizer
     % in a matrix of size ``nbBlocks`` by ``nbEventsPerBlock``
+    %
     %
     % (C) Copyright 2022 CPP visual motion localizer developpers
 

@@ -55,6 +55,7 @@ function [cfg] = expDesign(cfg)
     % - cfg.design.fixationTargets: array (nbBlocks, numEventsPerBlock) showing
     %                               for each event if it should be accompanied by a target
     %
+    %
     % (C) Copyright 2020 CPP visual motion localizer developpers
 
     %% Check inputs

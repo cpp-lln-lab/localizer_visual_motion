@@ -1,7 +1,5 @@
 function speeds = setSpeedTargets(cfg)
     %
-    % USAGE::
-    %
     %  speeds = setSpeedTargets(cfg)
     %
     % If selected as task, it computes the matrix with the speeds set in

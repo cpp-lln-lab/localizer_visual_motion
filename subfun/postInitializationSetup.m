@@ -1,10 +1,12 @@
-% (C) Copyright 2020 CPP visual motion localizer developpers
-
-function varargout = postInitializationSetup(varargin)
-    % varargout = postInitializatinSetup(varargin)
-
+function cfg = postInitializationSetup(cfg)
+    %
+    % cfg = postInitializatinSetup(cfg)
+    %
     % generic function to finalize some set up after psychtoolbox has been
     % initialized
+    %
+    %
+    % (C) Copyright 2020 CPP visual motion localizer developpers
 
     cfg = deal(varargin{:});
 
