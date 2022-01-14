@@ -23,6 +23,8 @@ jobs:
       with:
         tests: tests
         src: subfun
+        # add CPP_PTB to the path but don't include it the coverage
+        ext: lib/CPP_PTB/src
         with_coverage: true
         cover_xml_file: coverage.xml
 
