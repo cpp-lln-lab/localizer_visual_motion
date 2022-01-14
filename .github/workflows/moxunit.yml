@@ -25,6 +25,8 @@ jobs:
         src: subfun
         # add CPP_PTB to the path but don't include it the coverage
         ext: lib/CPP_PTB/src
+        # Octave packages needed
+        pkg: statistics
         with_coverage: true
         cover_xml_file: coverage.xml
 
