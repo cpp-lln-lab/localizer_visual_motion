@@ -1,4 +1,5 @@
 function test_suite = test_setDirections %#ok<*STOUT>
+    % (C) Copyright 2021 CPP visual motion localizer developpers
     try % assignment of 'localfunctions' is necessary in Matlab >= 2016
         test_functions = localfunctions(); %#ok<*NASGU>
     catch % no problem; early Matlab versions can use initTestSuite fine
@@ -20,7 +21,7 @@ function test_setDirections_MT()
 
     % static every second block
     assertEqual(directions(1:2:end, :), ones(cfg.design.nbRepetitions, ...
-      cfg.design.nbEventsPerBlock) * -1);
+                                             cfg.design.nbEventsPerBlock) * -1);
 
 end
 

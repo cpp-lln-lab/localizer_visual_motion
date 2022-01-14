@@ -1,4 +1,5 @@
 function test_suite = test_setBlocksConditions %#ok<*STOUT>
+    % (C) Copyright 2021 CPP visual motion localizer developpers
     try % assignment of 'localfunctions' is necessary in Matlab >= 2016
         test_functions = localfunctions(); %#ok<*NASGU>
     catch % no problem; early Matlab versions can use initTestSuite fine
@@ -17,8 +18,8 @@ function test_getDirectionBaseVectors_MT()
     nbRepeats = cfg.design.nbRepetitions;
 
     assertEqual(conditionNamesVector, repmat(conditions, nbRepeats, 1));
-    assertEqual(idxCondition1, (1:2:numel(conditions)*nbRepeats)');
-    assertEqual(idxCondition2, (2:2:numel(conditions)*nbRepeats)');
+    assertEqual(idxCondition1, (1:2:numel(conditions) * nbRepeats)');
+    assertEqual(idxCondition2, (2:2:numel(conditions) * nbRepeats)');
 
 end
 
@@ -33,7 +34,7 @@ function test_getDirectionBaseVectors_MST()
     nbRepeats = cfg.design.nbRepetitions;
 
     assertEqual(conditionNamesVector, repmat(conditions, nbRepeats, 1));
-    assertEqual(idxCondition1, (1:2:numel(conditions)*nbRepeats)');
-    assertEqual(idxCondition2, (2:2:numel(conditions)*nbRepeats)');
+    assertEqual(idxCondition1, (1:2:numel(conditions) * nbRepeats)');
+    assertEqual(idxCondition2, (2:2:numel(conditions) * nbRepeats)');
 
 end
