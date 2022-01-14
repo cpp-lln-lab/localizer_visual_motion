@@ -13,13 +13,14 @@ function test_setDirections_MT()
 
     directions = setDirections(cfg);
 
-    assertEqual(size(directions), [24, cfg.design.nbEventsPerBlock]);
+    assertEqual(size(directions), [cfg.design.nbRepetitions * 2, cfg.design.nbEventsPerBlock]);
 
     % only left right and static
     assertEqual(unique(directions), [-1; 0; 180]);
 
     % static every second block
-    assertEqual(directions(1:2:end, :), ones(12, cfg.design.nbEventsPerBlock) * -1);
+    assertEqual(directions(1:2:end, :), ones(cfg.design.nbRepetitions, ...
+      cfg.design.nbEventsPerBlock) * -1);
 
 end
 
@@ -30,7 +31,7 @@ function test_setDirections_MST()
 
     directions = setDirections(cfg);
 
-    assertEqual(size(directions), [48, cfg.design.nbEventsPerBlock]);
+    assertEqual(size(directions), [cfg.design.nbRepetitions * 2, cfg.design.nbEventsPerBlock]);
 
     % only left right and static
     assertEqual(unique(directions), [-666; -1; 666]);

@@ -13,9 +13,12 @@ function test_getDirectionBaseVectors_MT()
 
     [conditionNamesVector, idxCondition1, idxCondition2] = setBlocksConditions(cfg);
 
-    assertEqual(conditionNamesVector, repmat({'static'; 'motion'}, 12, 1));
-    assertEqual(idxCondition1, [1:2:23]');
-    assertEqual(idxCondition2, [2:2:24]');
+    conditions = {'static'; 'motion'};
+    nbRepeats = cfg.design.nbRepetitions;
+
+    assertEqual(conditionNamesVector, repmat(conditions, nbRepeats, 1));
+    assertEqual(idxCondition1, (1:2:numel(conditions)*nbRepeats)');
+    assertEqual(idxCondition2, (2:2:numel(conditions)*nbRepeats)');
 
 end
 
@@ -26,8 +29,11 @@ function test_getDirectionBaseVectors_MST()
 
     [conditionNamesVector, idxCondition1, idxCondition2] = setBlocksConditions(cfg);
 
-    assertEqual(conditionNamesVector, repmat({'static'; 'motion'}, 24, 1));
-    assertEqual(idxCondition1, [1:2:47]');
-    assertEqual(idxCondition2, [2:2:48]');
+    conditions = {'static'; 'motion'};
+    nbRepeats = cfg.design.nbRepetitions;
+
+    assertEqual(conditionNamesVector, repmat(conditions, nbRepeats, 1));
+    assertEqual(idxCondition1, (1:2:numel(conditions)*nbRepeats)');
+    assertEqual(idxCondition2, (2:2:numel(conditions)*nbRepeats)');
 
 end

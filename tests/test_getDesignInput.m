@@ -13,10 +13,10 @@ function test_setSpeedTargets_MT()
 
     [nbRepetitions, nbEventsPerBlock, maxNbPerBlock, nbBlocks] = getDesignInput(cfg);
 
-    assertEqual(nbRepetitions, 12);
+    assertEqual(nbRepetitions, cfg.design.nbRepetitions);
     assertEqual(nbEventsPerBlock, cfg.design.nbEventsPerBlock);
     assertEqual(maxNbPerBlock, 2);
-    assertEqual(nbBlocks, 24);
+    assertEqual(nbBlocks, length(cfg.design.names) * nbRepetitions);
 
 end
 
@@ -27,9 +27,9 @@ function test_setSpeedTargets_MST()
 
     [nbRepetitions, nbEventsPerBlock, maxNbPerBlock, nbBlocks] = getDesignInput(cfg);
 
-    assertEqual(nbRepetitions, 24);
+    assertEqual(nbRepetitions, cfg.design.nbRepetitions);
     assertEqual(nbEventsPerBlock, cfg.design.nbEventsPerBlock);
     assertEqual(maxNbPerBlock, 2);
-    assertEqual(nbBlocks, 48);
+    assertEqual(nbBlocks, length(cfg.design.names) * nbRepetitions);
 
 end
