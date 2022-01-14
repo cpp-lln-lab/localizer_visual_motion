@@ -10,8 +10,6 @@ function test_expDesignBasic()
 
     isMT = true;
 
-    run ../initEnv();
-
     cfg = getMockConfig(isMT);
 
     [cfg] = expDesign(cfg);

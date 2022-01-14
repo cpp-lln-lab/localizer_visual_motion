@@ -8,8 +8,6 @@ end
 
 function test_setDirectionsMT()
 
-    run ../initEnv();
-
     isMT = true;
     cfg = getMockConfig(isMT);
 
@@ -26,8 +24,6 @@ function test_setDirectionsMT()
 end
 
 function test_setDirectionsMST()
-
-    run ../initEnv();
 
     isMT = false;
     cfg = getMockConfig(isMT);

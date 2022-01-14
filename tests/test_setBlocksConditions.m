@@ -8,8 +8,6 @@ end
 
 function test_getDirectionBaseVectorsBasic()
 
-    run ../initEnv();
-
     isMT = true;
     cfg = getMockConfig(isMT);
 
