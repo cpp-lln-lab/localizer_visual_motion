@@ -6,31 +6,31 @@ function test_suite = test_setDirections %#ok<*STOUT>
     initTestSuite;
 end
 
-function test_setDirectionsMT()
+function test_setDirections_MT()
 
     isMT = true;
     cfg = getMockConfig(isMT);
 
     directions = setDirections(cfg);
 
-    assertEqual(size(directions), [24, 12]);
+    assertEqual(size(directions), [24, cfg.design.nbEventsPerBlock]);
 
     % only left right and static
     assertEqual(unique(directions), [-1; 0; 180]);
 
     % static every second block
-    assertEqual(directions(1:2:end, :), ones(12, 12) * -1);
+    assertEqual(directions(1:2:end, :), ones(12, cfg.design.nbEventsPerBlock) * -1);
 
 end
 
-function test_setDirectionsMST()
+function test_setDirections_MST()
 
     isMT = false;
     cfg = getMockConfig(isMT);
 
     directions = setDirections(cfg);
 
-    assertEqual(size(directions), [48, 24]);
+    assertEqual(size(directions), [48, cfg.design.nbEventsPerBlock]);
 
     % only left right and static
     assertEqual(unique(directions), [-666; -1; 666]);

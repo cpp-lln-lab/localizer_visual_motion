@@ -6,20 +6,38 @@ function test_suite = test_setSpeedTargets %#ok<*STOUT>
     initTestSuite;
 end
 
-function test_setSpeedTargetsBasic()
+function test_setSpeedTargets_MT()
 
     isMT = true;
     cfg = getMockConfig(isMT);
 
     speeds = setSpeedTargets(cfg);
 
-    assertEqual(speeds, ones(24, 12) * 28);
+    assertEqual(speeds, ones(cfg.design.nbRepetitions * 2, cfg.design.nbEventsPerBlock) * 28);
 
     % try when the target are just for the fixation cross
     cfg.target.type = {'fixation_cross'};
 
     speeds = setSpeedTargets(cfg);
 
-    assertEqual(speeds, ones(24, 12) * 28);
+    assertEqual(speeds, ones(cfg.design.nbRepetitions * 2, cfg.design.nbEventsPerBlock) * 28);
+
+end
+
+function test_setSpeedTargets_MST()
+
+    isMT = false;
+    cfg = getMockConfig(isMT);
+
+    speeds = setSpeedTargets(cfg);
+
+    assertEqual(speeds, ones(cfg.design.nbRepetitions * 2, cfg.design.nbEventsPerBlock) * 28);
+
+    % try when the target are just for the fixation cross
+    cfg.target.type = {'fixation_cross'};
+
+    speeds = setSpeedTargets(cfg);
+
+    assertEqual(speeds, ones(cfg.design.nbRepetitions * 2, cfg.design.nbEventsPerBlock) * 28);
 
 end

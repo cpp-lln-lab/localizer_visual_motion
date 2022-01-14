@@ -6,7 +6,7 @@ function test_suite = test_setBlocksConditions %#ok<*STOUT>
     initTestSuite;
 end
 
-function test_getDirectionBaseVectorsBasic()
+function test_getDirectionBaseVectors_MT()
 
     isMT = true;
     cfg = getMockConfig(isMT);
@@ -16,5 +16,18 @@ function test_getDirectionBaseVectorsBasic()
     assertEqual(conditionNamesVector, repmat({'static'; 'motion'}, 12, 1));
     assertEqual(idxCondition1, [1:2:23]');
     assertEqual(idxCondition2, [2:2:24]');
+
+end
+
+function test_getDirectionBaseVectors_MST()
+
+    isMT = false;
+    cfg = getMockConfig(isMT);
+
+    [conditionNamesVector, idxCondition1, idxCondition2] = setBlocksConditions(cfg);
+
+    assertEqual(conditionNamesVector, repmat({'static'; 'motion'}, 24, 1));
+    assertEqual(idxCondition1, [1:2:47]');
+    assertEqual(idxCondition2, [2:2:48]');
 
 end

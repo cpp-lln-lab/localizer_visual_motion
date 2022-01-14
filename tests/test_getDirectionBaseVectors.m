@@ -6,7 +6,7 @@ function test_suite = test_getDirectionBaseVectors %#ok<*STOUT>
     initTestSuite;
 end
 
-function test_getDirectionBaseVectorsBasic()
+function test_getDirectionBaseVectors_MT()
 
     isMT = true;
     cfg = getMockConfig(isMT);
@@ -15,5 +15,17 @@ function test_getDirectionBaseVectorsBasic()
 
     assertEqual(directionsCondition1, [-1 -1]);
     assertEqual(directionsCondition2, [0 180]);
+
+end
+
+function test_getDirectionBaseVectors_MST()
+
+    isMT = false;
+    cfg = getMockConfig(isMT);
+
+    [directionsCondition1, directionsCondition2] = getDirectionBaseVectors(cfg);
+
+    assertEqual(directionsCondition1, [-1 -1]);
+    assertEqual(directionsCondition2, [666 -666]);
 
 end

@@ -6,9 +6,19 @@ function test_suite = test_expDesign %#ok<*STOUT>
     initTestSuite;
 end
 
-function test_expDesignBasic()
+function test_expDesign_MT()
 
     isMT = true;
+
+    cfg = getMockConfig(isMT);
+
+    [cfg] = expDesign(cfg);
+
+end
+
+function test_expDesign_MST()
+
+    isMT = false;
 
     cfg = getMockConfig(isMT);
 

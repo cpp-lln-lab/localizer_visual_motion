@@ -6,7 +6,7 @@ function test_suite = test_setFixationTargets %#ok<*STOUT>
     initTestSuite;
 end
 
-function test_setFixationTargetsBasic()
+function test_setFixationTargets_MT()
 
     isMT = true;
     cfg = getMockConfig(isMT);
@@ -17,8 +17,7 @@ function test_setFixationTargetsBasic()
     assertTrue(~any(fixationTargets(:, 1)));
     assertTrue(~any(fixationTargets(:, end)));
 
-    % no target one after the other
-    % TODO
+    % TODO no target one after the other
 
     % at least one target for each allowed position
     assertTrue(all(sum(fixationTargets(:, 2:end - 1))) > 0);
@@ -28,6 +27,31 @@ function test_setFixationTargetsBasic()
 
     fixationTargets = setFixationTargets(cfg);
 
-    assertEqual(fixationTargets, zeros(24, 12));
+    assertEqual(fixationTargets, zeros(cfg.design.nbRepetitions * 2, cfg.design.nbEventsPerBlock));
+
+end
+
+function test_setFixationTargets_MST()
+
+    isMT = false;
+    cfg = getMockConfig(isMT);
+
+    fixationTargets = setFixationTargets(cfg);
+
+    % no target on first and last event of a block
+    assertTrue(~any(fixationTargets(:, 1)));
+    assertTrue(~any(fixationTargets(:, end)));
+
+    % TODO no target one after the other
+
+    % TODO at least one target for each allowed position
+    % assertTrue(all(sum(fixationTargets(:, 2:end - 1))) > 0);
+
+    % try when the target are just for the fixation cross
+    cfg.target.type = {'speed'};
+
+    fixationTargets = setFixationTargets(cfg);
+
+    assertEqual(fixationTargets, zeros(cfg.design.nbRepetitions * 2, cfg.design.nbEventsPerBlock));
 
 end

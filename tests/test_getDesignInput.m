@@ -6,7 +6,7 @@ function test_suite = test_getDesignInput %#ok<*STOUT>
     initTestSuite;
 end
 
-function test_setSpeedTargetsBasic()
+function test_setSpeedTargets_MT()
 
     isMT = true;
     cfg = getMockConfig(isMT);
@@ -14,8 +14,22 @@ function test_setSpeedTargetsBasic()
     [nbRepetitions, nbEventsPerBlock, maxNbPerBlock, nbBlocks] = getDesignInput(cfg);
 
     assertEqual(nbRepetitions, 12);
-    assertEqual(nbEventsPerBlock, 12);
+    assertEqual(nbEventsPerBlock, cfg.design.nbEventsPerBlock);
     assertEqual(maxNbPerBlock, 2);
     assertEqual(nbBlocks, 24);
+
+end
+
+function test_setSpeedTargets_MST()
+
+    isMT = false;
+    cfg = getMockConfig(isMT);
+
+    [nbRepetitions, nbEventsPerBlock, maxNbPerBlock, nbBlocks] = getDesignInput(cfg);
+
+    assertEqual(nbRepetitions, 24);
+    assertEqual(nbEventsPerBlock, cfg.design.nbEventsPerBlock);
+    assertEqual(maxNbPerBlock, 2);
+    assertEqual(nbBlocks, 48);
 
 end
