@@ -23,13 +23,16 @@ function diplayDesign(cfg, displayFigs)
         colormap(myColorMap);
 
         if  strcmp(cfg.design.localizer, 'MT') || ...
-                strcmp(cfg.design.localizer, 'MT_MST') && length(cfg.design.names) == 2
+                strcmp(cfg.design.localizer, 'MT_MST') && ...
+                length(cfg.design.names) == 2
 
-            title('Blocks (rows, static-odd and motion-even) & Events (columns, colors: motion direction)');
+            title(['Blocks (rows, static-odd and motion-even) & ' ...
+                   'Events (columns, colors: motion direction)']);
 
         else
 
-            title('Block (rows, only motion blocks) & Events (columns, colors: motion direction)');
+            title(['Block (rows, only motion blocks) & ' ...
+                   'Events (columns, colors: motion direction)']);
 
         end
 
@@ -51,8 +54,8 @@ function diplayDesign(cfg, displayFigs)
         labelAxesFreqTarget();
         title('Fixation Targets position distribution');
 
-        % Show the direction presented distribution per event position in the blocks across the
-        % experiment
+        % Show the direction presented distribution per event position
+        % in the blocks across the experiment
         figure(2);
 
         [~, motionDirections] = getDirectionBaseVectors(cfg);
@@ -70,7 +73,7 @@ function diplayDesign(cfg, displayFigs)
 
         end
 
-         suptitle('Distribution of events for each direction');
+        suptitle('Distribution of events for each direction');
 
     end
 

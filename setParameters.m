@@ -48,8 +48,8 @@ function [cfg] = setParameters()
     % - MST: radial motion centered in a circle aperture that is on the opposite
     % side of the screen relative to the fixation
     %   - alternates fixaton left and fixation right
-%     cfg.design.localizer = 'MT';
-        cfg.design.localizer = 'MT_MST';
+    %     cfg.design.localizer = 'MT';
+    cfg.design.localizer = 'MT_MST';
 
     cfg.design.motionType = 'translation';
     cfg.design.motionDirections = [0 0 180 180];
@@ -223,9 +223,9 @@ function cfg = setParametersMtMst(cfg)
         cfg.design.motionType = 'radial';
         cfg.design.motionDirections = [666 -666];
         cfg.design.names = {'motion'};
-%         cfg.design.names = {'static'; 'motion'};
+        %         cfg.design.names = {'static'; 'motion'};
         cfg.design.fixationPosition = {'fixation_left'};
-%         cfg.design.fixationPosition = {'fixation_right'; 'fixation_left'};
+        %         cfg.design.fixationPosition = {'fixation_right'; 'fixation_left'};
         cfg.design.xDisplacementFixation = 7;
         cfg.design.xDisplacementAperture = 3;
 

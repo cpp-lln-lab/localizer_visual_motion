@@ -10,7 +10,6 @@ function cfg = getMockConfig(isMT)
     %% Set specific localizer configurations as conditions, directions (MT) and stimulation
     %  position (MT_MST)
 
-
     %% Nb blocks and events
 
     % 2 conditions [`cfg.design.names`] and 10 repetitions [`cfg.design.nbRepetitions`]
@@ -42,7 +41,6 @@ function cfg = getMockConfig(isMT)
 
         % inward and outward are presented as separated event
         cfg.design.nbEventsPerBlock = cfg.design.nbEventsPerBlock * 2;
-
 
     end
 
