@@ -18,9 +18,12 @@ function cfg = getMockConfig(isMT)
 
     %% Nb blocks and events
 
-       % Example: 2 conditions [`cfg.design.names`] and 10 repetitions [`cfg.design.nbRepetitions`]
-       % means 20 blocks, if MT_MST and 2 hemifield [`cfg.design.fixationPosition`] means 40 blocks
-    % means 20 blocks
+    % Example:
+    %  - 2 conditions [`cfg.design.names`]
+    %  - 10 repetitions [`cfg.design.nbRepetitions`]
+    % means 20 blocks,
+    % means 40 blocks if MT_MST and 2 hemifield [`cfg.design.fixationPosition`]
+
     cfg.design.nbRepetitions = 12;
     cfg.design.nbEventsPerBlock = 12;
 
