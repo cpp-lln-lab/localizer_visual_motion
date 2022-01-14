@@ -65,6 +65,9 @@ function [cfg] = expDesign(cfg)
 
     if nargin < 1 || isempty(cfg)
 
+        % make sure we got access to all the required functions and inputs
+        run('../../initEnv.m');
+
         % ``true`` for MT+ translational localizer
         % ``false`` for MT/MST localizer
         isMT = false;
@@ -75,9 +78,6 @@ function [cfg] = expDesign(cfg)
 
         % Get the computed design on a visual representation
         displayFigs = 1;
-
-        % make sure we got access to all the required functions and inputs
-        run('../../initEnv.m');
 
     end
 
