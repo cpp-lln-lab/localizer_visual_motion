@@ -20,7 +20,6 @@ function test_setSpeedTargetsBasic()
 
     speeds = setSpeedTargets(cfg);
 
-    % not sure why the fixation cross should have a speed ????
-    assertEqual(speeds, ones(24, 12));
+    assertEqual(speeds, ones(24, 12) * 28);
 
 end
