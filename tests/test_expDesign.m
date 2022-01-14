@@ -8,14 +8,12 @@ end
 
 function test_expDesignBasic()
 
-    displayFigs = 1;
-
     isMT = true;
 
     run ../initEnv();
 
     cfg = getMockConfig(isMT);
 
-    [cfg] = expDesign(cfg, displayFigs);
+    [cfg] = expDesign(cfg);
 
 end

@@ -11,17 +11,18 @@ function test_setSpeedTargetsBasic()
     run ../initEnv();
 
     isMT = true;
-    cfg = getTestConfig(isMT);
+    cfg = getMockConfig(isMT);
 
     speeds = setSpeedTargets(cfg);
 
-    assertEqual(speeds, ones(20, 12) * 28);
+    assertEqual(speeds, ones(24, 12) * 28);
 
     % try when the target are just for the fixation cross
     cfg.target.type = {'fixation_cross'};
 
     speeds = setSpeedTargets(cfg);
 
-    assertEqual(speeds, ones(20, 12));
+    % not sure why the fixation cross should have a speed ????
+    assertEqual(speeds, ones(24, 12));
 
 end

@@ -11,13 +11,13 @@ function test_setSpeedTargetsBasic()
     run ../initEnv();
 
     isMT = true;
-    cfg = getTestConfig(isMT);
+    cfg = getMockConfig(isMT);
 
     [nbRepetitions, nbEventsPerBlock, maxNbPerBlock, nbBlocks] = getDesignInput(cfg);
 
-    assertEqual(nbRepetitions, 10);
+    assertEqual(nbRepetitions, 12);
     assertEqual(nbEventsPerBlock, 12);
     assertEqual(maxNbPerBlock, 2);
-    assertEqual(nbBlocks, 10);
+    assertEqual(nbBlocks, 24);
 
 end

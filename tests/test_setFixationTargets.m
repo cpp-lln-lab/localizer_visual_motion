@@ -11,7 +11,7 @@ function test_setFixationTargetsBasic()
     run ../initEnv();
 
     isMT = true;
-    cfg = getTestConfig(isMT);
+    cfg = getMockConfig(isMT);
 
     fixationTargets = setFixationTargets(cfg);
 
@@ -30,6 +30,6 @@ function test_setFixationTargetsBasic()
 
     fixationTargets = setFixationTargets(cfg);
 
-    assertEqual(fixationTargets, zeros(20, 12));
+    assertEqual(fixationTargets, zeros(24, 12));
 
 end

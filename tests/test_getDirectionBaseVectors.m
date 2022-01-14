@@ -11,7 +11,7 @@ function test_getDirectionBaseVectorsBasic()
     run ../initEnv();
 
     isMT = true;
-    cfg = getTestConfig(isMT);
+    cfg = getMockConfig(isMT);
 
     [directionsCondition1, directionsCondition2] = getDirectionBaseVectors(cfg);
 

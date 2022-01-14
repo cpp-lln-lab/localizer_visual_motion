@@ -17,7 +17,7 @@ function speeds = setSpeedTargets(cfg)
         % Outputs an "empty" matrix in case no speed task is required
     else
         [~, nbEventsPerBlock, ~, nbBlocks] = getDesignInput(cfg);
-        speeds = ones(nbBlocks, nbEventsPerBlock) * cfg.dot.speedPixPerFrame;
+        speeds = ones(nbBlocks, nbEventsPerBlock);
 
     end
 

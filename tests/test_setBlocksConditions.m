@@ -11,12 +11,12 @@ function test_getDirectionBaseVectorsBasic()
     run ../initEnv();
 
     isMT = true;
-    cfg = getTestConfig(isMT);
+    cfg = getMockConfig(isMT);
 
     [conditionNamesVector, idxCondition1, idxCondition2] = setBlocksConditions(cfg);
 
-    assertEqual(conditionNamesVector, repmat({'static'; 'motion'}, 10, 1));
-    assertEqual(idxCondition1, [1; 3; 5; 7; 9; 11; 13; 15; 17; 19]);
-    assertEqual(idxCondition2, [2; 4; 6; 8; 10; 12; 14; 16; 18; 20]);
+    assertEqual(conditionNamesVector, repmat({'static'; 'motion'}, 12, 1));
+    assertEqual(idxCondition1, [1:2:23]');
+    assertEqual(idxCondition2, [2:2:24]');
 
 end
