@@ -1,8 +1,8 @@
 function cfg = getMockConfig(isMT)
     % fixture
     %
-    % REMINDER: If `cfg.design.nbRepetitions` and `cfg.design.nbEventsPerBlock` values are different
-    %           from 12, tests on GitHub will fail so do not change.
+    % REMINDER: If `cfg.design.nbRepetitions` and `cfg.design.nbEventsPerBlock` values are changed
+    %           this may make the tests on GitHub fail, so be careful.
     %
     % (C) Copyright 2020 CPP visual motion localizer developpers
 
