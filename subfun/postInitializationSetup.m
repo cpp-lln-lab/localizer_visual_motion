@@ -8,8 +8,6 @@ function cfg = postInitializationSetup(cfg)
     %
     % (C) Copyright 2020 CPP visual motion localizer developpers
 
-    cfg = deal(varargin{:});
-
     cfg.dot.matrixWidth = cfg.screen.winWidth;
 
     % Convert some values from degrees to pixels
@@ -25,7 +23,5 @@ function cfg = postInitializationSetup(cfg)
     % field of view
     cfg.dot.number = round(cfg.dot.density * ...
                            (cfg.dot.matrixWidth / cfg.screen.ppd)^2);
-
-    varargout = {cfg};
 
 end
