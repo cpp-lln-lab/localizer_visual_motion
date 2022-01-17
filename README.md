@@ -1,30 +1,27 @@
 [![](https://img.shields.io/badge/Octave-CI-blue?logo=Octave&logoColor=white)](https://github.com/cpp-lln-lab/localizer_visual_motion/actions)
+![](https://github.com/cpp-lln-lab/localizer_visual_motion/workflows/CI/badge.svg)
+[![codecov](https://codecov.io/gh/cpp-lln-lab/localizer_visual_motion/branch/master/graph/badge.svg)](https://codecov.io/gh/cpp-lln-lab/localizer_visual_motion)
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 [![All Contributors](https://img.shields.io/badge/all_contributors-5-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
-![](https://github.com/cpp-lln-lab/localizer_visual_motion/workflows/CI/badge.svg)
-
-[![codecov](https://codecov.io/gh/cpp-lln-lab/localizer_visual_motion/branch/master/graph/badge.svg)](https://codecov.io/gh/cpp-lln-lab/localizer_visual_motion)
-
-[![Build Status](https://travis-ci.com/cpp-lln-lab/localizer_visual_motion.svg?branch=master)](https://travis-ci.com/cpp-lln-lab/localizer_visual_motion)
 
 <!-- TOC -->
 - [fMRI localizers for visual motion](#fmri-localizers-for-visual-motion)
-  - [Translational Motion](#translational-motion)
   - [Requirements](#requirements)
   - [Installation](#installation)
   - [Structure and function details](#structure-and-function-details)
-    - [visualLocTranslational](#visualloctranslational)
+    - [visualMotionLocalizer](#visualmotionlocalizer)
     - [setParameters](#setparameters)
       - [Let the scanner pace the experiment](#let-the-scanner-pace-the-experiment)
     - [subfun/doDotMo](#subfundodotmo)
       - [Input](#input)
       - [Output](#output)
     - [subfun/design/expDesign](#subfundesignexpdesign)
-      - [EVENTS](#events)
-      - [TARGETS](#targets)
-      - [Input](#input-1)
-      - [Output](#output-1)
+      - [Events](#events)
+      - [Pseudorandomization rules:](#pseudorandomization-rules)
+      - [Input:](#input-1)
+      - [Output:](#output-1)
+  - [Contributors ✨](#contributors-)
 <!-- TOC -->
 
 # fMRI localizers for visual motion
