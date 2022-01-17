@@ -1,7 +1,9 @@
-% (C) Copyright 2020 CPP visual motion localizer developpers
-
 function varargout = preTrialSetup(varargin)
-    % varargout = postInitializatinSetup(varargin)
+    %
+    % [thisEvent, thisFixation, cfg] = postInitializatinSetup(cfg, iBlock, iEvent)
+    %
+    %
+    % (C) Copyright 2020 CPP visual motion localizer developpers
 
     % generic function to prepare some structure before each trial
 
@@ -33,6 +35,7 @@ function varargout = preTrialSetup(varargin)
         thisEvent.fixationPosition = cfg.design.blockFixationPosition{iBlock};
 
         switch thisEvent.fixationPosition
+
             case 'fixation_right'
                 cfg.aperture.xPosPix = -abs(cfg.aperture.xPosPix);
 

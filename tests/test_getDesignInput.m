@@ -1,4 +1,5 @@
 function test_suite = test_getDesignInput %#ok<*STOUT>
+    % (C) Copyright 2021 CPP visual motion localizer developpers
     try % assignment of 'localfunctions' is necessary in Matlab >= 2016
         test_functions = localfunctions(); %#ok<*NASGU>
     catch % no problem; early Matlab versions can use initTestSuite fine
@@ -6,18 +7,30 @@ function test_suite = test_getDesignInput %#ok<*STOUT>
     initTestSuite;
 end
 
-function test_setSpeedTargetsBasic()
-
-    run ../initEnv();
+function test_setSpeedTargets_MT()
 
     isMT = true;
-    cfg = getTestConfig(isMT);
+    cfg = getMockConfig(isMT);
 
     [nbRepetitions, nbEventsPerBlock, maxNbPerBlock, nbBlocks] = getDesignInput(cfg);
 
-    assertEqual(nbRepetitions, 10);
-    assertEqual(nbEventsPerBlock, 12);
+    assertEqual(nbRepetitions, cfg.design.nbRepetitions);
+    assertEqual(nbEventsPerBlock, cfg.design.nbEventsPerBlock);
     assertEqual(maxNbPerBlock, 2);
-    assertEqual(nbBlocks, 10);
+    assertEqual(nbBlocks, length(cfg.design.names) * nbRepetitions);
+
+end
+
+function test_setSpeedTargets_MST()
+
+    isMT = false;
+    cfg = getMockConfig(isMT);
+
+    [nbRepetitions, nbEventsPerBlock, maxNbPerBlock, nbBlocks] = getDesignInput(cfg);
+
+    assertEqual(nbRepetitions, cfg.design.nbRepetitions * length(cfg.design.fixationPosition));
+    assertEqual(nbEventsPerBlock, cfg.design.nbEventsPerBlock);
+    assertEqual(maxNbPerBlock, 2);
+    assertEqual(nbBlocks, length(cfg.design.names) * nbRepetitions);
 
 end

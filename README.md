@@ -124,9 +124,9 @@ Wrapper function that present the dot stimulation (static or motion) per event.
 
 > NB: The dots are drawn on a square that contains the round aperture, then any dots outside of the aperture is turned into a NaN so effectively the actual number of dots on the screen at any given time is not the one that you input but a smaller number (nDots / Area of aperture) on average.
 
-### subfun/expDesign(MtMst)
+### subfun/design/expDesign
 
-These functions, one per MT+ and one per MT/MST localizer, create the sequence of blocks and the events in them. The conditions are consecutive static and motion blocks (Gives better results than randomised).
+This function and its companions creates the sequence of blocks (static/motion) and the events (the single directions) for MT+ and MT/MST localizers. The conditions are consecutive static and motion blocks (fixed in this order gives better results than randomised).
 
 It can be run as a stand alone without inputs and display a visual example of the possible design. See `getMockConfig` to set up the mock configuration.
 

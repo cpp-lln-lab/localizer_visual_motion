@@ -1,12 +1,12 @@
-% (C) Copyright 2020 CPP visual motion localizer developpers
-
-function varargout = postInitializationSetup(varargin)
-    % varargout = postInitializatinSetup(varargin)
-
+function cfg = postInitializationSetup(cfg)
+    %
+    % cfg = postInitializatinSetup(cfg)
+    %
     % generic function to finalize some set up after psychtoolbox has been
     % initialized
-
-    cfg = deal(varargin{:});
+    %
+    %
+    % (C) Copyright 2020 CPP visual motion localizer developpers
 
     cfg.dot.matrixWidth = cfg.screen.winWidth;
 
@@ -23,7 +23,5 @@ function varargout = postInitializationSetup(varargin)
     % field of view
     cfg.dot.number = round(cfg.dot.density * ...
                            (cfg.dot.matrixWidth / cfg.screen.ppd)^2);
-
-    varargout = {cfg};
 
 end

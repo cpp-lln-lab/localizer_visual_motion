@@ -1,4 +1,5 @@
 function test_suite = test_setDirections %#ok<*STOUT>
+    % (C) Copyright 2021 CPP visual motion localizer developpers
     try % assignment of 'localfunctions' is necessary in Matlab >= 2016
         test_functions = localfunctions(); %#ok<*NASGU>
     catch % no problem; early Matlab versions can use initTestSuite fine
@@ -6,37 +7,37 @@ function test_suite = test_setDirections %#ok<*STOUT>
     initTestSuite;
 end
 
-function test_setDirectionsMT()
-
-    run ../initEnv();
+function test_setDirections_MT()
 
     isMT = true;
-    cfg = getTestConfig(isMT);
+    cfg = getMockConfig(isMT);
 
     directions = setDirections(cfg);
 
-    assertEqual(size(directions), [20, 12]);
+    assertEqual(size(directions), [cfg.design.nbRepetitions * 2, cfg.design.nbEventsPerBlock]);
 
     % only left right and static
     assertEqual(unique(directions), [-1; 0; 180]);
 
     % static every second block
-    assertEqual(directions(1:2:end, :), ones(10, 12) * -1);
+    assertEqual(directions(1:2:end, :), ones(cfg.design.nbRepetitions, ...
+                                             cfg.design.nbEventsPerBlock) * -1);
 
 end
 
-function test_setDirectionsMST()
-
-    run ../initEnv();
+function test_setDirections_MST()
 
     isMT = false;
-    cfg = getTestConfig(isMT);
+    cfg = getMockConfig(isMT);
 
     directions = setDirections(cfg);
 
-    assertEqual(size(directions), [10, 12]);
+    assertEqual(size(directions), [cfg.design.nbRepetitions * ...
+                                   length(cfg.design.names) * ...
+                                   length(cfg.design.fixationPosition), ...
+                                   cfg.design.nbEventsPerBlock]);
 
     % only left right and static
-    assertEqual(unique(directions), [-666; 666]);
+    assertEqual(unique(directions), [-666; -1; 666]);
 
 end
