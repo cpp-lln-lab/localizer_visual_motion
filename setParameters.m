@@ -48,15 +48,16 @@ function [cfg] = setParameters()
     % - MST: radial motion centered in a circle aperture that is on the opposite
     % side of the screen relative to the fixation
     %   - alternates fixaton left and fixation right
-    cfg.design.localizer = 'MT';
-    %     cfg.design.localizer = 'MT_MST';
+    %     cfg.design.localizer = 'MT';
+    cfg.design.localizer = 'MT_MST';
 
     cfg.design.motionType = 'translation';
     cfg.design.motionDirections = [0 0 180 180];
     cfg.design.names = {'static'; 'motion'};
 
-    % if you have static and motion and `nbRepetions` = 4, this will return 8 blocks (n blocks per
-    % hemifield in case of MT/MST localizer)
+    % if you have static and motion and `nbRepetions` = 4, this will return 8 blocks (for MT/MST
+    % localizer && 2 hemifield it is 8 blocks per hemifield), i.e. how many times each condition
+    % will be repeated
     cfg.design.nbRepetitions = 12;
     cfg.design.nbEventsPerBlock = 12;
 
@@ -221,17 +222,14 @@ function cfg = setParametersMtMst(cfg)
 
         cfg.design.motionType = 'radial';
         cfg.design.motionDirections = [666 -666];
-        %         cfg.design.names = {'motion'};
-        cfg.design.names = {'static'; 'motion'};
-        cfg.design.fixationPosition = {'fixation_left'; 'fixation_right'};
-        %          cfg.design.fixationPosition = {'fixation_right'; 'fixation_left'};
+        cfg.design.names = {'motion'};
+        %         cfg.design.names = {'static'; 'motion'};
+        cfg.design.fixationPosition = {'fixation_left'};
+        %         cfg.design.fixationPosition = {'fixation_right'; 'fixation_left'};
         cfg.design.xDisplacementFixation = 7;
         cfg.design.xDisplacementAperture = 3;
 
-        % here we double the repetions (2 hemifields)
-        cfg.design.nbRepetitions = cfg.design.nbRepetitions * length(cfg.design.fixationPosition);
-
-        % inward&outward are presented as separated event
+        % inward and outward are presented as separated event
         cfg.design.nbEventsPerBlock = cfg.design.nbEventsPerBlock * 2;
 
         cfg.timing.IBI = 4;

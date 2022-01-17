@@ -1,30 +1,27 @@
 [![](https://img.shields.io/badge/Octave-CI-blue?logo=Octave&logoColor=white)](https://github.com/cpp-lln-lab/localizer_visual_motion/actions)
+![](https://github.com/cpp-lln-lab/localizer_visual_motion/workflows/CI/badge.svg)
+[![codecov](https://codecov.io/gh/cpp-lln-lab/localizer_visual_motion/branch/master/graph/badge.svg)](https://codecov.io/gh/cpp-lln-lab/localizer_visual_motion)
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 [![All Contributors](https://img.shields.io/badge/all_contributors-5-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
-![](https://github.com/cpp-lln-lab/localizer_visual_motion/workflows/CI/badge.svg)
-
-[![codecov](https://codecov.io/gh/cpp-lln-lab/localizer_visual_motion/branch/master/graph/badge.svg)](https://codecov.io/gh/cpp-lln-lab/localizer_visual_motion)
-
-[![Build Status](https://travis-ci.com/cpp-lln-lab/localizer_visual_motion.svg?branch=master)](https://travis-ci.com/cpp-lln-lab/localizer_visual_motion)
 
 <!-- TOC -->
 - [fMRI localizers for visual motion](#fmri-localizers-for-visual-motion)
-  - [Translational Motion](#translational-motion)
   - [Requirements](#requirements)
   - [Installation](#installation)
   - [Structure and function details](#structure-and-function-details)
-    - [visualLocTranslational](#visualloctranslational)
+    - [visualMotionLocalizer](#visualmotionlocalizer)
     - [setParameters](#setparameters)
       - [Let the scanner pace the experiment](#let-the-scanner-pace-the-experiment)
     - [subfun/doDotMo](#subfundodotmo)
       - [Input](#input)
       - [Output](#output)
-    - [subfun/expDesign](#subfunexpdesign)
-      - [EVENTS](#events)
-      - [TARGETS](#targets)
-      - [Input](#input-1)
-      - [Output](#output-1)
+    - [subfun/design/expDesign](#subfundesignexpdesign)
+      - [Events](#events)
+      - [Pseudorandomization rules:](#pseudorandomization-rules)
+      - [Input:](#input-1)
+      - [Output:](#output-1)
+  - [Contributors ✨](#contributors-)
 <!-- TOC -->
 
 # fMRI localizers for visual motion
@@ -37,8 +34,8 @@ For instructions see the following links:
 
 | Requirements                                                    | Used version |
 | --------------------------------------------------------------- | ------------ |
-| [CPP_BIDS](https://github.com/cpp-lln-lab/CPP_BIDS) (submodule) | 2.1.0        |
-| [CPP_PTB](https://github.com/cpp-lln-lab/CPP_PTB) (submodule)   | 1.2.0        |
+| [CPP_BIDS](https://github.com/cpp-lln-lab/CPP_BIDS) (submodule) | 2.1.1        |
+| [CPP_PTB](https://github.com/cpp-lln-lab/CPP_PTB) (submodule)   | 1.2.1        |
 | [PsychToolBox](http://psychtoolbox.org/)                        | >=3.0.14     |
 | [Matlab](https://www.mathworks.com/products/matlab.html)        | >=2017       |
 | or [octave](https://www.gnu.org/software/octave/)               | >=4.?        |
@@ -124,13 +121,13 @@ Wrapper function that present the dot stimulation (static or motion) per event.
 
 > NB: The dots are drawn on a square that contains the round aperture, then any dots outside of the aperture is turned into a NaN so effectively the actual number of dots on the screen at any given time is not the one that you input but a smaller number (nDots / Area of aperture) on average.
 
-### subfun/expDesign(MtMst)
+### subfun/design/expDesign
 
-These functions, one per MT+ and one per MT/MST localizer, create the sequence of blocks and the events in them. The conditions are consecutive static and motion blocks (Gives better results than randomised).
+This function and its companions creates the sequence of blocks (static/motion) and the events (the single directions) for MT+ and MT/MST localizers. The conditions are consecutive static and motion blocks (fixed in this order gives better results than randomised).
 
-It can be run as a stand alone without inputs and display a visual example of the possible design. See `getMockConfig` to set up the mock configuration.
+It can be run as a stand alone without inputs and displays a visual example of the possible design. See `getMockConfig` to set up the mock configuration.
 
-It computes the directions to display and the task(s), at the moment
+It computes the directions to display and the task(s), at the moment:
 1. detection of change in the color of the fixation target
 2. detection of different speed of the moving dots [ W I P - if selected as a task it will give the same null output as if not selected ie no difference in speed]
 

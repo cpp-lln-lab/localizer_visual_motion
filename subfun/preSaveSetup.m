@@ -1,7 +1,10 @@
-% (C) Copyright 2020 CPP visual motion localizer developpers
-
 function varargout = preSaveSetup(varargin)
-    % varargout = postInitializatinSetup(varargin)
+    %
+    % thisEvent = postInitializatinSetup(thisEvent, thisFixation, iBlock, iEvent, ...
+    %                                    duration, onset, cfg, logFile)
+    %
+    %
+    % (C) Copyright 2020 CPP visual motion localizer developpers
 
     % generic function to prepare structures before saving
 
