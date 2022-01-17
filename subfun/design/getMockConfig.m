@@ -46,9 +46,6 @@ function cfg = getMockConfig(isMT)
 
         % To not touch
 
-        % here we double the repetions (2 hemifields)
-        cfg.design.nbRepetitions = cfg.design.nbRepetitions * length(cfg.design.fixationPosition);
-
         % inward and outward are presented as separated event
         cfg.design.nbEventsPerBlock = cfg.design.nbEventsPerBlock * 2;
 
