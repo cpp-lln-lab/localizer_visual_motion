@@ -39,6 +39,9 @@ function test_setSpeedTargets_MST()
 
     speeds = setSpeedTargets(cfg);
 
-    assertEqual(speeds, ones(cfg.design.nbRepetitions * 2, cfg.design.nbEventsPerBlock) * 28);
+    assertEqual(speeds, ones(cfg.design.nbRepetitions ...
+                             * length(cfg.design.names) ...
+                             * length(cfg.design.fixationPosition), ...
+                             cfg.design.nbEventsPerBlock) * 28);
 
 end

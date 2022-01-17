@@ -31,7 +31,7 @@ function test_getDirectionBaseVectors_MST()
     [conditionNamesVector, idxCondition1, idxCondition2] = setBlocksConditions(cfg);
 
     conditions = {'static'; 'motion'};
-    nbRepeats = cfg.design.nbRepetitions;
+    nbRepeats = cfg.design.nbRepetitions * length(cfg.design.fixationPosition);
 
     assertEqual(conditionNamesVector, repmat(conditions, nbRepeats, 1));
     assertEqual(idxCondition1, (1:2:numel(conditions) * nbRepeats)');

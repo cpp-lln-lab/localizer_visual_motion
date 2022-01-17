@@ -53,6 +53,9 @@ function test_setFixationTargets_MST()
 
     fixationTargets = setFixationTargets(cfg);
 
-    assertEqual(fixationTargets, zeros(cfg.design.nbRepetitions * 2, cfg.design.nbEventsPerBlock));
+    assertEqual(fixationTargets, zeros(cfg.design.nbRepetitions ...
+                                       * length(cfg.design.names) ...
+                                       * length(cfg.design.fixationPosition), ...
+                                       cfg.design.nbEventsPerBlock));
 
 end

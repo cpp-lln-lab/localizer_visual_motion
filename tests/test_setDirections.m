@@ -32,7 +32,10 @@ function test_setDirections_MST()
 
     directions = setDirections(cfg);
 
-    assertEqual(size(directions), [cfg.design.nbRepetitions * 2, cfg.design.nbEventsPerBlock]);
+    assertEqual(size(directions), [cfg.design.nbRepetitions ...
+                                   * length(cfg.design.names) ...
+                                   * length(cfg.design.fixationPosition), ...
+                                   cfg.design.nbEventsPerBlock]);
 
     % only left right and static
     assertEqual(unique(directions), [-666; -1; 666]);
