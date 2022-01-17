@@ -20,7 +20,7 @@
     - [subfun/doDotMo](#subfundodotmo)
       - [Input](#input)
       - [Output](#output)
-    - [subfun/expDesign](#subfunexpdesign)
+    - [subfun/design/expDesign](#subfundesignexpdesign)
       - [EVENTS](#events)
       - [TARGETS](#targets)
       - [Input](#input-1)
@@ -37,8 +37,8 @@ For instructions see the following links:
 
 | Requirements                                                    | Used version |
 | --------------------------------------------------------------- | ------------ |
-| [CPP_BIDS](https://github.com/cpp-lln-lab/CPP_BIDS) (submodule) | 2.1.0        |
-| [CPP_PTB](https://github.com/cpp-lln-lab/CPP_PTB) (submodule)   | 1.2.0        |
+| [CPP_BIDS](https://github.com/cpp-lln-lab/CPP_BIDS) (submodule) | 2.1.1        |
+| [CPP_PTB](https://github.com/cpp-lln-lab/CPP_PTB) (submodule)   | 1.2.1        |
 | [PsychToolBox](http://psychtoolbox.org/)                        | >=3.0.14     |
 | [Matlab](https://www.mathworks.com/products/matlab.html)        | >=2017       |
 | or [octave](https://www.gnu.org/software/octave/)               | >=4.?        |
@@ -128,9 +128,9 @@ Wrapper function that present the dot stimulation (static or motion) per event.
 
 This function and its companions creates the sequence of blocks (static/motion) and the events (the single directions) for MT+ and MT/MST localizers. The conditions are consecutive static and motion blocks (fixed in this order gives better results than randomised).
 
-It can be run as a stand alone without inputs and display a visual example of the possible design. See `getMockConfig` to set up the mock configuration.
+It can be run as a stand alone without inputs and displays a visual example of the possible design. See `getMockConfig` to set up the mock configuration.
 
-It computes the directions to display and the task(s), at the moment
+It computes the directions to display and the task(s), at the moment:
 1. detection of change in the color of the fixation target
 2. detection of different speed of the moving dots [ W I P - if selected as a task it will give the same null output as if not selected ie no difference in speed]
 
