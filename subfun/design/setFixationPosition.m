@@ -15,9 +15,8 @@ function blockFixationPosition = setFixationPosition(cfg)
     if ~strcmp(cfg.design.localizer, 'MT_MST')
 
         blockFixationPosition = zeros(nbBlocks, 1);
-
+        
     else % Compute the matrix with the fixation position if requested
-
 
         nbBlocksPerHemifield = nbBlocks / length(cfg.design.fixationPosition);
 
