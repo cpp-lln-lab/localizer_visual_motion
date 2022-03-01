@@ -6,7 +6,7 @@ function cfg = postInitializationSetup(cfg)
     % initialized
     %
     %
-    % (C) Copyright 2020 CPP visual motion localizer developpers
+    % (C) Copyright 2020 CPP visual motion localizer developers
 
     cfg.dot.matrixWidth = cfg.screen.winWidth;
 

@@ -7,7 +7,7 @@ function cfg = getMockConfig(isMT)
     %           this may make the tests on GitHub fail, so be careful.
     %
     %
-    % (C) Copyright 2020 CPP visual motion localizer developpers
+    % (C) Copyright 2020 CPP visual motion localizer developers
 
     if nargin < 1
         isMT =  true;

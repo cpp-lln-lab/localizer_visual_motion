@@ -1,6 +1,6 @@
 function runTests()
     %
-    % (C) Copyright 2022 CPP_BIDS developers
+    % (C) Copyright 2022 CPP visual motion localizer developers
 
     % Elapsed time is ??? seconds.
 

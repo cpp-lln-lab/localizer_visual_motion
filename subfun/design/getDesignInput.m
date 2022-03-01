@@ -3,7 +3,7 @@ function [nbRepetitions, nbEventsPerBlock, maxNbPerBlock, nbBlocks] = getDesignI
     % [nbRepetitions, nbEventsPerBlock, maxNbPerBlock, nbBlocks] = getDesignInput(cfg)
     %
     %
-    % (C) Copyright 2020 CPP visual motion localizer developpers
+    % (C) Copyright 2020 CPP visual motion localizer developers
 
     nbRepetitions = cfg.design.nbRepetitions;
 
