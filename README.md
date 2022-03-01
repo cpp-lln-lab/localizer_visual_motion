@@ -1,11 +1,8 @@
 [![](https://img.shields.io/badge/Octave-CI-blue?logo=Octave&logoColor=white)](https://github.com/cpp-lln-lab/localizer_visual_motion/actions)
 ![](https://github.com/cpp-lln-lab/localizer_visual_motion/workflows/CI/badge.svg)
 [![codecov](https://codecov.io/gh/cpp-lln-lab/localizer_visual_motion/branch/master/graph/badge.svg)](https://codecov.io/gh/cpp-lln-lab/localizer_visual_motion)
-<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 [![All Contributors](https://img.shields.io/badge/all_contributors-5-orange.svg?style=flat-square)](#contributors-)
-<!-- ALL-CONTRIBUTORS-BADGE:END -->
 
-<!-- TOC -->
 - [fMRI localizers for visual motion](#fmri-localizers-for-visual-motion)
   - [Requirements](#requirements)
   - [Installation](#installation)
@@ -22,13 +19,13 @@
       - [Input:](#input-1)
       - [Output:](#output-1)
   - [Contributors ✨](#contributors-)
-<!-- TOC -->
 
 # fMRI localizers for visual motion
 
 ## Requirements
 
-Make sure that the following toolboxes are installed and added to the matlab / octave path. See the next section on how to install the submodule toolboxes.
+Make sure that the following toolboxes are installed and added to the matlab /
+octave path. See the next section on how to install the submodule toolboxes.
 
 For instructions see the following links:
 
@@ -42,8 +39,8 @@ For instructions see the following links:
 
 ## Installation
 
-The CPP_BIDS and CPP_PTB dependencies are already set up as submodule to this repository.
-You can install it all with git by doing.
+The CPP_BIDS and CPP_PTB dependencies are already set up as submodule to this
+repository. You can install it all with git by doing.
 
 ```bash
 git clone --recurse-submodules https://github.com/cpp-lln-lab/localizer_visual_motion.git
@@ -53,15 +50,21 @@ git clone --recurse-submodules https://github.com/cpp-lln-lab/localizer_visual_m
 
 ### visualMotionLocalizer
 
-Running this script will show blocks of motion dots and static dots. Motion blocks will show dots moving in one of four directions (up-, down-, left-, and right-ward) (MT+ localizer) or dots moving inward and outward in the peripheral of the screen (MT/MST localizer).
+Running this script will show blocks of motion dots and static dots. Motion
+blocks will show dots moving in one of four directions (up-, down-, left-, and
+right-ward) (MT+ localizer) or dots moving inward and outward in the peripheral
+of the screen (MT/MST localizer).
 
-Run in `Debug mode` (see `setParameters.m`) it does not care about subjID, run n., Eye Tracker (soon, at the moment it needs to be set off manually), etc..
+Run in `Debug mode` (see `setParameters.m`) it does not care about subjID, run
+n., Eye Tracker (soon, at the moment it needs to be set off manually), etc..
 
-Any details of the experiment can be changed in `setParameters.m` (e.g., experiment mode, motion stimuli details, exp. design, etc.)
+Any details of the experiment can be changed in `setParameters.m` (e.g.,
+experiment mode, motion stimuli details, exp. design, etc.)
 
 ### setParameters
 
-`setParameters.m` is the core engine of the experiment. It contains the following tweakable sections:
+`setParameters.m` is the core engine of the experiment. It contains the
+following tweakable sections:
 
 - Debug mode setting
 - MRI settings
@@ -77,7 +80,8 @@ Any details of the experiment can be changed in `setParameters.m` (e.g., experim
 
 #### Let the scanner pace the experiment
 
-Set `cfg.pacedByTriggers.do` to `true` and you can then set all the details in this `if` block
+Set `cfg.pacedByTriggers.do` to `true` and you can then set all the details in
+this `if` block
 
 ```matlab
 % Time is here in terms of `repetition time (TR)` (i.e. MRI volumes)
@@ -106,10 +110,13 @@ Wrapper function that present the dot stimulation (static or motion) per event.
 
 #### Input
 
-- `cfg`: PTB/machine and experiment configurations returned by `setParameters` and `initPTB`
+- `cfg`: PTB/machine and experiment configurations returned by `setParameters`
+  and `initPTB`
 - `logFile`: structure that stores the experiment logfile to be saved
-- `thisEvent`: structure that stores information about the event to present regarding the dots (static or motion, direction, etc.)
-- `thisFixation`: structure that stores information about the fixation cross task to present
+- `thisEvent`: structure that stores information about the event to present
+  regarding the dots (static or motion, direction, etc.)
+- `thisFixation`: structure that stores information about the fixation cross
+  task to present
 - `dots`: [...]
 - `iEvent`: index of the event of the block at the moment of the presentation
 
@@ -119,52 +126,78 @@ Wrapper function that present the dot stimulation (static or motion) per event.
 - Event `duration`
 - `dots`: [...]
 
-> NB: The dots are drawn on a square that contains the round aperture, then any dots outside of the aperture is turned into a NaN so effectively the actual number of dots on the screen at any given time is not the one that you input but a smaller number (nDots / Area of aperture) on average.
+> NB: The dots are drawn on a square that contains the round aperture, then any
+> dots outside of the aperture is turned into a NaN so effectively the actual
+> number of dots on the screen at any given time is not the one that you input
+> but a smaller number (nDots / Area of aperture) on average.
 
 ### subfun/design/expDesign
 
-This function and its companions creates the sequence of blocks (static/motion) and the events (the single directions) for MT+ and MT/MST localizers. The conditions are consecutive static and motion blocks (fixed in this order gives better results than randomised).
+This function and its companions creates the sequence of blocks (static/motion)
+and the events (the single directions) for MT+ and MT/MST localizers. The
+conditions are consecutive static and motion blocks (fixed in this order gives
+better results than randomised).
 
-It can be run as a stand alone without inputs and displays a visual example of the possible design. See `getMockConfig` to set up the mock configuration.
+It can be run as a stand alone without inputs and displays a visual example of
+the possible design. See `getMockConfig` to set up the mock configuration.
 
 It computes the directions to display and the task(s), at the moment:
+
 1. detection of change in the color of the fixation target
-2. detection of different speed of the moving dots [ W I P - if selected as a task it will give the same null output as if not selected ie no difference in speed]
+2. detection of different speed of the moving dots [ W I P - if selected as a
+   task it will give the same null output as if not selected ie no difference in
+   speed]
 
 #### Events
 
-The ``nbEventsPerBlock`` should be a multiple of the number of motion directions requested in ``motionDirections`` (which should be more than 1) e.g.:
-- MT localizer: `cfg.design.motionDirections = [ 0 90 180 270 ]; % right down left up`
+The `nbEventsPerBlock` should be a multiple of the number of motion directions
+requested in `motionDirections` (which should be more than 1) e.g.:
+
+- MT localizer:
+  `cfg.design.motionDirections = [ 0 90 180 270 ]; % right down left up`
 - MT_MST localizer: `cfg.design.motionDirections = [666 -666]; % outward inward`
 
 #### Pseudorandomization rules:
 
 - Directions:
-1. Directions are all presented in random orders in `numEventsPerBlock/nDirections` consecutive chunks. This evenly distribute the directions across the block.
+
+1. Directions are all presented in random orders in
+   `numEventsPerBlock/nDirections` consecutive chunks. This evenly distribute
+   the directions across the block.
 2. No same consecutive direction
 
 - Color change detection of the fixation cross:
-1. If there are 2 targets per block we make sure that they are at least 2 events apart.
+
+1. If there are 2 targets per block we make sure that they are at least 2 events
+   apart.
 2. Targets cannot be on the first or last event of a block.
 3. No less than 1 target per event position in the whole run
 
 #### Input:
+
 - `cfg`: parameters returned by setParameters
-- `displayFigs`: a boolean to decide whether to show the basic design matrix of the design
+- `displayFigs`: a boolean to decide whether to show the basic design matrix of
+  the design
 
 #### Output:
-- `cfg.design.blockNames`: cell array (nbBlocks, 1) with the condition name for each block
+
+- `cfg.design.blockNames`: cell array (nbBlocks, 1) with the condition name for
+  each block
 - `cfg.design.nbBlocks`: integer for th etotal number of blocks in the run
-- `cfg.design.directions`: array (nbBlocks, nbEventsPerBlock) with the direction to present in a given event of a block.
+- `cfg.design.directions`: array (nbBlocks, nbEventsPerBlock) with the direction
+  to present in a given event of a block.
   - 0 90 180 270 indicate the angle for translational motion direction
   - 666 -666 indicate in/out-ward direction in radial motion
   - -1 indicates static
-- `cfg.design.speeds`: array (nbBlocks, nbEventsPerBlock) indicate the dots speed in each event, the target is represented by a higher/lower value
-- `cfg.design.fixationTargets`: array (nbBlocks, numEventsPerBlock) showing for each event if it should be accompanied by a target
+- `cfg.design.speeds`: array (nbBlocks, nbEventsPerBlock) indicate the dots
+  speed in each event, the target is represented by a higher/lower value
+- `cfg.design.fixationTargets`: array (nbBlocks, numEventsPerBlock) showing for
+  each event if it should be accompanied by a target
 
 ## Contributors ✨
 
-Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+Thanks goes to these wonderful people
+([emoji key](https://allcontributors.org/docs/en/emoji-key)):
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
@@ -184,4 +217,6 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
-This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
+This project follows the
+[all-contributors](https://github.com/all-contributors/all-contributors)
+specification. Contributions of any kind welcome!
