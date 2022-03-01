@@ -6,10 +6,7 @@ function runTests()
 
     tic;
 
-    cd(fileparts(mfilename('fullpath')));
-
-    cfg.verbose = 0;
-    checkCppBidsDependencies(cfg);
+    initEnv();
 
     if bids.internal.is_github_ci
         fprintf(1, '\nThis is github CI\n');
@@ -21,10 +18,8 @@ function runTests()
 
     warning('OFF');
 
-    folderToCover = fullfile(pwd, 'src');
+    folderToCover = fullfile(pwd, 'subfun');
     testFolder = fullfile(pwd, 'tests');
-
-    addpath(fullfile(testFolder, 'utils'));
 
     success = moxunit_runtests(testFolder, ...
                                '-verbose', '-recursive', '-with_coverage', ...
