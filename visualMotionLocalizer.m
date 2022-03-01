@@ -1,211 +1,208 @@
-% (C) Copyright 2018 Mohamed Rezk
-% (C) Copyright 2020 CPP visual motion localizer developers
+function visualMotionLocalizer(cfg)
+    %
+    % (C) Copyright 2018 Mohamed Rezk
+    % (C) Copyright 2020 CPP visual motion localizer developers
 
-%% Visual motion localizer
+    if nargin < 1
+        cfg = struct();
+    end
 
-getOnlyPress = 1;
+    getOnlyPress = 1;
 
-more off;
+    % Clear all the previous stuff
+    clc;
+    if ~ismac
+        close all;
+        clear Screen;
+    end
 
-% Clear all the previous stuff
-clc;
-if ~ismac
-    close all;
-    clear Screen;
-end
+    % make sure we got access to all the required functions and inputs
+    initEnv();
 
-% make sure we got access to all the required functions and inputs
-initEnv();
+    % set and load all the parameters to run the experiment
+    cfg = checkParameters(cfg);
+    cfg = userInputs(cfg);
+    cfg = createFilename(cfg);
 
-% set and load all the parameters to run the experiment
-cfg = setParameters;
-cfg = userInputs(cfg);
-cfg = createFilename(cfg);
+    %%  Experiment
 
-%%  Experiment
+    % Safety loop: close the screen if code crashes
+    try
 
-% Safety loop: close the screen if code crashes
-try
+        [cfg] = initPTB(cfg);
 
-    %% Init the experiment
-    [cfg] = initPTB(cfg);
+        cfg = postInitializationSetup(cfg);
 
-    cfg = postInitializationSetup(cfg);
+        [el] = eyeTracker('Calibration', cfg);
 
-    [el] = eyeTracker('Calibration', cfg);
+        [cfg] = expDesign(cfg);
 
-    [cfg] = expDesign(cfg);
+        % Prepare for the output logfiles with all
+        logFile.extraColumns = cfg.extraColumns;
+        logFile = saveEventsFile('init', cfg, logFile);
+        logFile = saveEventsFile('open', cfg, logFile);
 
-    % Prepare for the output logfiles with all
-    logFile.extraColumns = cfg.extraColumns;
-    logFile = saveEventsFile('init', cfg, logFile);
-    logFile = saveEventsFile('open', cfg, logFile);
+        % prepare textures
+        cfg = apertureTexture('init', cfg);
+        cfg = dotTexture('init', cfg);
 
-    % prepare textures
-    cfg = apertureTexture('init', cfg);
-    cfg = dotTexture('init', cfg);
+        disp(cfg);
 
-    disp(cfg);
+        % Show experiment instruction
+        standByScreen(cfg);
 
-    % Show experiment instruction
-    standByScreen(cfg);
+        % prepare the KbQueue to collect responses
+        getResponse('init', cfg.keyboard.responseBox, cfg);
 
-    % prepare the KbQueue to collect responses
-    getResponse('init', cfg.keyboard.responseBox, cfg);
+        waitForTrigger(cfg);
 
-    % Wait for Trigger from Scanner
-    waitForTrigger(cfg);
+        % Start
+        eyeTracker('StartRecording', cfg);
 
-    %% Experiment Start
+        cfg = getExperimentStart(cfg);
 
-    eyeTracker('StartRecording', cfg);
+        getResponse('start', cfg.keyboard.responseBox);
 
-    cfg = getExperimentStart(cfg);
+        waitFor(cfg, cfg.timing.onsetDelay);
 
-    getResponse('start', cfg.keyboard.responseBox);
+        for iBlock = 1:cfg.design.nbBlocks
 
-    waitFor(cfg, cfg.timing.onsetDelay);
+            fprintf('\n - Running Block %.0f \n', iBlock);
 
-    %% For Each Block
+            eyeTracker('Message', cfg, ['start_block-', num2str(iBlock)]);
 
-    for iBlock = 1:cfg.design.nbBlocks
+            dots = [];
+            previousEvent.target = 0;
 
-        fprintf('\n - Running Block %.0f \n', iBlock);
+            for iEvent = 1:cfg.design.nbEventsPerBlock
 
-        eyeTracker('Message', cfg, ['start_block-', num2str(iBlock)]);
+                checkAbort(cfg, cfg.keyboard.keyboard);
 
-        dots = [];
-        previousEvent.target = 0;
+                [thisEvent, thisFixation, cfg] = preTrialSetup(cfg, iBlock, iEvent);
 
-        % For each event in the block
-        for iEvent = 1:cfg.design.nbEventsPerBlock
+                % we wait for a trigger every 2 events
+                if cfg.pacedByTriggers.do && mod(iEvent, 2) == 1
+                    waitForTrigger( ...
+                                   cfg, ...
+                                   cfg.keyboard.responseBox, ...
+                                   cfg.pacedByTriggers.quietMode, ...
+                                   cfg.pacedByTriggers.nbTriggers);
+                end
 
-            % Check for experiment abortion from operator
-            checkAbort(cfg, cfg.keyboard.keyboard);
+                eyeTracker('Message', cfg, ...
+                           ['start_trial-', num2str(iEvent), '_', thisEvent.trial_type]);
 
-            [thisEvent, thisFixation, cfg] = preTrialSetup(cfg, iBlock, iEvent);
+                % we only reuse the dots position for targets that consists of
+                % presenting static dots with the same position as those of the
+                % previous trial
+                %
+                % TODO does not take into account what to do if 3 or more targets in a row
+                if strcmp(cfg.target.type, 'static_repeat') && ...
+                   strcmp(thisEvent.trial_type, 'static') && ...
+                   thisEvent.target == 1 && ...
+                   thisEvent.target == previousEvent.target
+                else
+                    dots = [];
+                end
 
-            % we wait for a trigger every 2 events
-            if cfg.pacedByTriggers.do && mod(iEvent, 2) == 1
+                % play the dots and collect onset and duraton of the event
+                [onset, duration, dots] = doDotMo(cfg, thisEvent, thisFixation, dots, iEvent);
+
+                thisEvent = preSaveSetup( ...
+                                         thisEvent, ...
+                                         thisFixation, ...
+                                         iBlock, iEvent, ...
+                                         duration, onset, ...
+                                         cfg, ...
+                                         logFile);
+
+                saveEventsFile('save', cfg, thisEvent);
+
+                % collect the responses and appends to the event structure for
+                % saving in the tsv file
+                responseEvents = getResponse('check', cfg.keyboard.responseBox, cfg, ...
+                                             getOnlyPress);
+
+                triggerString = ['trigger_' cfg.design.blockNames{iBlock}];
+                saveResponsesAndTriggers(responseEvents, cfg, logFile, triggerString);
+
+                eyeTracker('Message', cfg, ...
+                           ['end_trial-', num2str(iEvent), '_', thisEvent.trial_type]);
+
+                previousEvent = thisEvent;
+
+                waitFor(cfg, cfg.timing.ISI);
+
+            end
+
+            % "prepare" cross for the baseline block
+            % if MT / MST this allows us to set the cross at the position of the next block
+            if iBlock < cfg.design.nbBlocks
+                nextBlock = iBlock + 1;
+            else
+                nextBlock = cfg.design.nbBlocks;
+            end
+
+            [~, thisFixation] = preTrialSetup(cfg, nextBlock, 1);
+            drawFixation(thisFixation);
+            Screen('Flip', cfg.screen.win);
+
+            eyeTracker('Message', cfg, ['end_block-', num2str(iBlock)]);
+
+            waitFor(cfg, cfg.timing.IBI);
+
+            % IBI trigger paced
+            if cfg.pacedByTriggers.do
                 waitForTrigger( ...
                                cfg, ...
                                cfg.keyboard.responseBox, ...
                                cfg.pacedByTriggers.quietMode, ...
-                               cfg.pacedByTriggers.nbTriggers);
+                               cfg.timing.triggerIBI);
             end
 
-            eyeTracker('Message', cfg, ...
-                       ['start_trial-', num2str(iEvent), '_', thisEvent.trial_type]);
+            if isfield(cfg.design, 'localizer') && ...
+                strcmpi(cfg.design.localizer, 'MT_MST') && ...
+                iBlock == cfg.design.nbBlocks / 2
 
-            % we only reuse the dots position for targets that consists of
-            % presenting static dots with the same position as those of the
-            % previous trial
-            %
-            % TODO does not take into account what to do if 3 or more targets in a row
-            if strcmp(cfg.target.type, 'static_repeat') && ...
-               strcmp(thisEvent.trial_type, 'static') && ...
-               thisEvent.target == 1 && ...
-               thisEvent.target == previousEvent.target
-            else
-                dots = [];
+                waitFor(cfg, cfg.timing.changeFixationPosition);
+
             end
 
-            % play the dots and collect onset and duraton of the event
-            [onset, duration, dots] = doDotMo(cfg, thisEvent, thisFixation, dots, iEvent);
+            % trigger monitoring
+            triggerEvents = getResponse('check', cfg.keyboard.responseBox, cfg, ...
+                                        getOnlyPress);
 
-            thisEvent = preSaveSetup( ...
-                                     thisEvent, ...
-                                     thisFixation, ...
-                                     iBlock, iEvent, ...
-                                     duration, onset, ...
-                                     cfg, ...
-                                     logFile);
-
-            saveEventsFile('save', cfg, thisEvent);
-
-            % collect the responses and appends to the event structure for
-            % saving in the tsv file
-            responseEvents = getResponse('check', cfg.keyboard.responseBox, cfg, ...
-                                         getOnlyPress);
-
-            triggerString = ['trigger_' cfg.design.blockNames{iBlock}];
-            saveResponsesAndTriggers(responseEvents, cfg, logFile, triggerString);
-
-            eyeTracker('Message', cfg, ...
-                       ['end_trial-', num2str(iEvent), '_', thisEvent.trial_type]);
-
-            previousEvent = thisEvent;
-
-            waitFor(cfg, cfg.timing.ISI);
+            triggerString = 'trigger_baseline';
+            saveResponsesAndTriggers(triggerEvents, cfg, logFile, triggerString);
 
         end
 
-        % "prepare" cross for the baseline block
-        % if MT / MST this allows us to set the cross at the position of the next block
-        if iBlock < cfg.design.nbBlocks
-            nextBlock = iBlock + 1;
-        else
-            nextBlock = cfg.design.nbBlocks;
-        end
+        % End of the run for the BOLD to go down
+        waitFor(cfg, cfg.timing.endDelay);
 
-        [~, thisFixation] = preTrialSetup(cfg, nextBlock, 1);
-        drawFixation(thisFixation);
-        Screen('Flip', cfg.screen.win);
+        cfg = getExperimentEnd(cfg);
 
-        eyeTracker('Message', cfg, ['end_block-', num2str(iBlock)]);
+        eyeTracker('StopRecordings', cfg);
 
-        waitFor(cfg, cfg.timing.IBI);
+        % Close the logfiles
+        saveEventsFile('close', cfg, logFile);
 
-        % IBI trigger paced
-        if cfg.pacedByTriggers.do
-            waitForTrigger( ...
-                           cfg, ...
-                           cfg.keyboard.responseBox, ...
-                           cfg.pacedByTriggers.quietMode, ...
-                           cfg.timing.triggerIBI);
-        end
+        getResponse('stop', cfg.keyboard.responseBox);
+        getResponse('release', cfg.keyboard.responseBox);
 
-        if isfield(cfg.design, 'localizer') && ...
-            strcmpi(cfg.design.localizer, 'MT_MST') && ...
-            iBlock == cfg.design.nbBlocks / 2
+        eyeTracker('Shutdown', cfg);
 
-            waitFor(cfg, cfg.timing.changeFixationPosition);
+        createJson(cfg, cfg);
 
-        end
+        farewellScreen(cfg);
 
-        % trigger monitoring
-        triggerEvents = getResponse('check', cfg.keyboard.responseBox, cfg, ...
-                                    getOnlyPress);
+        cleanUp();
 
-        triggerString = 'trigger_baseline';
-        saveResponsesAndTriggers(triggerEvents, cfg, logFile, triggerString);
+    catch
+
+        cleanUp();
+        psychrethrow(psychlasterror);
 
     end
-
-    % End of the run for the BOLD to go down
-    waitFor(cfg, cfg.timing.endDelay);
-
-    cfg = getExperimentEnd(cfg);
-
-    eyeTracker('StopRecordings', cfg);
-
-    % Close the logfiles
-    saveEventsFile('close', cfg, logFile);
-
-    getResponse('stop', cfg.keyboard.responseBox);
-    getResponse('release', cfg.keyboard.responseBox);
-
-    eyeTracker('Shutdown', cfg);
-
-    createJson(cfg, cfg);
-
-    farewellScreen(cfg);
-
-    cleanUp();
-
-catch
-
-    cleanUp();
-    psychrethrow(psychlasterror);
 
 end

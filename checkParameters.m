@@ -1,17 +1,16 @@
-% (C) Copyright 2020 CPP visual motion localizer developers
-
-function [cfg] = setParameters()
-
-    % VISUAL LOCALIZER
+function [cfg] = checkParameters(cfg)
+    %
+    % (C) Copyright 2020 CPP visual motion localizer developers
 
     % Initialize the general configuration variables structure
-    cfg = struct();
+    if nargin < 1
+        cfg = struct();
+    end
 
     % by default the data will be stored in an output folder created where the
     % setParamters.m file is
     % change that if you want the data to be saved somewhere else
-    cfg.dir.output = fullfile( ...
-                              fileparts(mfilename('fullpath')), 'output');
+    cfg.dir.output = fullfile(fileparts(mfilename('fullpath')), 'output');
 
     %% Debug mode settings
 
@@ -36,7 +35,7 @@ function [cfg] = setParameters()
 
     % MRI settings
     cfg = setMRI(cfg);
-    %     cfg.suffix.acquisition = '';
+    % cfg.suffix.acquisition = '';
 
     cfg.pacedByTriggers.do = false;
 
@@ -151,8 +150,7 @@ function [cfg] = setParameters()
         cfg.fixation.colorTarget = cfg.color.red;
     end
 
-    cfg.extraColumns = { ...
-                        'direction', ...
+    cfg.extraColumns = {'direction', ...
                         'speedDegVA', ...
                         'target', ...
                         'event', ...
@@ -167,46 +165,37 @@ function [cfg] = setParameters()
 end
 
 function cfg = setKeyboards(cfg)
-    cfg.keyboard.escapeKey = 'ESCAPE';
-    cfg.keyboard.responseKey = { ...
-                                'r', 'g', 'y', 'b', ...
+
+    cfg.keyboard = cppPtbDefaults('keyboard');
+
+    cfg.keyboard.responseKey = {'r', 'g', 'y', 'b', ...
                                 'd', 'n', 'z', 'e', ...
                                 't'};
-    cfg.keyboard.keyboard = [];
-    cfg.keyboard.responseBox = [];
 
-    if strcmpi(cfg.testingDevice, 'mri')
-        cfg.keyboard.keyboard = [];
-        cfg.keyboard.responseBox = [];
-    end
 end
 
 function cfg = setMRI(cfg)
     % letter sent by the trigger to sync stimulation and volume acquisition
     cfg.mri.triggerKey = 't';
+
     cfg.mri.triggerNb = 5;
 
     cfg.mri.repetitionTime = 1.8;
 
     cfg.bids.MRI.Instructions = 'Detect the RED fixation cross';
     cfg.bids.MRI.TaskDescription = [];
-
 end
 
 function cfg = setMonitor(cfg)
 
     % Monitor parameters for PTB
-    cfg.color.white = [255 255 255];
-    cfg.color.black = [0 0 0];
-    cfg.color.red = [255 0 0];
-    cfg.color.grey = mean([cfg.color.black; cfg.color.white]);
+    cfg.color = cppPtbDefaults('color');
     cfg.color.background = cfg.color.black;
     cfg.text.color = cfg.color.white;
 
     % Monitor parameters
     cfg.screen.monitorWidth = 50; % in cm
     cfg.screen.monitorDistance = 40; % distance from the screen in cm
-
     if strcmpi(cfg.testingDevice, 'mri')
         cfg.screen.monitorWidth = 25;
         cfg.screen.monitorDistance = 95;
