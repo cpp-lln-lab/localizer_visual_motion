@@ -1,0 +1,126 @@
+{
+  "dir": {
+    "output": "/home/remi/github/CPP_localizer_visual_motion/subfun/defaults/output"
+  },
+  "debug": {
+    "do": true,
+    "smallWin": false,
+    "transpWin": false
+  },
+  "skipSyncTests": 0,
+  "verbose": 1,
+  "testingDevice": "mri",
+  "eyeTracker": {
+    "do": false
+  },
+  "audio": {
+    "do": false
+  },
+  "color": {
+    "white": [255,255,255],
+    "black": [0,0,0],
+    "grey": [127.5,127.5,127.5],
+    "red": [255,0,0],
+    "blue": [0,255,0],
+    "green": [0,0,255],
+    "background": [0,0,0]
+  },
+  "text": {
+    "color": [255,255,255]
+  },
+  "screen": {
+    "monitorWidth": 25,
+    "monitorDistance": 95
+  },
+  "keyboard": {
+    "keyboard": [],
+    "responseBox": [],
+    "responseKey": [
+      "r",
+      "g",
+      "y",
+      "b",
+      "d",
+      "n",
+      "z",
+      "e",
+      "t"
+    ],
+    "escapeKey": "ESCAPE"
+  },
+  "mri": {
+    "triggerKey": "t",
+    "triggerNb": 5,
+    "repetitionTime": 1.8
+  },
+  "bids": {
+    "MRI": {
+      "Instructions": "Detect the RED fixation cross",
+      "TaskDescription": []
+    }
+  },
+  "pacedByTriggers": {
+    "do": false
+  },
+  "design": {
+    "localizer": "MT",
+    "motionType": "translation",
+    "motionDirections": [0,0,180,180],
+    "names": [
+      "static",
+      "motion"
+    ],
+    "nbRepetitions": 12,
+    "nbEventsPerBlock": 12
+  },
+  "timing": {
+    "eventDuration": 0.3,
+    "IBI": 0,
+    "ISI": 0,
+    "onsetDelay": 0,
+    "endDelay": 3.6
+  },
+  "dot": {
+    "speed": 15,
+    "coherence": 1,
+    "density": 1,
+    "lifeTime": 0.4,
+    "proportionKilledPerFrame": 0,
+    "size": 0.2,
+    "color": [255,255,255],
+    "staticReSeed": true
+  },
+  "aperture": {
+    "type": "none",
+    "width": [],
+    "xPos": 0
+  },
+  "task": {
+    "name": "visual localizer",
+    "instruction": "1-Detect the RED fixation cross\\n \\n\\n"
+  },
+  "fixation": {
+    "type": "cross",
+    "color": [255,255,255],
+    "width": 0.25,
+    "lineWidthPix": 3,
+    "xDisplacement": 0,
+    "yDisplacement": 0,
+    "colorTarget": [255,0,0]
+  },
+  "target": {
+    "maxNbPerBlock": 1,
+    "duration": 0.1,
+    "type": "fixation_cross"
+  },
+  "extraColumns": [
+    "direction",
+    "speedDegVA",
+    "target",
+    "event",
+    "block",
+    "keyName",
+    "fixationPosition",
+    "aperturePosition"
+  ]
+}
