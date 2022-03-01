@@ -6,7 +6,7 @@ function blockFixationPosition = setFixationPosition(cfg)
     % in a matrix of size ``nbBlocks`` by ``nbEventsPerBlock``
     %
     %
-    % (C) Copyright 2022 CPP visual motion localizer developpers
+    % (C) Copyright 2022 CPP visual motion localizer developers
 
     % Get the parameter to compute the design with
     [~, ~, ~, nbBlocks] = getDesignInput(cfg);

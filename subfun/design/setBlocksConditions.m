@@ -3,7 +3,7 @@ function [conditionNamesVector, idxCondition1, idxCondition2] = setBlocksConditi
     % [conditionNamesVector, idxCondition1, idxCondition2] = setBlocksConditions(cfg)
     %
     %
-    % (C) Copyright 2020 CPP visual motion localizer developpers
+    % (C) Copyright 2020 CPP visual motion localizer developers
 
     nbRepetitions = getDesignInput(cfg);
 

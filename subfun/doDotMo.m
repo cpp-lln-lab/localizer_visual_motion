@@ -19,7 +19,7 @@ function [onset, duration, dots] = doDotMo(cfg, thisEvent, thisFixation, dots, i
     %
     %
     % (C) Copyright 2018 Mohamed Rezk
-    % (C) Copyright 2020 CPP visual motion localizer developpers
+    % (C) Copyright 2020 CPP visual motion localizer developers
 
     %% Get parameters
     if isempty(dots)

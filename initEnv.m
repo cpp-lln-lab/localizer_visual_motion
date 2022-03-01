@@ -1,5 +1,5 @@
 % (C) Copyright 2020 Agah Karakuzu
-% (C) Copyright 2019 CPP visual motion localizer developpers
+% (C) Copyright 2019 CPP visual motion localizer developers
 
 function initEnv
     % 1 - Check if version requirements

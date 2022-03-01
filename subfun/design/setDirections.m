@@ -9,7 +9,7 @@ function directions = setDirections(cfg)
     % condition2 = 'motion';
     %
     %
-    % (C) Copyright 2020 CPP visual motion localizer developpers
+    % (C) Copyright 2020 CPP visual motion localizer developers
 
     % Get the directions we should work with
     [directionsCondition1, directionsCondition2] = getDirectionBaseVectors(cfg);

@@ -3,7 +3,7 @@ function [directionsCondition1, directionsCondition2] = getDirectionBaseVectors(
     % [directionsCondition1, directionsCondition2] = getDirectionBaseVectors(cfg)
     %
     %
-    % (C) Copyright 2020 CPP visual motion localizer developpers
+    % (C) Copyright 2020 CPP visual motion localizer developers
 
     % Set directions for static and motion condition
 
