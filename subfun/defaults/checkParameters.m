@@ -32,19 +32,12 @@ function [cfg] = checkParameters(cfg)
 
     %% Engine parameters
     fieldsToSet.testingDevice = 'mri';
+
     fieldsToSet.eyeTracker.do = false;
 
     fieldsToSet = setMonitor(fieldsToSet);
 
-    % Keyboards
     fieldsToSet = setKeyboards(fieldsToSet);
-
-    % MRI settings
-    fieldsToSet = setMRI(fieldsToSet);
-
-    % cfg.suffix.acquisition = '';
-
-    fieldsToSet.pacedByTriggers.do = false;
 
     %% Experiment Design
 
@@ -57,7 +50,6 @@ function [cfg] = checkParameters(cfg)
 
     % IBI
     % block length = (cfg.eventDuration + cfg.ISI) * cfg.design.nbEventsPerBlock
-
     fieldsToSet.timing.eventDuration = 0.30; % second
 
     % Time between events in secs
@@ -77,9 +69,6 @@ function [cfg] = checkParameters(cfg)
     % 'fixation_cross' : the fixation cross changes color
     % 'static_repeat' : static dots are in the same position as previous trials
     fieldsToSet.target.type = 'fixation_cross';
-
-    fieldsToSet.target.maxNbPerBlock = 1;
-    fieldsToSet.target.duration = 0.1; % In secs
 
     % Fixation cross (in pixels)
     fieldsToSet.fixation = cppPtbDefaults('fixation');
@@ -102,9 +91,13 @@ function [cfg] = checkParameters(cfg)
 
     cfg = setParametersMtMst(cfg);
 
-    cfg = setPacedByTrigger(cfg);
+    cfg = setMRI(cfg);
 
     cfg = setTarget(cfg);
+
+    if cfg.verbose == 2
+        unfold(cfg);
+    end
 
 end
 
@@ -118,7 +111,8 @@ function fieldsToSet = setKeyboards(fieldsToSet)
 
 end
 
-function fieldsToSet = setMRI(fieldsToSet)
+function cfg = setMRI(cfg)
+
     % letter sent by the trigger to sync stimulation and volume acquisition
     fieldsToSet.mri.triggerKey = 't';
 
@@ -126,8 +120,14 @@ function fieldsToSet = setMRI(fieldsToSet)
 
     fieldsToSet.mri.repetitionTime = 1.8;
 
-    fieldsToSet.bids.MRI.Instructions = 'Detect the RED fixation cross';
-    fieldsToSet.bids.MRI.TaskDescription = [];
+    fieldsToSet.suffix.acquisition = '';
+
+    fieldsToSet.pacedByTriggers.do = false;
+
+    cfg = setDefaultFields(cfg, fieldsToSet);
+
+    cfg = setPacedByTrigger(cfg);
+
 end
 
 function fieldsToSet = setMonitor(fieldsToSet)
@@ -170,7 +170,6 @@ function cfg = setParametersMtMst(cfg)
             fieldsToSet.design.nbEventsPerBlock = fieldsToSet.design.nbEventsPerBlock * 2;
 
             fieldsToSet.timing.IBI = 4;
-
             fieldsToSet.timing.changeFixationPosition = 10;
 
             fieldsToSet.aperture.type = 'circle';
@@ -237,19 +236,28 @@ function cfg = setTarget(cfg)
     % 'fixation_cross' : the fixation cross changes color
     % 'static_repeat' : static dots are in the same position as previous trials
 
+    fieldsToSet.target.maxNbPerBlock = 1;
+
     if strcmp(cfg.target.type, 'fixation_cross')
         cfg.task.instruction = '1-Detect the RED fixation cross\n \n\n';
         cfg.task.taskDescription = '';
         cfg.fixation.colorTarget = cfg.color.red;
+
+        fieldsToSet.target.duration = 0.1; % In secs
+
     elseif strcmp(cfg.target.type, 'static_repeat')
         cfg.task.instruction = '1-Detect when the dots are in the same position\n \n\n';
         cfg.task.taskDescription = '';
         cfg.fixation.colorTarget = cfg.fixation.color;
+
     else
         error('cfg.target.type must be ''fixation_cross'' or ''static_repeat''');
+
     end
 
     cfg.bids.MRI.Instructions = cfg.task.instruction;
     cfg.bids.MRI.TaskDescription = cfg.task.taskDescription;
+
+    cfg = setDefaultFields(cfg, fieldsToSet);
 
 end
