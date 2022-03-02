@@ -24,8 +24,10 @@ function [cfg] = checkParameters(cfg)
         cfg.design.localizer = 'MT';
     end
 
-    root_dir = bids.internal.file_utils(fullfile(fileparts(mfilename('fullpath')), '..', '..'), ...
-                                        'cpath');
+    root_dir = fullfile(fileparts(mfilename('fullpath')), '..', '..');
+    if which('bids.internal.file_utils')
+        root_dir = bids.internal.file_utils(root_dir, 'cpath');
+    end
     fieldsToSet.dir.output = root_dir;
 
     fieldsToSet.skipSyncTests = 0;
