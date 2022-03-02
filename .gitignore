@@ -5,7 +5,6 @@
 */logfiles/*
 */*/*/logfiles/*
 *.tsv
-*.mat
 
 output
 
