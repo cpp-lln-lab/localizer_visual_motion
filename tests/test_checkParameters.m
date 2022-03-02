@@ -7,15 +7,30 @@ function test_suite = test_checkParameters %#ok<*STOUT>
     initTestSuite;
 end
 
-function test_checkParameters_basic()
+function test_checkParameters_MT()
 
-    cfg = checkParameters();
-
-    %     bids.util.jsonencode(fullfile(pwd, 'config_MT_MST.json'), cfg);
+    cfg.design.localizer = 'MT';
+    cfg = checkParameters(cfg);
     %     expected = cfg;
-    %     save(fullfile(pwd, 'config_MT_MST.mat'), 'expected')
+    %     save(fullfile(fileparts(mfilename('fullpath')), 'config_MT.mat'), 'expected');
+    load(fullfile(fileparts(mfilename('fullpath')), 'config_MT.mat'));
+    fields = fieldnames(expected);
+    for i = 1:numel(fields)
+        assertEqual(cfg.(fields{i}), expected.(fields{i}));
+    end
 
-    load(fullfile(pwd, 'config_MT_MST.mat'));
-    assertEqual(cfg, expected);
+end
+
+function test_checkParameters_MT_MST()
+
+    cfg.design.localizer = 'MT_MST';
+    cfg = checkParameters(cfg);
+    %     expected = cfg;
+    %     save(fullfile(fileparts(mfilename('fullpath')), 'config_MT_MST.mat'), 'expected');
+    load(fullfile(fileparts(mfilename('fullpath')), 'config_MT_MST.mat'));
+    fields = fieldnames(expected);
+    for i = 1:numel(fields)
+        assertEqual(cfg.(fields{i}), expected.(fields{i}));
+    end
 
 end
