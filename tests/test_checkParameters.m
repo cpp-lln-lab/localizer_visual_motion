@@ -11,15 +11,15 @@ function test_checkParameters_MT()
 
     cfg.design.localizer = 'MT';
     cfg = checkParameters(cfg);
-    expected = cfg;
-    save(fullfile(fileparts(mfilename('fullpath')), 'data', 'config_MT.mat'), 'expected');
-    load(fullfile(fileparts(mfilename('fullpath')), 'data', 'config_MT.mat'));
+    %     expected = cfg;
+    %     save(fullfile(fileparts(mfilename('fullpath')), 'data', 'config_MT.mat'), 'expected');
+    load(fullfile(fileparts(mfilename('fullpath')), 'data', 'config_MT.mat'), 'expected');
+    cfg = rmfield(cfg, 'dir');
+    expected = rmfield(expected, 'dir'); %#ok<*NODEF>
     fields = fieldnames(expected);
     for i = 1:numel(fields)
         assertEqual(cfg.(fields{i}), expected.(fields{i}));
     end
-
-    unfold(cfg);
 
 end
 
@@ -27,9 +27,11 @@ function test_checkParameters_MT_MST()
 
     cfg.design.localizer = 'MT_MST';
     cfg = checkParameters(cfg);
-    expected = cfg;
-    save(fullfile(fileparts(mfilename('fullpath')), 'data', 'config_MT_MST.mat'), 'expected');
-    load(fullfile(fileparts(mfilename('fullpath')), 'data', 'config_MT_MST.mat'));
+    %     expected = cfg;
+    %     save(fullfile(fileparts(mfilename('fullpath')), 'data', 'config_MT_MST.mat'), 'expected');
+    load(fullfile(fileparts(mfilename('fullpath')), 'data', 'config_MT_MST.mat'), 'expected');
+    cfg = rmfield(cfg, 'dir');
+    expected = rmfield(expected, 'dir');
     fields = fieldnames(expected);
     for i = 1:numel(fields)
         assertEqual(cfg.(fields{i}), expected.(fields{i}));
