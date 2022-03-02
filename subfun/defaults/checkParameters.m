@@ -1,25 +1,31 @@
 function [cfg] = checkParameters(cfg)
     %
+    % Check that all parameters are sets. If not it uses the defaults.
+    %
+    % ``cfg.design.localizer``: switching this to ``MT`` or ``MT_MST``
+    %
+    % - ``MT``: translational motion on the whole screen
+    %
+    %   - alternates static and motion (left or right) blocks
+    %
+    % - ``MT_MST``: radial motion centered in a circle aperture that is on the opposite
+    %   side of the screen relative to the fixation
+    %
+    %   - alternates fixaton left and fixation right
+    %
+    % ``cfg.dir.output``: by default the data will be stored in an output folder created in the root
+    % dir of this repo. Change that if you want the data to be saved somewhere
+    % else.
+    %
     % (C) Copyright 2020 CPP visual motion localizer developers
 
     % Initialize the general configuration variables structure
     if nargin < 1
-        cfg = struct();
+        cfg.design.localizer = 'MT';
     end
 
-    % switching this on to MT or MT/MST with use:
-    % - MT: translational motion on the whole screen
-    %   - alternates static and motion (left or right) blocks
-    % - MST: radial motion centered in a circle aperture that is on the opposite
-    % side of the screen relative to the fixation
-    %   - alternates fixaton left and fixation right
-    %     cfg.design.localizer = 'MT';
-    %     cfg.design.localizer = 'MT_MST';
-
-    % by default the data will be stored in an output folder created where the
-    % setParamters.m file is
-    % change that if you want the data to be saved somewhere else
-    fieldsToSet.dir.output = fullfile(fileparts(mfilename('fullpath')), 'output');
+    root_dir = fileparts(which('visualMotionLocalizer'));
+    fieldsToSet.dir.output = root_dir;
 
     fieldsToSet.skipSyncTests = 0;
 
