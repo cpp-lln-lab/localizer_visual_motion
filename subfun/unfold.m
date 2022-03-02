@@ -140,10 +140,16 @@ end
 
 function printToScreen(input)
     if ischar(input)
-        fprintf(1, ':\t%s', input);
+        fprintf(1, ' =\t''%s''', input);
+    elseif isinteger(input)
+        pattern = repmat('%i, ', 1, numel(input));
+        fprintf(1, [' =\t' pattern '\b\b'], input);
     elseif isnumeric(input)
         pattern = repmat('%f, ', 1, numel(input));
-        fprintf(1, [':\t' pattern], input);
+        fprintf(1, [' =\t' pattern '\b\b'], input);
+    elseif islogical(input)
+        pattern = repmat('%i, ', 1, numel(input));
+        fprintf(1, [' =\t' pattern '\b\b'], input);
     end
 end
 

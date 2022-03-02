@@ -24,7 +24,8 @@ function [cfg] = checkParameters(cfg)
         cfg.design.localizer = 'MT';
     end
 
-    root_dir = fileparts(which('visualMotionLocalizer'));
+    root_dir = bids.internal.file_utils(fullfile(fileparts(mfilename('fullpath')), '..', '..'), ...
+                                        'cpath');
     fieldsToSet.dir.output = root_dir;
 
     fieldsToSet.skipSyncTests = 0;
