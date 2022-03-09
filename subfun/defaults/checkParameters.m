@@ -169,13 +169,13 @@ function cfg = setParametersMtMst(cfg)
             fieldsToSet.design.names = {'motion'};
             % {'static'; 'motion'}
             fieldsToSet.design.fixationPosition = {'fixation_right'; 'fixation_left'};
-            % {'fixation_right'; 'fixation_left'}; 
+            % {'fixation_right'; 'fixation_left'};
             fieldsToSet.design.xDisplacementFixation = 7;
             fieldsToSet.design.xDisplacementAperture = 3;
 
             % inward and outward are presented as separated event
             fieldsToSet.design.nbEventsPerBlock = cfg.design.nbEventsPerBlock * 2;
-            
+
             % time between events in secs
             fieldsToSet.timing.ISI = 0;
             fieldsToSet.timing.IBI = 10;
