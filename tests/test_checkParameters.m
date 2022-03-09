@@ -16,7 +16,7 @@ function test_checkParameters_output_dir()
     cfg = checkParameters(cfg);
 
     % test
-    if ~isGithubCi
+    if ~isGithubMoxunitAction
         cfg.dir.output = bids.internal.file_utils(cfg.dir.output, 'cpath');
         assertEqual(cfg.dir.output, ...
                     bids.internal.file_utils(fullfile(fileparts(mfilename('fullpath')), ...
@@ -153,17 +153,17 @@ function cfg = removeDirFieldForGithubAction(cfg)
     cfg = rmfield(cfg, 'dir');
 end
 
-function [is_github, pth] = isGithubCi()
-  % (C) Copyright 2021 Remi Gau
-  is_github = false;
+function [isGithub, pth] = isGithubMoxunitAction()
+    % (C) Copyright 2021 Remi Gau
+    isGithub = false;
 
-  GITHUB_WORKSPACE = getenv('HOME');
+    GITHUB_WORKSPACE = getenv('HOME');
 
-  if strcmp(GITHUB_WORKSPACE, '/home/runner')
+    if strcmp(GITHUB_WORKSPACE, '/github/workspace')
 
-    is_github = true;
-    pth = GITHUB_WORKSPACE;
+        isGithub = true;
+        pth = GITHUB_WORKSPACE;
 
-  end
+    end
 
 end
