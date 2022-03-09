@@ -2,7 +2,7 @@ function [cfg] = checkParameters(cfg)
     %
     % Check that all parameters are sets. If not it uses the defaults.
     %
-    % ``cfg.design.localizer``: switching this to ``MT`` or ``MT_MST``
+    % ``cfg.design.localizer``: switching this to ``MT`` (default) or ``MT_MST``
     %
     % - ``MT``: translational motion on the whole screen
     %
@@ -11,7 +11,7 @@ function [cfg] = checkParameters(cfg)
     % - ``MT_MST``: radial motion centered in a circle aperture that is on the opposite
     %   side of the screen relative to the fixation
     %
-    %   - alternates fixaton left and fixation right
+    %   - (default) alternates fixaton left and fixation right
     %
     % ``cfg.dir.output``: by default the data will be stored in an output folder created in the root
     % dir of this repo. Change that if you want the data to be saved somewhere
@@ -28,14 +28,14 @@ function [cfg] = checkParameters(cfg)
     if which('bids.internal.file_utils')
         root_dir = bids.internal.file_utils(root_dir, 'cpath');
     end
-    fieldsToSet.dir.output = root_dir;
+    fieldsToSet.dir.output = fullfile(root_dir, 'output');
 
     fieldsToSet.skipSyncTests = 0;
 
     fieldsToSet.verbose = 1;
 
     %% Debug mode settings
-    fieldsToSet.debug.do = true;
+    fieldsToSet.debug.do = false;
     fieldsToSet.debug.smallWin = false;
     fieldsToSet.debug.transpWin = false;
 
@@ -54,19 +54,19 @@ function [cfg] = checkParameters(cfg)
     % localizer && 2 hemifield it is 8 blocks per hemifield), i.e. how many times each condition
     % will be repeated
     fieldsToSet.design.nbRepetitions = 12;
+    fieldsToSet.design.nbEventsPerBlock = 12;
 
     %% Timing
 
-    % IBI
     % block length = (cfg.eventDuration + cfg.ISI) * cfg.design.nbEventsPerBlock
     fieldsToSet.timing.eventDuration = 0.30; % second
 
     % Time between events in secs
-    fieldsToSet.timing.ISI = 0;
+    fieldsToSet.timing.ISI = 0.1;
     % Number of seconds before the motion stimuli are presented
-    fieldsToSet.timing.onsetDelay = 0;
+    fieldsToSet.timing.onsetDelay = 5;
     % Number of seconds after the end all the stimuli before ending the run
-    fieldsToSet.timing.endDelay = 3.6;
+    fieldsToSet.timing.endDelay = 5;
 
     %% Visual Stimulation
     fieldsToSet.dot = cppPtbDefaults('dot');
@@ -158,8 +158,6 @@ end
 
 function cfg = setParametersMtMst(cfg)
 
-    fieldsToSet.design.nbEventsPerBlock = 12;
-
     switch lower(cfg.design.localizer)
 
         case 'mt_mst'
@@ -170,15 +168,17 @@ function cfg = setParametersMtMst(cfg)
             fieldsToSet.design.motionDirections = [666 -666];
             fieldsToSet.design.names = {'motion'};
             % {'static'; 'motion'}
-            fieldsToSet.design.fixationPosition = {'fixation_left'};
-            % {'fixation_right'; 'fixation_left'};
+            fieldsToSet.design.fixationPosition = {'fixation_right'; 'fixation_left'};
+            % {'fixation_right'; 'fixation_left'}; 
             fieldsToSet.design.xDisplacementFixation = 7;
             fieldsToSet.design.xDisplacementAperture = 3;
 
             % inward and outward are presented as separated event
-            fieldsToSet.design.nbEventsPerBlock = fieldsToSet.design.nbEventsPerBlock * 2;
-
-            fieldsToSet.timing.IBI = 4;
+            fieldsToSet.design.nbEventsPerBlock = cfg.design.nbEventsPerBlock * 2;
+            
+            % time between events in secs
+            fieldsToSet.timing.ISI = 0;
+            fieldsToSet.timing.IBI = 10;
             fieldsToSet.timing.changeFixationPosition = 10;
 
             fieldsToSet.aperture.type = 'circle';
@@ -194,7 +194,7 @@ function cfg = setParametersMtMst(cfg)
             fieldsToSet.design.names = {'static'; 'motion'};
 
             % Time between blocs in secs
-            fieldsToSet.timing.IBI = 0;
+            fieldsToSet.timing.IBI = 4;
 
             % Diameter/length of side of aperture in Visual angles
             fieldsToSet.aperture.type = 'none';
@@ -212,19 +212,16 @@ function cfg = setPacedByTrigger(cfg)
     % reexpress those in terms of repetition time
     if cfg.pacedByTriggers.do
 
-        fieldsToSet.pacedByTriggers.quietMode = true;
+        fieldsToSet.pacedByTriggers.quietMode = false;
         fieldsToSet.pacedByTriggers.nbTriggers = 1;
 
-        fieldsToSet.timing.eventDuration = fieldsToSet.mri.repetitionTime / 2 - 0.04; % second
+        fieldsToSet.timing.eventDuration = cfg.mri.repetitionTime / 2 - 0.04; % second
 
         % Time between blocs in nb of triggers (remember to consider the nb trigger to wait + 1)
         fieldsToSet.timing.triggerIBI = 4;
 
         % Time between blocks in secs
         fieldsToSet.timing.IBI = 0;
-        if strcmpi(cfg.design.localizer, 'mt_mst')
-            fieldsToSet.timing.IBI = 2;
-        end
 
         % Time between events in secs
         fieldsToSet.timing.ISI = 0;
@@ -233,7 +230,7 @@ function cfg = setPacedByTrigger(cfg)
         fieldsToSet.timing.onsetDelay = 0;
 
         % Number of seconds after the end all the stimuli before ending the run
-        fieldsToSet.timing.endDelay = 2;
+        fieldsToSet.timing.endDelay = 0;
 
         cfg = setDefaultFields(cfg, fieldsToSet);
 
