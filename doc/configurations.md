@@ -100,6 +100,10 @@ cfg.timing.onsetDelay =	5.000000;
 cfg.verbose =	1.000000;
 ```
 
+##
+
+Type help `expDesign` to get information on how to tweak your experiment design.
+
 ## Let the scanner pace the experiment
 
 <!-- TODO check that this is still valid -->

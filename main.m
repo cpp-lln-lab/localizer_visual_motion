@@ -33,7 +33,9 @@ cfg = checkParameters(cfg);
 % Run
 visualMotionLocalizer(cfg);
 
-clear cfg;
+% clear cfg;
+
+return
 
 %% Run MT/MST localizer
 
