@@ -6,8 +6,10 @@ function cfg = cfgMT(cfg)
 
     cfg.pacedByTriggers.do = true;
 
+    cfg.mri.triggerNb = 0;
+
     cfg.design.nbRepetitions = 15;
 
-    cfg.timing.eventDuration = 0.43; % second
+    cfg.timing.eventDuration = 0.43; % .86 second
 
 end

@@ -57,6 +57,8 @@ function [onset, duration, dots] = doDotMo(cfg, thisEvent, thisFixation, dots, i
 
         %% make textures
 
+        % If staticReSeed is true, then change the seed of the static dots only
+        % for the first event
         if cfg.dot.staticReSeed && ...
            strcmpi(thisEvent.trial_type, 'static') && ...
            iEvent ~= 1
@@ -96,7 +98,9 @@ function [onset, duration, dots] = doDotMo(cfg, thisEvent, thisFixation, dots, i
 
     drawFixation(thisFixation);
 
-    if cfg.dot.staticReSeed && strcmpi(thisEvent.trial_type, 'static')
+    if cfg.dot.staticReSeed && ...
+            strcmpi(thisEvent.trial_type, 'static') && ...
+            iEvent ~= cfg.design.nbEventsPerBlock
 
         dotTexture('draw', cfg, thisEvent);
 
