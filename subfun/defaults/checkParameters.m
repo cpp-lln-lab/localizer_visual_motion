@@ -2,7 +2,7 @@ function [cfg] = checkParameters(cfg)
     %
     % Check that all parameters are sets. If not it uses the defaults.
     %
-    % ``cfg.design.localizer``: switching this to ``MT`` (deafult) or ``MT_MST``
+    % ``cfg.design.localizer``: switching this to ``MT`` (default) or ``MT_MST``
     %
     % - ``MT``: translational motion on the whole screen
     %
