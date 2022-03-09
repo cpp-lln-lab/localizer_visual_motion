@@ -7,6 +7,18 @@ clear;
 
 initEnv();
 
+cfg.subject.subjectGrp = 'pilot';
+cfg.subject.sessionNb = 1;
+cfg.subject.askGrpSess = [false false];
+
+cfg.verbose = 1;
+
+cfg.debug.do = false;
+cfg.debug.transpWin = false;
+cfg.debug.smallWin = false;
+
+cfg.eyeTracker.do = false;
+
 %% Run MT+ localizer
 cfg = cfgMT();
 

@@ -206,7 +206,7 @@ function cfg = setPacedByTrigger(cfg)
     % reexpress those in terms of repetition time
     if cfg.pacedByTriggers.do
 
-        fieldsToSet.pacedByTriggers.quietMode = false;
+        fieldsToSet.pacedByTriggers.quietMode = true;
         fieldsToSet.pacedByTriggers.nbTriggers = 1;
 
         fieldsToSet.timing.eventDuration = cfg.mri.repetitionTime / 2 - 0.04; % second
