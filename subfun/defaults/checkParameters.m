@@ -123,7 +123,7 @@ function cfg = setMRI(cfg)
 
     fieldsToSet.mri.repetitionTime = 1.8;
 
-    fieldsToSet.suffix.acquisition = '';
+    fieldsToSet.suffix.acq = '';
 
     fieldsToSet.pacedByTriggers.do = false;
 
