@@ -9,6 +9,8 @@ end
 
 function test_checkParameters_output_dir()
 
+    fprintf(getenv('HOME'));
+
     % failure expected when run with runTests
 
     % set up
