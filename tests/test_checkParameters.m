@@ -7,34 +7,128 @@ function test_suite = test_checkParameters %#ok<*STOUT>
     initTestSuite;
 end
 
+function test_checkParameters_no_debug_fullscreen()
+
+    % set up
+    cfg.design.localizer = 'MT';
+    cfg.debug.do = false;
+    cfg.debug.transpWin = 0;
+    cfg.debug.smallWin = 0;
+
+    cfg = checkParameters(cfg);
+
+    % prepare expected results
+    cfg = removeDirFieldForGithubAction(cfg);
+
+    load(fullfile(fileparts(mfilename('fullpath')), 'data', 'config_MT.mat'), 'expected');
+
+    expected.debug.do = false;
+    expected.debug.transpWin = 0;
+    expected.debug.smallWin = 0;
+    expected.skipSyncTests = 0;
+
+    % test
+    assertEqual(cfg.debug, expected.debug);
+    assertEqual(cfg.skipSyncTests, expected.skipSyncTests);
+
+end
+
+function test_checkParameters_no_debug()
+
+    % set up
+    cfg.design.localizer = 'MT';
+    cfg.debug.do = false;
+
+    cfg = checkParameters(cfg);
+
+    % prepare expected results
+    cfg = removeDirFieldForGithubAction(cfg);
+
+    load(fullfile(fileparts(mfilename('fullpath')), 'data', 'config_MT.mat'), 'expected');
+
+    expected.debug.do = false;
+    expected.debug.transpWin = 1;
+    expected.debug.smallWin = 1;
+    expected.skipSyncTests = 0;
+
+    % test
+    assertEqual(cfg.debug, expected.debug);
+    assertEqual(cfg.skipSyncTests, expected.skipSyncTests);
+
+end
+
+function test_checkParameters_debug()
+
+    cfg.design.localizer = 'MT';
+    cfg.debug.do = true;
+
+    cfg = checkParameters(cfg);
+
+    % prepare expected results
+    cfg = removeDirFieldForGithubAction(cfg);
+
+    load(fullfile(fileparts(mfilename('fullpath')), 'data', 'config_MT.mat'), 'expected');
+
+    expected.debug.do = true;
+    expected.debug.transpWin = 1;
+    expected.debug.smallWin = 1;
+    expected.skipSyncTests = 1;
+
+    % test
+    assertEqual(cfg.debug, expected.debug);
+    assertEqual(cfg.skipSyncTests, expected.skipSyncTests);
+
+end
+
 function test_checkParameters_MT()
 
     cfg.design.localizer = 'MT';
+
     cfg = checkParameters(cfg);
-    %     expected = cfg;
-    %     save(fullfile(fileparts(mfilename('fullpath')), 'data', 'config_MT.mat'), 'expected');
+
+    % prepare expected results
+    cfg = removeDirFieldForGithubAction(cfg);
+
+    % uncomment for update default config .mat
+% expected = cfg;
+% save(fullfile(fileparts(mfilename('fullpath')), 'data', 'config_MT.mat'), 'expected');
     load(fullfile(fileparts(mfilename('fullpath')), 'data', 'config_MT.mat'), 'expected');
-    cfg = rmfield(cfg, 'dir');
-    expected = rmfield(expected, 'dir'); %#ok<*NODEF>
-    fields = fieldnames(expected);
-    for i = 1:numel(fields)
-        assertEqual(cfg.(fields{i}), expected.(fields{i}));
-    end
+
+    % test
+    checkAllFields(cfg, expected);
+    assertEqual(cfg, expected);
+
 
 end
 
 function test_checkParameters_MT_MST()
 
     cfg.design.localizer = 'MT_MST';
+
     cfg = checkParameters(cfg);
-    %     expected = cfg;
-    %     save(fullfile(fileparts(mfilename('fullpath')), 'data', 'config_MT_MST.mat'), 'expected');
+
+    % prepare expected results
+    cfg = removeDirFieldForGithubAction(cfg);
+
+    % uncomment for update default config .mat
+% expected = cfg;
+% save(fullfile(fileparts(mfilename('fullpath')), 'data', 'config_MT_MST.mat'), 'expected');
     load(fullfile(fileparts(mfilename('fullpath')), 'data', 'config_MT_MST.mat'), 'expected');
-    cfg = rmfield(cfg, 'dir');
-    expected = rmfield(expected, 'dir');
+
+    % test
+    checkAllFields(cfg, expected);
+    assertEqual(cfg, expected);
+
+
+end
+
+function checkAllFields(cfg, expected)
     fields = fieldnames(expected);
     for i = 1:numel(fields)
         assertEqual(cfg.(fields{i}), expected.(fields{i}));
     end
+end
 
+function cfg = removeDirFieldForGithubAction(cfg)
+  cfg = rmfield(cfg, 'dir');
 end

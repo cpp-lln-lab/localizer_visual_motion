@@ -28,20 +28,11 @@ function [cfg] = checkParameters(cfg)
     if which('bids.internal.file_utils')
         root_dir = bids.internal.file_utils(root_dir, 'cpath');
     end
+
     fieldsToSet.dir.output = fullfile(root_dir, 'output');
-
-    fieldsToSet.skipSyncTests = 0;
-
-    fieldsToSet.verbose = 1;
-
-    %% Debug mode settings
-    fieldsToSet.debug.do = false;
-    fieldsToSet.debug.smallWin = false;
-    fieldsToSet.debug.transpWin = false;
 
     %% Engine parameters
     fieldsToSet.testingDevice = 'mri';
-
     fieldsToSet.eyeTracker.do = false;
 
     fieldsToSet = setMonitor(fieldsToSet);
@@ -103,6 +94,8 @@ function [cfg] = checkParameters(cfg)
     cfg = setMRI(cfg);
 
     cfg = setTarget(cfg);
+
+    cfg = checkCppPtbCfg(cfg);
 
     if cfg.verbose == 2
         unfold(cfg);
