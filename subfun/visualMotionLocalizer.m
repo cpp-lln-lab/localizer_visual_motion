@@ -29,13 +29,13 @@ function visualMotionLocalizer(cfg)
     % Safety loop: close the screen if code crashes
     try
 
-        [cfg] = initPTB(cfg);
+        cfg = initPTB(cfg);
 
         cfg = postInitializationSetup(cfg);
 
-        [el] = eyeTracker('Calibration', cfg);
+        cfg.el = eyeTracker('Calibration', cfg);
 
-        [cfg] = expDesign(cfg);
+        cfg = expDesign(cfg);
 
         % Prepare for the output logfiles with all
         logFile.extraColumns = cfg.extraColumns;

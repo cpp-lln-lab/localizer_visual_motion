@@ -73,6 +73,7 @@ function test_checkParameters_debug()
     expected.debug.transpWin = 1;
     expected.debug.smallWin = 1;
     expected.skipSyncTests = 1;
+    expected.hideCursor = 1;
 
     % test
     assertEqual(cfg.debug, expected.debug);
@@ -90,14 +91,13 @@ function test_checkParameters_MT()
     cfg = removeDirFieldForGithubAction(cfg);
 
     % uncomment for update default config .mat
-% expected = cfg;
-% save(fullfile(fileparts(mfilename('fullpath')), 'data', 'config_MT.mat'), 'expected');
+    % expected = cfg;
+    % save(fullfile(fileparts(mfilename('fullpath')), 'data', 'config_MT.mat'), 'expected');
     load(fullfile(fileparts(mfilename('fullpath')), 'data', 'config_MT.mat'), 'expected');
 
     % test
     checkAllFields(cfg, expected);
     assertEqual(cfg, expected);
-
 
 end
 
@@ -111,14 +111,13 @@ function test_checkParameters_MT_MST()
     cfg = removeDirFieldForGithubAction(cfg);
 
     % uncomment for update default config .mat
-% expected = cfg;
-% save(fullfile(fileparts(mfilename('fullpath')), 'data', 'config_MT_MST.mat'), 'expected');
+    % expected = cfg;
+    % save(fullfile(fileparts(mfilename('fullpath')), 'data', 'config_MT_MST.mat'), 'expected');
     load(fullfile(fileparts(mfilename('fullpath')), 'data', 'config_MT_MST.mat'), 'expected');
 
     % test
     checkAllFields(cfg, expected);
     assertEqual(cfg, expected);
-
 
 end
 
@@ -130,5 +129,5 @@ function checkAllFields(cfg, expected)
 end
 
 function cfg = removeDirFieldForGithubAction(cfg)
-  cfg = rmfield(cfg, 'dir');
+    cfg = rmfield(cfg, 'dir');
 end
