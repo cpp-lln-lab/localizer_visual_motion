@@ -15,6 +15,8 @@ function initEnv
     %
     % 2 - Add project to the O/M path
 
+    more off;
+
     octaveVersion = '4.0.3';
     matlabVersion = '8.6.0';
 

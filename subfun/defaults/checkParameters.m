@@ -29,7 +29,8 @@ function [cfg] = checkParameters(cfg)
         root_dir = bids.internal.file_utils(root_dir, 'cpath');
     end
 
-    fieldsToSet.dir.output = fullfile(root_dir, 'output', 'source');
+    % the "source" subfolder will be added by createFilename of CPP_BIDS
+    fieldsToSet.dir.output = fullfile(root_dir, 'output');
 
     %% Engine parameters
     fieldsToSet.testingDevice = 'mri';
