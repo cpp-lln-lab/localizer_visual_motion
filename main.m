@@ -9,11 +9,11 @@ initEnv();
 
 cfg.subject.subjectGrp = 'pilot';
 cfg.subject.sessionNb = 1;
-cfg.subject.askGrpSess = [false false];
+cfg.subject.askGrpSess = [true false];
 
 cfg.verbose = 1;
 
-cfg.debug.do = true;
+cfg.debug.do = false;
 cfg.debug.transpWin = false;
 cfg.debug.smallWin = false;
 
