@@ -211,20 +211,20 @@ function cfg = setPacedByTrigger(cfg)
 
         fieldsToSet.timing.eventDuration = cfg.mri.repetitionTime / 2 - 0.04; % second
 
-        % Time between blocs in nb of triggers (remember to consider the nb trigger to wait + 1)
+        % Time in nb of volumes between blocs in nb of triggers (remember to consider the nb trigger to wait + 1)
         fieldsToSet.timing.triggerIBI = 4;
 
         % Time between blocks in secs
-        fieldsToSet.timing.IBI = 0;
+        cfg.timing.IBI = 0;
 
         % Time between events in secs
-        fieldsToSet.timing.ISI = 0;
+        cfg.timing.ISI = 0;
 
         % Number of seconds before the motion stimuli are presented
-        fieldsToSet.timing.onsetDelay = 0;
+        cfg.timing.onsetDelay = 0;
 
         % Number of seconds after the end all the stimuli before ending the run
-        fieldsToSet.timing.endDelay = 0;
+        cfg.timing.endDelay = 0;
 
         cfg = setDefaultFields(cfg, fieldsToSet);
 

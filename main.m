@@ -13,17 +13,17 @@ cfg.subject.askGrpSess = [false false];
 
 cfg.verbose = 1;
 
-cfg.debug.do = false;
+cfg.debug.do = true;
 cfg.debug.transpWin = false;
 cfg.debug.smallWin = false;
 
 cfg.eyeTracker.do = false;
 
 %% Run MT+ localizer
-cfg = cfgMT();
+% cfg = cfgMT(cfg);
 
 %% Run MT/MST localizer
-% cfg = cfgMST();
+cfg = cfgMST(cfg);
 
 cfg = checkParameters(cfg);
 
