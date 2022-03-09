@@ -9,8 +9,6 @@ end
 
 function test_checkParameters_output_dir()
 
-    fprintf(getenv('HOME'));
-
     % failure expected when run with runTests
 
     % set up
@@ -161,7 +159,7 @@ function [isGithub, pth] = isGithubMoxunitAction()
 
     GITHUB_WORKSPACE = getenv('HOME');
 
-    if strcmp(GITHUB_WORKSPACE, '/github/workspace')
+    if strcmp(GITHUB_WORKSPACE, '/github/home')
 
         isGithub = true;
         pth = GITHUB_WORKSPACE;
