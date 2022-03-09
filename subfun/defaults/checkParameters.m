@@ -211,7 +211,8 @@ function cfg = setPacedByTrigger(cfg)
 
         fieldsToSet.timing.eventDuration = cfg.mri.repetitionTime / 2 - 0.04; % second
 
-        % Time in nb of volumes between blocs in nb of triggers (remember to consider the nb trigger to wait + 1)
+        % Time in nb of volumes between blocs in nb of triggers
+        % (remember to consider the nb trigger to wait + 1)
         fieldsToSet.timing.triggerIBI = 4;
 
         % Time between blocks in secs

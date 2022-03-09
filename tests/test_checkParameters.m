@@ -14,7 +14,7 @@ function test_checkParameters_output_dir()
     cfg = checkParameters(cfg);
 
     % test
-    if which('bids.internal.file_utils')
+    if ~bids.internal.is_github_ci
         cfg.dir.output = bids.internal.file_utils(cfg.dir.output, 'cpath');
         assertEqual(cfg.dir.output, ...
                     bids.internal.file_utils(fullfile(fileparts(mfilename('fullpath')), ...
@@ -110,8 +110,8 @@ function test_checkParameters_MT()
     cfg = removeDirFieldForGithubAction(cfg);
 
     % uncomment for update default config .mat
-    % expected = cfg;
-    % save(fullfile(fileparts(mfilename('fullpath')), 'data', 'config_MT.mat'), 'expected');
+    %     expected = cfg;
+    %     save(fullfile(fileparts(mfilename('fullpath')), 'data', 'config_MT.mat'), 'expected');
     load(fullfile(fileparts(mfilename('fullpath')), 'data', 'config_MT.mat'), 'expected');
 
     % test
@@ -130,8 +130,8 @@ function test_checkParameters_MT_MST()
     cfg = removeDirFieldForGithubAction(cfg);
 
     % uncomment for update default config .mat
-    % expected = cfg;
-    % save(fullfile(fileparts(mfilename('fullpath')), 'data', 'config_MT_MST.mat'), 'expected');
+    %     expected = cfg;
+    %     save(fullfile(fileparts(mfilename('fullpath')), 'data', 'config_MT_MST.mat'), 'expected');
     load(fullfile(fileparts(mfilename('fullpath')), 'data', 'config_MT_MST.mat'), 'expected');
 
     % test
