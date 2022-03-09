@@ -15,6 +15,8 @@ function initEnv
     %
     % 2 - Add project to the O/M path
 
+    more off;
+
     octaveVersion = '4.0.3';
     matlabVersion = '8.6.0';
 
@@ -102,6 +104,7 @@ function addDependencies()
     pth = fileparts(mfilename('fullpath'));
     addpath(fullfile(pth, 'lib', 'CPP_BIDS'));
     addpath(genpath(fullfile(pth, 'lib', 'CPP_PTB', 'src')));
+    addpath(genpath(fullfile(pth, 'lib', 'CPP_PTB', 'lib')));
     addpath(genpath(fullfile(pth, 'subfun')));
 
     checkCppBidsDependencies();

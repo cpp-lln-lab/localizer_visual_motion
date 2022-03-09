@@ -5,9 +5,9 @@
 */logfiles/*
 */*/*/logfiles/*
 *.tsv
-*.mat
 
 output
+source
 
 ## virtual env
 env/
