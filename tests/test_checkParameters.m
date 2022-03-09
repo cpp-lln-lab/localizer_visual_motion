@@ -9,6 +9,8 @@ end
 
 function test_checkParameters_output_dir()
 
+    % failure expected when run with runTests
+
     % set up
     cfg.design.localizer = 'MT';
     cfg = checkParameters(cfg);
