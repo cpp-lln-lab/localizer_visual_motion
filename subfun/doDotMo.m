@@ -1,17 +1,28 @@
 function [onset, duration, dots] = doDotMo(cfg, thisEvent, thisFixation, dots, iEvent)
     %
-    % [onset, duration, dots] = doDotMo(cfg, thisEvent, thisFixation, dots, iEvent)
+    % Wrapper function that present the dot stimulation (static or motion) per event.
     %
-    % Draws the stimulation of static/moving in 4 directions dots or static
+    % USAGE::
     %
-    % DIRECTIONS
-    %  0=Right; 90=Up; 180=Left; 270=down
+    %   [onset, duration, dots] = doDotMo(cfg, thisEvent, thisFixation, dots, iEvent)
     %
-    % Input:
-    %   - cfg: PTB/machine configurations returned by setParameters and initPTB
+    % :param cfg: PTB/machine configurations returned. see ``checkParameters``
+    % :type cfg: structure
     %
-    % Output:
-    %     -
+    % :param thisEvent: structure that stores information about the event to present
+    % regarding the dots (static or motion, direction, etc.)
+    % :type thisEvent:
+    %
+    % :param thisFixation: structure that stores information about the fixation cross
+    % task to present
+    % :type thisFixation:
+    %
+    % :param dots:
+    % :type dots:
+    %
+    % :param iEvent: index of the event of the block at the moment of the presentation
+    % :type iEvent:
+    %
     %
     % The dots are drawn on a square with a width equals to the width of the
     % screen

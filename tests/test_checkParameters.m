@@ -7,6 +7,26 @@ function test_suite = test_checkParameters %#ok<*STOUT>
     initTestSuite;
 end
 
+function test_checkParameters_output_dir()
+
+    % set up
+    cfg.design.localizer = 'MT';
+    cfg = checkParameters(cfg);
+
+    % test
+    if which('bids.internal.file_utils')
+        cfg.dir.output = bids.internal.file_utils(cfg.dir.output, 'cpath');
+        assertEqual(cfg.dir.output, ...
+                    bids.internal.file_utils(fullfile(fileparts(mfilename('fullpath')), ...
+                                                      '..', ...
+                                                      'output', ...
+                                                      'source'), ...
+                                             'cpath'));
+
+    end
+
+end
+
 function test_checkParameters_no_debug_fullscreen()
 
     % set up

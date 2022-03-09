@@ -29,7 +29,7 @@ function [cfg] = checkParameters(cfg)
         root_dir = bids.internal.file_utils(root_dir, 'cpath');
     end
 
-    fieldsToSet.dir.output = fullfile(root_dir, 'output');
+    fieldsToSet.dir.output = fullfile(root_dir, 'output', 'source');
 
     %% Engine parameters
     fieldsToSet.testingDevice = 'mri';
