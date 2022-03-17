@@ -8,6 +8,8 @@ function cfg = cfgMST(cfg)
 
     cfg.design.nbEventsPerBlock = 10;
 
-    cfg.timing.eventDuration = 0.3; % 0.6 seconds
+    % in Liege is 0.6
+    % on macs is 0.3
+    cfg.timing.eventDuration = 0.6; % 0.6 seconds
 
 end

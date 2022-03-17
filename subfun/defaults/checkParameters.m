@@ -51,7 +51,7 @@ function [cfg] = checkParameters(cfg)
     %% Timing
 
     % block length = (cfg.eventDuration + cfg.ISI) * cfg.design.nbEventsPerBlock
-    fieldsToSet.timing.eventDuration = 0.30; % second
+    fieldsToSet.timing.eventDuration = 0.6; % second
 
     % Time between events in secs
     fieldsToSet.timing.ISI = 0.1;
