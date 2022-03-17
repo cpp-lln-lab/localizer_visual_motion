@@ -34,12 +34,13 @@ function cfg = cfgMST(cfg)
     %  height: 3.35264
     %
     % fixation cross displacement in degrees of visual angles
-    % cfg.fixation.xDisplacement = 0;
+    % this will also shift the whole FOV
+    cfg.fixation.xDisplacement = 0;
     % cfg.fixation.yDisplacement = 0;
 
     cfg.design.xDisplacementFixation = 3;
 
     cfg.aperture.width = 6;
-    cfg.design.xDisplacementAperture = 6;
+    cfg.design.xDisplacementAperture = 3;
 
 end

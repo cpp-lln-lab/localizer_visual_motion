@@ -177,7 +177,7 @@ function cfg = setParametersMtMst(cfg)
 
             fieldsToSet.aperture.type = 'circle';
             fieldsToSet.aperture.width = 7; % if left empty it will take the screen height
-            fieldsToSet.aperture.xPos = fieldsToSet.design.xDisplacementAperture;
+            fieldsToSet.aperture.xPos = 0;
 
         case 'mt'
 
