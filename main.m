@@ -24,10 +24,10 @@ cfg.eyeTracker.do = true;
 cfg.dot.speed = 7.5;
 
 %% Run MT+ localizer
-cfg = cfgMT(cfg);
+% cfg = cfgMT(cfg);
 
 %% Run MT/MST localizer
-% cfg = cfgMST(cfg);
+cfg = cfgMST(cfg);
 
 cfg = checkParameters(cfg);
 
