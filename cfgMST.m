@@ -28,8 +28,8 @@ function cfg = cfgMST(cfg)
 
     % fixation cross displacement in degrees of visual angles
     % this will also shift the whole FOV
-    cfg.fixation.xDisplacement = 0;
-    cfg.fixation.yDisplacement = 0;
+    cfg.fixation.xDisplacement = -3.676540;
+    cfg.fixation.yDisplacement = -0.499724;
 
     % determines position of the fixation cross on the right / left
     % should be a bit less than the: ( width of FOV ) / 2
