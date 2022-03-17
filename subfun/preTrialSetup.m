@@ -38,9 +38,6 @@ function varargout = preTrialSetup(varargin)
         % So we "reset" that pixel value from the value in degrees
         cfg.aperture.xPos = cfg.design.xDisplacementAperture;
         cfg.aperture = degToPix('xPos', cfg.aperture, cfg);
-        if isfield(cfg.fixation, 'xDisplacementPix')
-            cfg.aperture.xPosPix = cfg.aperture.xPosPix + cfg.fixation.xDisplacementPix;
-        end
 
         switch thisEvent.fixationPosition
 
@@ -58,12 +55,16 @@ function varargout = preTrialSetup(varargin)
 
         end
 
+        if isfield(cfg.fixation, 'xDisplacementPix')
+            cfg.aperture.xPosPix = cfg.aperture.xPosPix + cfg.fixation.xDisplacementPix;
+        end
+
         thisEvent.dotCenterXPosPix = cfg.aperture.xPosPix;
 
-        if isfield(cfg.fixation, 'xDisplacementPix')
-            % thisFixation.fixation.xDisplacement = thisFixation.fixation.xDisplacement + ...
-            %                                       cfg.fixation.xDisplacementPix;
-        end
+        % if isfield(cfg.fixation, 'xDisplacementPix')
+        %     thisFixation.fixation.xDisplacement = thisFixation.fixation.xDisplacement + ...
+        %                                           cfg.fixation.xDisplacementPix;
+        % end
 
         if isfield(cfg.fixation, 'yDisplacementPix')
         end
