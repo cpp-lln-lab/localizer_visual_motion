@@ -26,17 +26,17 @@ function cfg = cfgMST(cfg)
     %
     %
     % Field of view in DEGREES OF VISUAL ANGLES:
-    %  top left: 8.32304 1.60312
-    %  bottom right: 11.6757 3.49172
+    %  top left: 8.0 1.0
+    %  bottom right: 11.0 3.0
     %
     % Field of view in DEGREES OF VISUAL ANGLES:
-    %  width: 1.8886
-    %  height: 3.35264
+    %  width: 1.8
+    %  height: 3.3
     %
     % fixation cross displacement in degrees of visual angles
     % this will also shift the whole FOV
-    cfg.fixation.xDisplacement = -2;
-    % cfg.fixation.yDisplacement = 0;
+    % cfg.fixation.xDisplacement = 0;
+    cfg.fixation.yDisplacement = 1;
 
     cfg.design.xDisplacementFixation = 2;
 
