@@ -37,8 +37,9 @@ function cfg = cfgMST(cfg)
     % cfg.fixation.xDisplacement = 0;
     % cfg.fixation.yDisplacement = 0;
 
-    % cfg.design.xDisplacementFixation = 3;
-    % cfg.design.xDisplacementAperture = 7;
-    % cfg.aperture.width = 7;
+    cfg.design.xDisplacementFixation = 3;
+
+    cfg.aperture.width = 6;
+    cfg.design.xDisplacementAperture = 6;
 
 end
