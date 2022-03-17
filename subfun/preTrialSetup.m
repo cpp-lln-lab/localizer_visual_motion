@@ -34,25 +34,35 @@ function varargout = preTrialSetup(varargin)
 
         thisEvent.fixationPosition = cfg.design.blockFixationPosition{iBlock};
 
+        % cfg.aperture.xPosPix = cfg.design.xDisplacementAperturePix;
+
         switch thisEvent.fixationPosition
 
             case 'fixation_right'
                 cfg.aperture.xPosPix = -abs(cfg.aperture.xPosPix);
-
-                thisEvent.dotCenterXPosPix = cfg.aperture.xPosPix;
-
                 thisFixation.fixation.xDisplacement = cfg.design.xDisplacementFixation;
-                thisFixation = initFixation(thisFixation);
 
             case 'fixation_left'
                 cfg.aperture.xPosPix = +abs(cfg.aperture.xPosPix);
-
-                thisEvent.dotCenterXPosPix = cfg.aperture.xPosPix;
-
                 thisFixation.fixation.xDisplacement = -cfg.design.xDisplacementFixation;
-                thisFixation = initFixation(thisFixation);
+
+            otherwise
+
+                error('WTF');
 
         end
+
+        thisEvent.dotCenterXPosPix = cfg.aperture.xPosPix;
+
+        if isfield(cfg.fixation, 'xDisplacementPix')
+            thisEvent.dotCenterXPosPix = thisEvent.dotCenterXPosPix + cfg.fixation.xDisplacementPix;
+            thisFixation.fixation.xDisplacement = thisFixation.fixation.xDisplacement + ...
+                                                  cfg.fixation.xDisplacementPix;
+        end
+        if isfield(cfg.fixation, 'yDisplacementPix')
+        end
+
+        thisFixation = initFixation(thisFixation);
 
     end
 
