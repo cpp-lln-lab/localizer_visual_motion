@@ -24,7 +24,6 @@ function cfg = cfgMST(cfg)
     % cfg.screen.monitorDistance
     % cfg.screen.monitorWidth
 
-
     % Field of view in DEGREES OF VISUAL ANGLES
 
     % fixation cross displacement in degrees of visual angles
