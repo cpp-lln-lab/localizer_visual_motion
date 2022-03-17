@@ -61,10 +61,10 @@ function varargout = preTrialSetup(varargin)
         thisEvent.dotCenterXPosPix = cfg.aperture.xPosPix;
 
         if isfield(cfg.fixation, 'xDisplacementPix')
-            thisEvent.dotCenterXPosPix = thisEvent.dotCenterXPosPix + cfg.fixation.xDisplacementPix;
             % thisFixation.fixation.xDisplacement = thisFixation.fixation.xDisplacement + ...
             %                                       cfg.fixation.xDisplacementPix;
         end
+
         if isfield(cfg.fixation, 'yDisplacementPix')
         end
 
