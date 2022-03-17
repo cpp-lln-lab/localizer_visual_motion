@@ -57,14 +57,11 @@ function varargout = preTrialSetup(varargin)
 
         if isfield(cfg.fixation, 'xDisplacementPix')
             cfg.aperture.xPosPix = cfg.aperture.xPosPix + cfg.fixation.xDisplacementPix;
+            thisFixation.fixation.xDisplacement = thisFixation.fixation.xDisplacement + ...
+              cfg.fixation.xDisplacement;
         end
 
         thisEvent.dotCenterXPosPix = cfg.aperture.xPosPix;
-
-        if isfield(cfg.fixation, 'xDisplacementPix')
-            thisFixation.fixation.xDisplacement = thisFixation.fixation.xDisplacement + ...
-                                                  cfg.fixation.xDisplacement;
-        end
 
         if isfield(cfg.fixation, 'yDisplacementPix')
         end
