@@ -34,8 +34,13 @@ function varargout = preTrialSetup(varargin)
 
         thisEvent.fixationPosition = cfg.design.blockFixationPosition{iBlock};
 
+        % This is necessary because where the dot aperture is drawn is set in cfg
+        % So we "reset" that pixel value from the value in degrees
         cfg.aperture.xPos = cfg.design.xDisplacementAperture;
         cfg.aperture = degToPix('xPos', cfg.aperture, cfg);
+        if isfield(cfg.fixation, 'xDisplacementPix')
+            cfg.aperture.xPosPix = cfg.aperture.xPosPix + cfg.fixation.xDisplacementPix;
+        end
 
         switch thisEvent.fixationPosition
 
