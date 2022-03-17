@@ -6,11 +6,17 @@ function cfg = cfgMT(cfg)
 
     cfg.pacedByTriggers.do = false;
 
+    cfg.timing.triggerIBI = 4;
+
     cfg.mri.triggerNb = 0;
 
     cfg.design.nbRepetitions = 15;
 
-    cfg.timing.eventDuration = 0.43; % .86 second
+    cfg.design.nbEventsPerBlock = 12;
+
+    % in Liege is 0.79 (tsry less)
+    % in mcas is 0.43
+    cfg.timing.eventDuration = 0.79; % .86 second
 
     %% variable FOV info
     % in case the field of view is not properly centered or obstructed

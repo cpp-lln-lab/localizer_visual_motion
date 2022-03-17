@@ -17,7 +17,11 @@ cfg.debug.do = true;
 cfg.debug.transpWin = true;
 cfg.debug.smallWin = false;
 
-cfg.eyeTracker.do = false;
+cfg.audio.devIdx = 5;
+
+cfg.eyeTracker.do = true;
+% in liege
+cfg.dot.speed = 7.5;
 
 %% Run MT+ localizer
 cfg = cfgMT(cfg);
