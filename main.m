@@ -13,8 +13,8 @@ cfg.subject.askGrpSess = [true false];
 
 cfg.verbose = 1;
 
-cfg.debug.do = false;
-cfg.debug.transpWin = false;
+cfg.debug.do = true;
+cfg.debug.transpWin = true;
 cfg.debug.smallWin = false;
 
 cfg.audio.devIdx = 5;
@@ -24,10 +24,10 @@ cfg.eyeTracker.do = true;
 cfg.dot.speed = 7.5;
 
 %% Run MT+ localizer
-cfg = cfgMT(cfg);
+% cfg = cfgMT(cfg);
 
 %% Run MT/MST localizer
-% cfg = cfgMST(cfg);
+cfg = cfgMST(cfg);
 
 cfg = checkParameters(cfg);
 

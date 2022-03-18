@@ -34,25 +34,46 @@ function varargout = preTrialSetup(varargin)
 
         thisEvent.fixationPosition = cfg.design.blockFixationPosition{iBlock};
 
+        % This is necessary because where the dot aperture is drawn is set in cfg
+        % So we "reset" that pixel value from the value in degrees
+        cfg.aperture.xPos = cfg.design.xDisplacementAperture;
+        cfg.aperture = degToPix('xPos', cfg.aperture, cfg);
+
         switch thisEvent.fixationPosition
 
             case 'fixation_right'
                 cfg.aperture.xPosPix = -abs(cfg.aperture.xPosPix);
-
-                thisEvent.dotCenterXPosPix = cfg.aperture.xPosPix;
-
                 thisFixation.fixation.xDisplacement = cfg.design.xDisplacementFixation;
-                thisFixation = initFixation(thisFixation);
 
             case 'fixation_left'
                 cfg.aperture.xPosPix = +abs(cfg.aperture.xPosPix);
-
-                thisEvent.dotCenterXPosPix = cfg.aperture.xPosPix;
-
                 thisFixation.fixation.xDisplacement = -cfg.design.xDisplacementFixation;
-                thisFixation = initFixation(thisFixation);
+
+            otherwise
+
+                error('WTF');
 
         end
+
+        if isfield(cfg.fixation, 'xDisplacementPix')
+            cfg.aperture.xPosPix = cfg.aperture.xPosPix + cfg.fixation.xDisplacementPix;
+            thisFixation.fixation.xDisplacement = thisFixation.fixation.xDisplacement + ...
+              cfg.fixation.xDisplacement;
+        end
+
+        if isfield(cfg.fixation, 'yDisplacementPix')
+            cfg.aperture.yPosPix = cfg.fixation.yDisplacementPix;
+            thisEvent.dotCenterYPosPix = cfg.aperture.yPosPix;
+        end
+
+        thisEvent.dotCenterXPosPix = cfg.aperture.xPosPix;
+
+        if isfield(cfg.fixation, 'yDisplacementPix')
+        end
+
+        thisFixation.fixation.allCoords;
+
+        thisFixation = initFixation(thisFixation);
 
     end
 
