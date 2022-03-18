@@ -31,8 +31,10 @@ function cfg = cfgMT(cfg)
     % cfg.screen.monitorWidth
 
     % fixation cross displacement in degrees of visual angles
-    %
-    % cfg.fixation.xDisplacement = FIXME;
-    % cfg.fixation.yDisplacement = FIXME;
+    % this will also shift the whole FOV relative to the center of the screen
+    % Note: negative values will move things to the left and up.
+
+    cfg.fixation.xDisplacement = 0;
+    cfg.fixation.yDisplacement = 0;
 
 end

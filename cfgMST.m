@@ -24,22 +24,21 @@ function cfg = cfgMST(cfg)
     % cfg.screen.monitorDistance
     % cfg.screen.monitorWidth
 
-    % Field of view in DEGREES OF VISUAL ANGLES
-
     % fixation cross displacement in degrees of visual angles
-    % this will also shift the whole FOV
+    % this will also shift the whole FOV relative to the center of the screen
+    % Note: negative values will move things to the left and up.
     cfg.fixation.xDisplacement = 0;
     cfg.fixation.yDisplacement = 0;
 
     % determines position of the fixation cross on the right / left
     % should be a bit less than the: ( width of FOV ) / 2
-    cfg.design.xDisplacementFixation = 5;
+    cfg.design.xDisplacementFixation = 3;
 
     % determines position of the dots on the left /
     % should be a bit less than the: ( width of FOV ) / 2
-    cfg.design.xDisplacementAperture = 5;
+    cfg.design.xDisplacementAperture = 7;
 
     % determines the width of the dot circle
-    cfg.aperture.width = 1;
+    cfg.aperture.width = 7;
 
 end
