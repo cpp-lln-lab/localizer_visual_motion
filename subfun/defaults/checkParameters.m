@@ -63,6 +63,8 @@ function [cfg] = checkParameters(cfg)
     %% Visual Stimulation
     fieldsToSet.dot = cppPtbDefaults('dot');
     fieldsToSet.dot.color = fieldsToSet.color.white;
+    % Static dots should change position at each event or not
+    fieldsToSet.staticReSeed = true;
 
     %% Task(s)
 
