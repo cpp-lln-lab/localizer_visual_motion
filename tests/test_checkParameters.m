@@ -111,10 +111,11 @@ function test_checkParameters_MT()
     % prepare expected results
     cfg = removeDirFieldForGithubAction(cfg);
 
+    fileToLoad = fullfile(fileparts(mfilename('fullpath')), 'data', 'config_MT.mat');
     % uncomment for update default config .mat
-    %       expected = cfg;
-    %       save(fullfile(fileparts(mfilename('fullpath')), 'data', 'config_MT.mat'), 'expected');
-    load(fullfile(fileparts(mfilename('fullpath')), 'data', 'config_MT.mat'), 'expected');
+    % expected = cfg;
+    % save(fileToLoad, 'expected');
+    load(fileToLoad, 'expected');
 
     % test
     checkAllFields(cfg, expected);
@@ -131,10 +132,11 @@ function test_checkParameters_MT_MST()
     % prepare expected results
     cfg = removeDirFieldForGithubAction(cfg);
 
+    fileToLoad = fullfile(fileparts(mfilename('fullpath')), 'data', 'config_MT_MST.mat');
     % uncomment for update default config .mat
     % expected = cfg;
-    % save(fullfile(fileparts(mfilename('fullpath')), 'data', 'config_MT_MST.mat'), 'expected');
-    load(fullfile(fileparts(mfilename('fullpath')), 'data', 'config_MT_MST.mat'), 'expected');
+    % save(fileToLoad, 'expected');
+    load(fileToLoad, 'expected');
 
     % test
     checkAllFields(cfg, expected);
