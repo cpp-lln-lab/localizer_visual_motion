@@ -40,6 +40,6 @@ function cfg = cfgMST(cfg)
     cfg.design.xDisplacementAperture = 5;
 
     % determines the width of the dot circle
-    cfg.aperture.width = 1;
+    cfg.aperture.width = 7;
 
 end

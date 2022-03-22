@@ -13,14 +13,16 @@ cfg.subject.askGrpSess = [true false];
 
 cfg.verbose = 1;
 
-cfg.debug.do = true;
-cfg.debug.transpWin = true;
+cfg.debug.do = false; 
+cfg.debug.transpWin = false;
 cfg.debug.smallWin = false;
 
 cfg.audio.devIdx = 5;
 
 cfg.eyeTracker.do = true;
-% in liege
+
+% in liege 7.5
+% on Marco's mac 15
 cfg.dot.speed = 7.5;
 
 %% Run MT+ localizer
