@@ -64,7 +64,7 @@ function [cfg] = checkParameters(cfg)
     fieldsToSet.dot = cppPtbDefaults('dot');
     fieldsToSet.dot.color = fieldsToSet.color.white;
     % Static dots should change position at each event or not
-    fieldsToSet.staticReSeed = true;
+    fieldsToSet.dot.staticReSeed = true;
 
     %% Task(s)
 
