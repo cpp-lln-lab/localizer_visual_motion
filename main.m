@@ -13,7 +13,7 @@ cfg.subject.askGrpSess = [true false];
 
 cfg.verbose = 1;
 
-cfg.debug.do = false; 
+cfg.debug.do = false;
 cfg.debug.transpWin = false;
 cfg.debug.smallWin = false;
 

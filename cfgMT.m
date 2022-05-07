@@ -9,7 +9,7 @@ function cfg = cfgMT(cfg)
     cfg.timing.triggerIBI = 4;
 
     cfg.mri.triggerNb = 5;
-    
+
     % Time between events in secs
     cfg.timing.ISI = 0;
     % Time between blocs in secs
@@ -18,7 +18,7 @@ function cfg = cfgMT(cfg)
     cfg.timing.onsetDelay = 0;
     % Number of seconds after the end all the stimuli before ending the run
     cfg.timing.endDelay = 0;
-    
+
     cfg.design.nbRepetitions = 15;
 
     cfg.design.nbEventsPerBlock = 12;
