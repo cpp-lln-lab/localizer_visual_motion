@@ -113,8 +113,8 @@ function test_checkParameters_MT()
 
     fileToLoad = fullfile(fileparts(mfilename('fullpath')), 'data', 'config_MT.mat');
     % uncomment for update default config .mat
-    % expected = cfg;
-    % save(fileToLoad, 'expected');
+    %     expected = cfg;
+    %     save(fileToLoad, 'expected');
     load(fileToLoad, 'expected');
 
     % test
@@ -134,8 +134,8 @@ function test_checkParameters_MT_MST()
 
     fileToLoad = fullfile(fileparts(mfilename('fullpath')), 'data', 'config_MT_MST.mat');
     % uncomment for update default config .mat
-    % expected = cfg;
-    % save(fileToLoad, 'expected');
+    %     expected = cfg;
+    %     save(fileToLoad, 'expected');
     load(fileToLoad, 'expected');
 
     % test
