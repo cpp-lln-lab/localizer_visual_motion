@@ -3,7 +3,7 @@ function saveResponsesAndTriggers(responseEvents, cfg, logFile, triggerString)
     % saveResponsesAndTriggers(responseEvents, cfg, logFile, triggerString)
     %
     %
-    % (C) Copyright 2020 CPP visual motion localizer developpers
+    % (C) Copyright 2020 CPP visual motion localizer developers
 
     if isfield(responseEvents(1), 'onset') && ~isempty(responseEvents(1).onset)
 

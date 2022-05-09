@@ -8,9 +8,9 @@ test_report.log
 */logfiles/*
 */*/*/logfiles/*
 *.tsv
-*.mat
 
 output
+source
 
 ## virtual env
 env/
@@ -18,6 +18,10 @@ venv/
 
 ## visual studio code
 .vscode
+
+# exclude temp files from tests and coverage
+test_report.log
+*coverage*
 
 ## MATLAB / OCTAVE gitignore template
 

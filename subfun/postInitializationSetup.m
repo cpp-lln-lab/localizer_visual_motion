@@ -6,22 +6,21 @@ function cfg = postInitializationSetup(cfg)
     % initialized
     %
     %
-    % (C) Copyright 2020 CPP visual motion localizer developpers
+    % (C) Copyright 2020 CPP visual motion localizer developers
 
-    cfg.dot.matrixWidth = cfg.screen.winWidth;
+    cfg = postInitDots(cfg);
 
-    % Convert some values from degrees to pixels
-    cfg.dot = degToPix('size', cfg.dot, cfg);
-    cfg.dot = degToPix('speed', cfg.dot, cfg);
+    % TODO transfer those if blocks into 'degToPix' (and similarly into pixToDeg)
+    % TODO this kind of generic post initialization can be done systematically at end of initPTB
+    if isfield(cfg.fixation, 'xDisplacement')
+        cfg.fixation = degToPix('xDisplacement', cfg.fixation, cfg);
+    end
+    if isfield(cfg.fixation, 'yDisplacement')
+        cfg.fixation = degToPix('yDisplacement', cfg.fixation, cfg);
+    end
 
-    % Get dot speeds in pixels per frame
-    cfg.dot.speedPixPerFrame = cfg.dot.speedPix / cfg.screen.monitorRefresh;
-
-    cfg.aperture = degToPix('xPos', cfg.aperture, cfg);
-
-    % dots are displayed on a square with a length in visual angle equal to the
-    % field of view
-    cfg.dot.number = round(cfg.dot.density * ...
-                           (cfg.dot.matrixWidth / cfg.screen.ppd)^2);
+    if isfield(cfg.design, 'xDisplacementAperture')
+        cfg.design = degToPix('xDisplacementAperture', cfg.design, cfg);
+    end
 
 end

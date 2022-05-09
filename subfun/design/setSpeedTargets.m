@@ -10,7 +10,7 @@ function speeds = setSpeedTargets(cfg)
     % set speed in ``cfg.dot.speed`` (computed in pixels per frame).
     %
     %
-    % (C) Copyright 2021 CPP visual motion localizer developpers
+    % (C) Copyright 2021 CPP visual motion localizer developers
 
     [~, nbEventsPerBlock, ~, nbBlocks] = getDesignInput(cfg);
     speeds = ones(nbBlocks, nbEventsPerBlock) * cfg.dot.speedPixPerFrame;

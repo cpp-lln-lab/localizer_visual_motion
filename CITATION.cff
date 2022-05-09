@@ -1,0 +1,57 @@
+cff-version: 1.2.0
+
+title: "CPP localizer visual motion"
+
+version: 0.4.0dev
+
+abstract: A localizer for visual motion sensitive brain regions using RDK.
+
+message: "If you use this software, please cite it as below."
+
+repository-code: "https://github.com/cpp-lln-lab/localizer_visual_motion.git"
+
+identifiers:
+  - description: This is the collection of archived snapshots of all releases
+    type: doi
+    value: "10.5281/zenodo.4007674"
+
+contact:
+  - affiliation: "Université catholique de Louvain"
+    email: remi.gau@uclouvain.be
+    family-names: Gau
+    given-names: Rémi
+
+authors:
+  - family-names: "Gau"
+    given-names: "Rémi"
+    orcid: "https://orcid.org/0000-0002-1535-9767"
+    affiliation: "Université catholique de Louvain"
+
+  - family-names: "Barilari"
+    given-names: "Marco"
+    orcid: "https://orcid.org/0000-0002-3313-3120"
+    affiliation: "Université catholique de Louvain"
+
+  - family-names: "Battal"
+    given-names: "Ceren"
+    orcid: "https://orcid.org/0000-0002-9844-7630"
+    affiliation: "Université catholique de Louvain"
+
+  - family-names: "Rezk"
+    given-names: "Mohamed"
+    orcid: "https://orcid.org/0000-0002-1866-8645"
+    affiliation: "Université catholique de Louvain"
+
+  - family-names: "Shahzad"
+    given-names: "Iqra"
+    orcid: "https://orcid.org/0000-0002-8724-7668"
+    affiliation: "Université catholique de Louvain"
+
+license: MIT license
+
+keywords:
+  - BIDS
+  - brain imaging data structure
+  - neuroscience
+  - MATLAB
+  - Octave

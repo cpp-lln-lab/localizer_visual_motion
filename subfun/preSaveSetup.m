@@ -4,7 +4,7 @@ function varargout = preSaveSetup(varargin)
     %                                    duration, onset, cfg, logFile)
     %
     %
-    % (C) Copyright 2020 CPP visual motion localizer developpers
+    % (C) Copyright 2020 CPP visual motion localizer developers
 
     % generic function to prepare structures before saving
 

@@ -11,7 +11,7 @@ function fixationTargets = setFixationTargets(cfg)
     % If the fixation target task is not required, it outputs a matrix with only zeros
     %
     %
-    % (C) Copyright 2021 CPP visual motion localizer developpers
+    % (C) Copyright 2021 CPP visual motion localizer developers
 
     % Get the parameter to compute the design with
     [nbRepetitions, nbEventsPerBlock, maxNbPerBlock, nbBlocks] = getDesignInput(cfg);
