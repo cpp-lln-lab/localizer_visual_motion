@@ -1,5 +1,5 @@
-[![](https://img.shields.io/badge/Octave-CI-blue?logo=Octave&logoColor=white)](https://github.com/cpp-lln-lab/localizer_visual_motion/actions)
-[![tests and coverage](https://github.com/cpp-lln-lab/localizer_visual_motion/actions/workflows/moxunit.yml/badge.svg)](https://github.com/cpp-lln-lab/localizer_visual_motion/actions/workflows/moxunit.yml))
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5866130.svg)](https://doi.org/10.5281/zenodo.5866130)
+[![](https://img.shields.io/badge/Octave-CI-blue?logo=Octave&logoColor=white)](https://github.com/cpp-lln-lab/localizer_visual_motion/actions/workflows/moxunit.yml))
 [![codecov](https://codecov.io/gh/cpp-lln-lab/localizer_visual_motion/branch/master/graph/badge.svg)](https://codecov.io/gh/cpp-lln-lab/localizer_visual_motion)
 [![All Contributors](https://img.shields.io/badge/all_contributors-5-orange.svg?style=flat-square)](#contributors-)
 
