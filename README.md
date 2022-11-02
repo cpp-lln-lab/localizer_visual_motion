@@ -3,12 +3,6 @@
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5866130.svg)](https://doi.org/10.5281/zenodo.4007721)
 [![All Contributors](https://img.shields.io/badge/all_contributors-5-orange.svg?style=flat-square)](#contributors-)
 
-- [fMRI localizers for visual motion](#fmri-localizers-for-visual-motion)
-  - [Requirements](#requirements)
-  - [Installation](#installation)
-  - [Set up and running](#set-up-and-running)
-  - [Contributors ✨](#contributors-)
-
 # fMRI localizers for visual motion
 
 Running this script will show blocks of motion dots and static dots. Motion
