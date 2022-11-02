@@ -2,7 +2,7 @@ cff-version: 1.2.0
 
 title: "CPP localizer visual motion"
 
-version: 0.5.0
+version: 0.5.1
 
 abstract: A localizer for visual motion sensitive brain regions using RDK.
 
