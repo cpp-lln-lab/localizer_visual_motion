@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         submodules: true
         fetch-depth: 1
@@ -31,7 +31,7 @@ jobs:
         cover_xml_file: coverage.xml
 
     - name: Code coverage
-      uses: codecov/codecov-action@v1
+      uses: codecov/codecov-action@v3
       with:
        token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
        file:  coverage.xml # optional
